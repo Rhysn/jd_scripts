@@ -31,7 +31,7 @@ const JD_API_HOST = 'https://m.jingxi.com';
 const notify = $.isNode() ? require('./sendNotify') : '';
 let jdNotify = true;//是否关闭通知，false打开通知推送，true关闭通知推送
 const randomCount = 0;
-const tuanActiveId = `cKw-LGBsjl0XLu9coQ0d4A==`;
+const tuanActiveId = `gaVXW_NJ0KPEA2LyUhoXzA==`;
 const jxOpenUrl = `openjd://virtual?params=%7B%20%22category%22:%20%22jump%22,%20%22des%22:%20%22m%22,%20%22url%22:%20%22https://wqsd.jd.com/pingou/dream_factory/index.html%22%20%7D`;
 let cookiesArr = [], cookie = '', message = '';
 const inviteCodes = [ 'NTXGxnRwTQkr7rbDn08j4w==','XU6GKz30yCKA4LYvpnm5zw==','q0aZPe-QA6AChOBXOoOMBA==','QDotuqdYVNrSa3atJZ_V9Q==' ]
@@ -347,7 +347,8 @@ function hireAward(date, type = 0) {
   })
 }
 async function helpFriends() {
-  if ($.canHelpFlag) {
+  let Hours = new Date(new Date().getTime() + new Date().getTimezoneOffset()*60*1000 + 8*60*60*1000).getHours();
+  if ($.canHelpFlag && Hours >= 6) {
     await shareCodesFormat();
     for (let code of inviteCodes) {
       if (code) {
@@ -1460,7 +1461,7 @@ function jsonParse(str) {
       return JSON.parse(str);
     } catch (e) {
       console.log(e);
-      $.msg($.name, '', '不要在BoxJS手动复制粘贴修改cookie')
+      $.msg($.name, '', '请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie')
       return [];
     }
   }

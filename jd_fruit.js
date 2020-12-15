@@ -1,6 +1,6 @@
 /*
 东东水果:脚本更新地址 https://raw.githubusercontent.com/lxk0301/jd_scripts/master/jd_fruit.js
-更新时间：2020-11-30
+更新时间：2020-12-15
 东东农场活动链接：https://h5.m.jd.com/babelDiy/Zeus/3KSjXqQabiTuD1cJ28QskrpWoBKT/index.html
 已支持IOS双京东账号,Node.js支持N个京东账号
 脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
@@ -85,7 +85,7 @@ async function jdFruit() {
     // option['media-url'] = $.farmInfo.farmUserPro.goodsImage;
     subTitle = `【京东账号${$.index}】${$.nickName}`;
     message = `【水果名称】${$.farmInfo.farmUserPro.name}\n`;
-    console.log(`\n【您的互助码shareCode】 ${$.farmInfo.farmUserPro.shareCode}\n`);
+    console.log(`\n【您的${$.name}互助码shareCode】 ${$.farmInfo.farmUserPro.shareCode}\n`);
     console.log(`\n【已成功兑换水果】${$.farmInfo.farmUserPro.winTimes}次\n`);
     message += `【已兑换水果】${$.farmInfo.farmUserPro.winTimes}次\n`;
     await masterHelpShare();//助力好友
@@ -723,6 +723,14 @@ async function clockInIn() {
             console.log(`【惊喜礼包】获得${$.gotClockInGiftRes.amount}g💧\n`);
           }
         }
+      }
+    }
+    if ($.clockInInit.todaySigned && $.clockInInit.totalSigned === 7) {
+      console.log('开始领取--惊喜礼包38g水滴');
+      await gotClockInGift();
+      if ($.gotClockInGiftRes.code === '0') {
+        // message += `【惊喜礼包】获得${$.gotClockInGiftRes.amount}g💧\n`;
+        console.log(`【惊喜礼包】获得${$.gotClockInGiftRes.amount}g💧\n`);
       }
     }
     // 限时关注得水滴
