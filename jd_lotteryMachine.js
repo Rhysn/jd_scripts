@@ -1,7 +1,7 @@
 /*
 京东抽奖机
 更新时间：2020-12-13 09:53
-脚本说明：六个抽奖活动，【新店福利】【闪购盲盒】【疯狂砸金蛋】【东东福利屋】【健康服务】，点通知只能跳转一个，入口在京东APP玩一玩里面可以看到
+脚本说明：六个抽奖活动，【新店福利】【闪购盲盒】【疯狂砸金蛋】【健康服务】，点通知只能跳转一个，入口在京东APP玩一玩里面可以看到
 脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
 // quantumultx
 [task_local]
@@ -19,14 +19,14 @@ const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const STRSPLIT = "|";
 const needSum = false;     //是否需要显示汇总
 const printDetail = false;        //是否显示出参详情
-//【新店福利】【闪购盲盒】【疯狂砸金蛋】【东东福利屋】【健康服务】【新店福利】
-const appIdArr = ['1EFRQxA','1EFRRxA','1EFRQwA','1EFRQyg','1EFRTwg','1EFRTyg'];
-const shareCodeArr = ['P04z54XCjVXmIaW5m9cZ2f-3n0YlMQ1eZGUUpI','P04z54XCjVWmIaW5m9cZ2f-3n0YlHdruJTsA9A','P04z54XCjVXnIaW5m9cZ2f-3n0YlMvv1qNf7Uo','P04z54XCjVXloaW5mlRVjyhg31Pk7Eg69Y','P04z54XCjVUnoaW5m9cZ2f-3n0YlI4IkViXpeg','P04z54XCjVUloaW5m9cZ2f-3n0YlK2hgTLjcVQ'];
-const shareCodeArr2 = ['P04z54XCjVXmIaW5mlRVjyhg31Pk_ihjfY','P04z54XCjVWmIaW5mlRVjyhg31PkxxRQQA','P04z54XCjVXnIaW5mlRVjyhg31PkzULYoQ','P04z54XCjVXloaW5m9cZ2f-3n0YlIinqpWcFDA','P04z54XCjVUnoaW5mlRVjyhg31Pk5yQ45A','P04z54XCjVUloaW5mlRVjyhg31PkwB1JXc'];
-const homeDataFunPrefixArr = ['','','','wfh','healthyDay','healthyDay'];
-const collectScoreFunPrefixArr = ['','','','wfh','',''];
-const lotteryResultFunPrefixArr = ['','','','','interact_template','interact_template'];
-const browseTimeArr = ['','','','','15','']
+//【新店福利】【闪购盲盒】【疯狂砸金蛋】【健康服务】【新店福利】
+const appIdArr = ['1EFRQxA','1EFRRxA','1EFRQwA','1EFRTwg','1EFRTyg'];
+const shareCodeArr = ['P04z54XCjVXmIaW5m9cZ2f-3n0YlMQ1eZGUUpI','P04z54XCjVWmIaW5m9cZ2f-3n0YlHdruJTsA9A','P04z54XCjVXnIaW5m9cZ2f-3n0YlMvv1qNf7Uo','P04z54XCjVUnoaW5m9cZ2f-3n0YlI4IkViXpeg','P04z54XCjVUloaW5m9cZ2f-3n0YlK2hgTLjcVQ'];
+const shareCodeArr2 = ['P04z54XCjVXmIaW5mlRVjyhg31Pk_ihjfY','P04z54XCjVWmIaW5mlRVjyhg31PkxxRQQA','P04z54XCjVXnIaW5mlRVjyhg31PkzULYoQ','P04z54XCjVUnoaW5mlRVjyhg31Pk5yQ45A','P04z54XCjVUloaW5mlRVjyhg31PkwB1JXc'];
+const homeDataFunPrefixArr = ['','','','healthyDay','healthyDay'];
+const collectScoreFunPrefixArr = ['','','','',''];
+const lotteryResultFunPrefixArr = ['','','','interact_template','interact_template'];
+const browseTimeArr = ['','','','15','']
 let merge = {}
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '';
