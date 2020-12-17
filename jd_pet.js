@@ -267,7 +267,7 @@ async function slaveHelp() {
   for (let code of newShareCodes) {
     console.log(`开始助力京东账号${$.index} - ${$.nickName}的好友: ${code}`);
     if (!code) continue;
-    second = randomSecond(1000,25000);
+    second = randomSecond(100,400);
     sleep(second);
     let response = await request(arguments.callee.name.toString(), {'shareCode': code});
     if (response.code === '0' && response.resultCode === '0') {

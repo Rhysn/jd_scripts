@@ -368,7 +368,7 @@ async function doHelp() {
       continue
     }
     console.log(`\n开始助力好友: ${plantUuid}`);
-    second = randomSecond(1000,25000);
+    second = randomSecond(200,800);
     sleep(second);
     await helpShare(plantUuid);
     if ($.helpResult.code === '0') {
