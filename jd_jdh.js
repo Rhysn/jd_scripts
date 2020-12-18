@@ -39,8 +39,8 @@ if ($.isNode()) {
   cookiesArr.reverse();
 }
 const JD_API_HOST = 'https://api.m.jd.com/api';
+$.newShareCodes = ["c109aca795272b05dc47ee19723b864b","dd26e15d5af2d531dbc683e5cd09e90c","ab3fbdac94556801cf8b9443256c6194","ea3731c03e54fdb27937c5ceeee203bf"];
 !(async () => {
-  $.newShareCodes = [];
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {"open-url": "https://bean.m.jd.com/"});
     return;
