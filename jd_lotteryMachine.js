@@ -19,14 +19,14 @@ const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const STRSPLIT = "|";
 const needSum = false;     //是否需要显示汇总
 const printDetail = false;        //是否显示出参详情
-//【闪购盲盒】【疯狂砸金蛋】【健康服务】【新店福利】
-const appIdArr = ['1EFRRxA','1EFRQwA','1EFRTwg','1EFRTyg'];
-const shareCodeArr = ['P04z54XCjVWmIaW5m9cZ2f-3n0YlHdruJTsA9A','P04z54XCjVXnIaW5m9cZ2f-3n0YlMvv1qNf7Uo','P04z54XCjVUnoaW5m9cZ2f-3n0YlI4IkViXpeg','P04z54XCjVUloaW5m9cZ2f-3n0YlK2hgTLjcVQ'];
-const shareCodeArr2 = ['P04z54XCjVWmIaW5mlRVjyhg31PkxxRQQA','P04z54XCjVXnIaW5mlRVjyhg31PkzULYoQ','P04z54XCjVUnoaW5mlRVjyhg31Pk5yQ45A','P04z54XCjVUloaW5mlRVjyhg31PkwB1JXc'];
-const homeDataFunPrefixArr = ['','','healthyDay','healthyDay'];
-const collectScoreFunPrefixArr = ['','','',''];
-const lotteryResultFunPrefixArr = ['','','interact_template','interact_template'];
-const browseTimeArr = ['','','15','','']
+//【闪购盲盒】【疯狂砸金蛋】【健康服务】【新店福利】【健康福利】
+const appIdArr = ['1EFRRxA','1EFRQwA','1EFRTwg','1EFRTyg','1EFRSxw'];
+const shareCodeArr = ['P04z54XCjVWmIaW5m9cZ2f-3n0YlHdruJTsA9A','P04z54XCjVXnIaW5m9cZ2f-3n0YlMvv1qNf7Uo','P04z54XCjVUnoaW5m9cZ2f-3n0YlI4IkViXpeg','P04z54XCjVUloaW5m9cZ2f-3n0YlK2hgTLjcVQ','P04z54XCjVVm4aW5m9cZ2f-3n0YlNxzyfhC1Yc'];
+const shareCodeArr2 = ['P04z54XCjVWmIaW5mlRVjyhg31PkxxRQQA','P04z54XCjVXnIaW5mlRVjyhg31PkzULYoQ','P04z54XCjVUnoaW5mlRVjyhg31Pk5yQ45A','P04z54XCjVUloaW5mlRVjyhg31PkwB1JXc','P04z54XCjVVm4aW5m9cZ2f-3n0YlNxzyfhC1Yc'];
+const homeDataFunPrefixArr = ['','','healthyDay','healthyDay','healthyDay'];
+const collectScoreFunPrefixArr = ['','','','','harmony'];
+const lotteryResultFunPrefixArr = ['','','interact_template','interact_template',''];
+const browseTimeArr = ['','','15','','','']
 let merge = {}
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '';
