@@ -120,10 +120,10 @@ async function showMsg() {
   })
 }
 
-function getRedRain(url_ = "http://ql4kk90rw.hb-bkt.clouddn.com/jd_live_redRain.json?" + Date.now()) {
+function getRedRain(url_ = "http://ql4kk90rw.hb-bkt.clouddn.com/jd_live_redRain.json") {
   return new Promise(resolve => {
     $.get({
-      url: url_,
+      url: url_ + "?" + Date.now(),
       }, (err, resp, data) => {
       try {
         if (err) {
