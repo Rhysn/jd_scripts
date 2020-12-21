@@ -118,8 +118,8 @@ async function showMsg() {
 function getRedRain() {
   return new Promise(resolve => {
     $.get({
-      //url: "http://ql4kk90rw.hb-bkt.clouddn.com/jd_live_redRain.json?" + Date.now(),
-      url: "https://allgreat.xyz/Scripts/JD/InviteCodes/jd_live_redRain.json?",
+      url: "http://ql4kk90rw.hb-bkt.clouddn.com/jd_live_redRain.json?" + Date.now(),
+      //url: "https://allgreat.xyz/Scripts/JD/InviteCodes/jd_live_redRain.json",
       }, (err, resp, data) => {
       try {
         if (err) {
