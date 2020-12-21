@@ -77,6 +77,7 @@ const JD_API_HOST = 'https://api.m.jd.com/api';
     console.log(`不在红包雨时间之内`)
     return
    }
+   console.log(path);
   }
   for (let i = 0; i < cookiesArr.length; i++) {
     if (cookiesArr[i]) {
