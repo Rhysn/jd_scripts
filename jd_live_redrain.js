@@ -26,6 +26,7 @@ const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 let jdNotify = true;//是否关闭通知，false打开通知推送，true关闭通知推送
+path = "https://allgreat.xyz/Scripts/JD/InviteCodes/jd_live_redRain.json";
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
 if ($.isNode()) {
@@ -67,11 +68,15 @@ const JD_API_HOST = 'https://api.m.jd.com/api';
     return;
   }
   await getRedRain();
-	if(!$.activityId) return
   let nowTs = new Date().getTime()
-  if (!($.st <= nowTs && nowTs < $.ed)) {
+  if (!($.st <= nowTs && nowTs < $.ed) || !$.activityId){
+   await getRedRain(path);
+   if(!$.activityId) return
+   nowTs = new Date().getTime()
+   if (!($.st <= nowTs && nowTs < $.ed)) {
     console.log(`不在红包雨时间之内`)
     return
+   }
   }
   for (let i = 0; i < cookiesArr.length; i++) {
     if (cookiesArr[i]) {
@@ -115,11 +120,10 @@ async function showMsg() {
   })
 }
 
-function getRedRain() {
+function getRedRain(url_ = "http://ql4kk90rw.hb-bkt.clouddn.com/jd_live_redRain.json?" + Date.now()) {
   return new Promise(resolve => {
     $.get({
-      url: "http://ql4kk90rw.hb-bkt.clouddn.com/jd_live_redRain.json?" + Date.now(),
-      //url: "https://allgreat.xyz/Scripts/JD/InviteCodes/jd_live_redRain.json",
+      url: url_,
       }, (err, resp, data) => {
       try {
         if (err) {
