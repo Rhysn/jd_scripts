@@ -1,7 +1,7 @@
 /*
 京东抽奖机
-更新时间：2020-12-13 09:53
-脚本说明：六个抽奖活动，【新店福利】【闪购盲盒】【疯狂砸金蛋】【健康服务】，点通知只能跳转一个，入口在京东APP玩一玩里面可以看到
+更新时间：2020-12-21 10:00
+脚本说明：抽奖活动，【新店福利】【闪购盲盒】【疯狂砸金蛋】【健康服务】，点通知只能跳转一个，入口在京东APP玩一玩里面可以看到
 脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
 // quantumultx
 [task_local]
@@ -17,7 +17,7 @@ const $ = new Env('京东抽奖机');
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const STRSPLIT = "|";
-const needSum = false;     //是否需要显示汇总
+const needSum = false;            //是否需要显示汇总
 const printDetail = false;        //是否显示出参详情
 //【闪购盲盒】【疯狂砸金蛋】【健康服务】【新店福利】【健康福利】
 const appIdArr = ['1EFRRxA','1EFRQwA','1EFRTwg','1EFRTyg','1EFRSxw'];
@@ -58,26 +58,27 @@ const JD_API_HOST = `https://api.m.jd.com/client.action`;
         continue;
       }
       for (let j in appIdArr) {
-        //j = 4
-        appId = appIdArr[j];
-        shareCode = shareCodeArr[j];
-        homeDataFunPrefix = homeDataFunPrefixArr[j]||'interact_template';
-        collectScoreFunPrefix = collectScoreFunPrefixArr[j]||'harmony';
-        lotteryResultFunPrefix = lotteryResultFunPrefixArr[j]||homeDataFunPrefix;
-        browseTime = browseTimeArr[j]||6;
-        if (parseInt(j)) console.log(`\n开始第${parseInt(j) + 1}个抽奖活动`);
+        //j = appIdArr.length - 1
+        appId = appIdArr[j]
+        shareCode = shareCodeArr[j]
+        homeDataFunPrefix = homeDataFunPrefixArr[j]||'interact_template'
+        collectScoreFunPrefix = collectScoreFunPrefixArr[j]||'harmony'
+        lotteryResultFunPrefix = lotteryResultFunPrefixArr[j]||homeDataFunPrefix
+        browseTime = browseTimeArr[j]||6
+        if (parseInt(j)) console.log(`\n开始第${parseInt(j) + 1}个抽奖活动`)
         await interact_template_getHomeData();
+        console.log(`\n开始第${parseInt(j) + 1}个抽奖活动，助力列表2`)
         shareCode = shareCodeArr2[j];
         await interact_template_getHomeData();
         //break
       }
       await msgShow();
+      //break
     }
   }
 })()
   .catch((e) => $.logErr(e))
   .finally(() => $.done())
-
 
 //获取昵称
 function QueryJDUserInfo(timeout = 0) {
@@ -108,7 +109,7 @@ function QueryJDUserInfo(timeout = 0) {
   })
 }
 
-
+//获取活动信息
 function interact_template_getHomeData(timeout = 0) {
   return new Promise((resolve) => {
     setTimeout( ()=>{
@@ -152,9 +153,9 @@ function interact_template_getHomeData(timeout = 0) {
               }
               continue
             }
-            if ([14,6].includes(data.data.result.taskVos[i].taskType)) {//'data.data.result.taskVos[i].assistTaskDetailVo.taskToken'
+            if ([14,6].includes(data.data.result.taskVos[i].taskType)) {
               //console.log(data.data.result.taskVos[i].assistTaskDetailVo.taskToken)
-              await harmony_collectScore(shareCode,data.data.result.taskVos[i].taskId);
+              if (shareCode) await harmony_collectScore(shareCode,data.data.result.taskVos[i].taskId);
               for (let j = 0;j <(data.data.result.userInfo.lotteryNum||0);j++) {
                 await interact_template_getLotteryResult(data.data.result.taskVos[i].taskId);
               }
@@ -169,7 +170,6 @@ function interact_template_getHomeData(timeout = 0) {
                   //console.log(list[j].itemId)
                   if (list[j].itemId) {
                     await harmony_collectScore(list[j].taskToken,data.data.result.taskVos[i].taskId,list[j].itemId,1);
-                    await harmony_collectScore(list[j].taskToken,data.data.result.taskVos[i].taskId,list[j].itemId,0,parseInt(browseTime) * 1000);
                     if (k === data.data.result.taskVos[i].maxTimes - 1) await interact_template_getLotteryResult(data.data.result.taskVos[i].taskId);
                   } else {
                     await harmony_collectScore(list[j].taskToken,data.data.result.taskVos[i].taskId)
@@ -192,8 +192,7 @@ function interact_template_getHomeData(timeout = 0) {
     },timeout)
   })
 }
-
-
+//做任务
 function harmony_collectScore(taskToken,taskId,itemId = "",actionType = 0,timeout = 0) {
   return new Promise((resolve) => {
     setTimeout( ()=>{
@@ -217,6 +216,9 @@ function harmony_collectScore(taskToken,taskId,itemId = "",actionType = 0,timeou
           if (printDetail) console.log(data);
           data = JSON.parse(data);
           console.log(data.data.bizMsg)
+          if (data.data.bizMsg === "任务领取成功") {
+            await harmony_collectScore(taskToken,taskId,itemId,0,parseInt(browseTime) * 1000);
+          }
         } catch (e) {
           $.logErr(e, resp);
         } finally {
@@ -226,7 +228,7 @@ function harmony_collectScore(taskToken,taskId,itemId = "",actionType = 0,timeou
     },timeout)
   })
 }
-//
+//抽奖
 function interact_template_getLotteryResult(taskId,timeout = 0) {
   return new Promise((resolve) => {
     setTimeout( ()=>{
@@ -282,7 +284,6 @@ function interact_template_getLotteryResult(taskId,timeout = 0) {
 }
 
 //初始化
-
 function initial() {
    merge = {
      nickname: "",
