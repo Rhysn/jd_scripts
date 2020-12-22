@@ -156,7 +156,7 @@ function interact_template_getHomeData(timeout = 0) {
               continue
             }
             if ([14,6].includes(data.data.result.taskVos[i].taskType)) {
-              //console.log(data.data.result.taskVos[i].assistTaskDetailVo.taskToken)
+              console.log('你的邀请码：'data.data.result.taskVos[i].assistTaskDetailVo.taskToken)
               if (shareCode) await harmony_collectScore(shareCode,data.data.result.taskVos[i].taskId);
               for (let j = 0;j <(data.data.result.userInfo.lotteryNum||0);j++) {
                 if (appId === "1EFRTxQ") {
