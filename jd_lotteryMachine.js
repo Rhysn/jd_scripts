@@ -1,7 +1,7 @@
 /*
 京东抽奖机
-更新时间：2020-12-21 10:00
-脚本说明：抽奖活动，【新店福利】【闪购盲盒】【疯狂砸金蛋】【健康服务】，点通知只能跳转一个，入口在京东APP玩一玩里面可以看到
+更新时间：2020-12-22 14:34
+脚本说明：抽奖活动，【新店福利】【闪购盲盒】【疯狂砸金蛋】【健康服务】【砸蛋抽好礼】，点通知只能跳转一个，入口在京东APP玩一玩里面可以看到
 脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
 // quantumultx
 [task_local]
@@ -27,6 +27,7 @@ const homeDataFunPrefixArr = ['','','healthyDay','healthyDay','healthyDay','ts']
 const collectScoreFunPrefixArr = ['','','','','harmony','harmony'];
 const lotteryResultFunPrefixArr = ['','','interact_template','interact_template','interact_template','ts'];
 const browseTimeArr = ['','','15','','','6','']
+const shareTaskIdArr = ['','','','','','','6']
 let merge = {}
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '';
@@ -108,7 +109,6 @@ function QueryJDUserInfo(timeout = 0) {
     },timeout)
   })
 }
-
 //获取活动信息
 function interact_template_getHomeData(timeout = 0) {
   return new Promise((resolve) => {
@@ -127,6 +127,7 @@ function interact_template_getHomeData(timeout = 0) {
         },
         body : `functionId=${homeDataFunPrefix}_getHomeData&body={"appId":"${appId}","taskToken":""}&client=wh5&clientVersion=1.0.0`
       }
+      if (appId === "1EFRTxQ") url.body += "&appid=golden-egg"
       $.post(url, async (err, resp, data) => {
         try {
           if (printDetail) console.log(data);
@@ -138,6 +139,7 @@ function interact_template_getHomeData(timeout = 0) {
             return
           }
           scorePerLottery = data.data.result.userInfo.scorePerLottery||data.data.result.userInfo.lotteryMinusScore
+          if (data.data.result.raiseInfo) scorePerLottery = data.data.result.raiseInfo.levelList[data.data.result.raiseInfo.scoreLevel];
           //console.log(scorePerLottery)
           for (let i = 0;i < data.data.result.taskVos.length;i ++) {
             console.log("\n" + data.data.result.taskVos[i].taskType + '-' + data.data.result.taskVos[i].taskName  + '-' + (data.data.result.taskVos[i].status === 1 ? `已完成${data.data.result.taskVos[i].times}-未完成${data.data.result.taskVos[i].maxTimes}` : "全部已完成"))
@@ -157,7 +159,11 @@ function interact_template_getHomeData(timeout = 0) {
               //console.log(data.data.result.taskVos[i].assistTaskDetailVo.taskToken)
               if (shareCode) await harmony_collectScore(shareCode,data.data.result.taskVos[i].taskId);
               for (let j = 0;j <(data.data.result.userInfo.lotteryNum||0);j++) {
-                await interact_template_getLotteryResult(data.data.result.taskVos[i].taskId);
+                if (appId === "1EFRTxQ") {
+                  await ts_smashGoldenEggs()
+                }  else {
+                  await interact_template_getLotteryResult(data.data.result.taskVos[i].taskId);
+                }
               }
               continue
             }
@@ -183,6 +189,9 @@ function interact_template_getHomeData(timeout = 0) {
             }
           }
           if (scorePerLottery) await interact_template_getLotteryResult();
+          for (let j = 0;j <(data.data.result.userInfo.lotteryNum||0 && appId === "1EFRTxQ");j++) {
+              await ts_smashGoldenEggs()
+          }
         } catch (e) {
           $.logErr(e, resp);
         } finally {
@@ -211,6 +220,7 @@ function harmony_collectScore(taskToken,taskId,itemId = "",actionType = 0,timeou
         body : `functionId=${collectScoreFunPrefix}_collectScore&body={"appId":"${appId}","taskToken":"${taskToken}","taskId":${taskId}${itemId ? ',"itemId":"'+itemId+'"' : ''},"actionType":${actionType}&client=wh5&clientVersion=1.0.0`
       }
       //console.log(url.body)
+      if (appId === "1EFRTxQ") url.body += "&appid=golden-egg"
       $.post(url, async (err, resp, data) => {
         try {
           if (printDetail) console.log(data);
@@ -247,6 +257,7 @@ function interact_template_getLotteryResult(taskId,timeout = 0) {
         body : `functionId=${lotteryResultFunPrefix}_getLotteryResult&body={"appId":"${appId}"${taskId ? ',"taskId":"'+taskId+'"' : ''}}&client=wh5&clientVersion=1.0.0`
       }
       //console.log(url.body)
+      if (appId === "1EFRTxQ") url.body = `functionId=ts_getLottery&body={"appId":"${appId}"${taskId ? ',"taskId":"'+taskId+'"' : ''}}&client=wh5&clientVersion=1.0.0&appid=golden-egg`
       $.post(url, async (err, resp, data) => {
         try {
           if (printDetail) console.log(data);
@@ -264,6 +275,7 @@ function interact_template_getLotteryResult(taskId,timeout = 0) {
               console.log('红包:' + data.data.result.userAwardsCacheDto.redPacketVO.value)
               merge.redPacket.prizeCount += parseFloat(data.data.result.userAwardsCacheDto.redPacketVO.value)
             }
+            if (data.data.result.raiseInfo) scorePerLottery = parseInt(data.data.result.raiseInfo.nextLevelScore);
             if (parseInt(data.data.result.userScore) >= scorePerLottery && scorePerLottery) {
               await interact_template_getLotteryResult(1000)
             }
@@ -272,6 +284,41 @@ function interact_template_getLotteryResult(taskId,timeout = 0) {
             console.log(data.data.bizMsg)
             if (data.data.bizCode === 111 ) data.data.bizMsg = "无机会"
             merge.jdBeans.notify = `${data.data.bizMsg}`;
+          }
+        } catch (e) {
+          $.logErr(e, resp);
+        } finally {
+          resolve()
+        }
+      })
+    },timeout)
+  })
+}
+//获取积分
+function ts_smashGoldenEggs(taskId,timeout = 0) {
+  return new Promise((resolve) => {
+    setTimeout( ()=>{
+      let url = {
+        url : `${JD_API_HOST}`,
+        headers : {
+          'Origin' : `https://h5.m.jd.com`,
+          'Cookie' : cookie,
+          'Connection' : `keep-alive`,
+          'Accept' : `application/json, text/plain, */*`,
+          'Referer' : `https://h5.m.jd.com/babelDiy/Zeus/2WBcKYkn8viyxv7MoKKgfzmu7Dss/index.html?inviteId=P04z54XCjVXmYaW5m9cZ2f433tIlGBj3JnLHD0`,//?inviteId=P225KkcRx4b8lbWJU72wvZZcwCjVXmYaS5jQ P225KkcRx4b8lbWJU72wvZZcwCjVXmYaS5jQ
+          'Host' : `api.m.jd.com`,
+          'Accept-Encoding' : `gzip, deflate, br`,
+          'Accept-Language' : `zh-cn`
+        },
+        body : `appid=golden-egg&functionId=ts_smashGoldenEggs&body={"appId":"1EFRTxQ"}&client=wh5&clientVersion=1.0.0`
+      }
+      $.post(url, async (err, resp, data) => {
+        try {
+          if (printDetail) console.log(data);
+          if (!timeout) console.log('\n抽取积分')
+          data = JSON.parse(data);
+          if (data.data.bizCode === 0) {
+            console.log(`积分：${data.data.result.score}`)
           }
         } catch (e) {
           $.logErr(e, resp);
