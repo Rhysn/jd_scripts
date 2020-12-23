@@ -33,8 +33,8 @@ let helpSelf = false // 循环助力
 let applyJdBean = 0
 let cookiesArr = [], cookie = '', message = '';
 const inviteCodes = [
-  'L1gAlidA1wJx_uNrwl2R0Kt9zd5YaBeE@L1gAlidA1wJx_uNrwl2R0Kt9zd5YaBeE',
-  'L1gAlidA1wJx_uNrwl2R0Kt9zd5YaBeE@L1gAlidA1wJx_uNrwl2R0Kt9zd5YaBeE'
+  'L1gAlidA1wJx_uNrwl2R0Kt9zd5YaBeE@oLi3kpjI6Sa4CNfkG23F4A==',
+  'L1gAlidA1wJx_uNrwl2R0Kt9zd5YaBeE@oLi3kpjI6Sa4CNfkG23F4A=='
 ];
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 if ($.isNode()) {
