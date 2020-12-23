@@ -164,8 +164,10 @@ if ($.isNode()) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {"open-url": "https://bean.m.jd.com/"});
     return;
   }
-  let count = 0
-  while (true) {
+  let count = 0;
+  var date_key = new Date();
+  var min_key = date_key.getMinutes();
+  while (min_key < 15 || min_key > 17) {
     count++
     console.log(`============开始第${count}次挂机=============`)
     for (let i = 0; i < cookiesArr.length; i++) {
@@ -336,6 +338,7 @@ function buyJoy(joyId) {
           data = JSON.parse(data);
           if (data.success) {
             if (data.data.eventInfo) {
+              await openBox(data.data.eventInfo.eventType, data.data.eventInfo.eventRecordId)
               $.canBuy = false
               return
             }
@@ -433,8 +436,9 @@ function getCoin() {
   })
 }
 
-function openBox(boxId) {
-  let body = {"eventType": "LUCKY_BOX_DROP", "eventRecordId": boxId}
+function openBox(eventType = 'LUCKY_BOX_DROP', boxId) {
+  console.log(`openBox:${eventType}`)
+  let body = { eventType, "eventRecordId": boxId}
   return new Promise(async resolve => {
     $.get(taskUrl('crazyJoy_event_getVideoAdvert', JSON.stringify(body)), async (err, resp, data) => {
       try {
@@ -447,7 +451,7 @@ function openBox(boxId) {
             if (data['success']) {
               $.log(`点击幸运盒子成功，剩余观看视频次数：${data.data.advertViewTimes}，等待30秒`)
               await $.wait(30000)
-              await rewardBox(boxId)
+              await rewardBox(eventType, boxId)
             }
           }
         }
@@ -460,8 +464,8 @@ function openBox(boxId) {
   })
 }
 
-function rewardBox(boxId) {
-  let body = {"eventType": "LUCKY_BOX_DROP", "eventRecordId": boxId}
+function rewardBox(eventType, boxId) {
+  let body = { eventType, "eventRecordId": boxId}
   return new Promise(async resolve => {
     $.get(taskUrl('crazyJoy_event_obtainAward', JSON.stringify(body)), async (err, resp, data) => {
       try {
