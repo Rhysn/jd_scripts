@@ -21,7 +21,7 @@ const needSum = false;            //是否需要显示汇总
 const printDetail = false;        //是否显示出参详情
 //【闪购盲盒】【疯狂砸金蛋】【健康服务】【新店福利】【健康福利】【砸蛋抽好礼】【京东好声音】
 const appIdArr = ['1EFRRxA','1EFRQwA','1EFRTwg','1EFRTyg','1EFRSxw','1EFRTxQ','1EFRSxQ'];
-const shareCodeArr = ['P04z54XCjVWmIaW5m9cZ2f-3n0YlHdruJTsA9A','P04z54XCjVXnIaW5m9cZ2f-3n0YlMvv1qNf7Uo','P04z54XCjVUnoaW5m9cZ2f-3n0YlI4IkViXpeg','P04z54XCjVUloaW5m9cZ2f-3n0YlK2hgTLjcVQ','P04z54XCjVVm4aW5mlRVjyhg31Pk4UBQRQ','T0184qQtHEdH9FHRJBn3kQCjVUmYaW5kRrbA','T0225KkcRxga9AbWIhzykfJYcgCjVVmYaW5kRrbA'];
+const shareCodeArr = ['P04z54XCjVWmIaW5m9cZ2f-3n0YlHdruJTsA9A','P04z54XCjVXnIaW5m9cZ2f-3n0YlMvv1qNf7Uo','P04z54XCjVUnoaW5m9cZ2f-3n0YlI4IkViXpeg','P04z54XCjVUloaW5m9cZ2f-3n0YlK2hgTLjcVQ','P04z54XCjVVm4aW5mlRVjyhg31Pk4UBQRQ','T0184qQtHEdH9FHRJBn3kQCjVUmYaW5kRrbA','T0184qQtHEdH9FHRJBn3kQCjVVmYaW5kRrbA'];
 const shareCodeArr2 = ['P04z54XCjVWmIaW5mlRVjyhg31PkxxRQQA','P04z54XCjVXnIaW5mlRVjyhg31PkzULYoQ','P04z54XCjVUnoaW5mlRVjyhg31Pk5yQ45A','P04z54XCjVUloaW5mlRVjyhg31PkwB1JXc','P04z54XCjVVm4aW5m9cZ2f-3n0YlNxzyfhC1Yc','P04z54XCjVUmYaW5m9cZ2f-3n0YlCj8l1OiUl8','T0225KkcRxga9AbWIhzykfJYcgCjVVmYaW5kRrbA'];
 const homeDataFunPrefixArr = ['','','healthyDay','healthyDay','healthyDay','ts','healthyDay'];
 const collectScoreFunPrefixArr = ['','','','','harmony','harmony','harmony'];
