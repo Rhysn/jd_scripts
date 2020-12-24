@@ -60,6 +60,7 @@ if ($.isNode()) {
   cookiesArr.reverse();
   cookiesArr.push(...[$.getdata('CookieJD2'), $.getdata('CookieJD')]);
   cookiesArr.reverse();
+  cookiesArr = cookiesArr.filter(item => item !== "" && item !== null && item !== undefined);
 }
 const JD_API_HOST = 'https://api.m.jd.com/api';
 !(async () => {
@@ -70,15 +71,15 @@ const JD_API_HOST = 'https://api.m.jd.com/api';
   await getRedRain();
   let nowTs = new Date().getTime()
   if (!($.st <= nowTs && nowTs < $.ed) || !$.activityId){
-   await getRedRain(path);
-   if(!$.activityId) return
-   nowTs = new Date().getTime()
-   if (!($.st <= nowTs && nowTs < $.ed)) {
+    await getRedRain(path);
+    if(!$.activityId) return
+    nowTs = new Date().getTime()
+  if (!($.st <= nowTs && nowTs < $.ed)) {
     console.log(`不在红包雨时间之内`)
     return
-   }
-   console.log(path);
   }
+  console.log(path);
+}
   for (let i = 0; i < cookiesArr.length; i++) {
     if (cookiesArr[i]) {
       cookie = cookiesArr[i];
@@ -94,8 +95,6 @@ const JD_API_HOST = 'https://api.m.jd.com/api';
 
         if ($.isNode()) {
           await notify.sendNotify(`${$.name}cookie已失效 - ${$.UserName}`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
-        } else {
-          $.setdata('', `CookieJD${i ? i + 1 : ""}`);//cookie失效，故清空cookie。$.setdata('', `CookieJD${i ? i + 1 : "" }`);//cookie失效，故清空cookie。
         }
         continue
       }

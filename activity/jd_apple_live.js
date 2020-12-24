@@ -41,6 +41,7 @@ if ($.isNode()) {
   cookiesArr.reverse();
   cookiesArr.push(...[$.getdata('CookieJD2'), $.getdata('CookieJD')]);
   cookiesArr.reverse();
+  cookiesArr = cookiesArr.filter(item => item !== "" && item !== null && item !== undefined);
 }
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
 const inviteCodes = ['P04z54XCjVUm4aW5mlRVjyhg31Pk0s49-E@P04z54XCjVUm4aW5m9cZ2f-3n0YlI8yLlI-fkw', 'P04z54XCjVUm4aW5mlRVjyhg31Pk0s49-E@P04z54XCjVUm4aW5m9cZ2f-3n0YlI8yLlI-fkw'];
@@ -65,8 +66,6 @@ const inviteCodes = ['P04z54XCjVUm4aW5mlRVjyhg31Pk0s49-E@P04z54XCjVUm4aW5m9cZ2f-
 
         if ($.isNode()) {
           await notify.sendNotify(`${$.name}cookie已失效 - ${$.UserName}`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
-        } else {
-          $.setdata('', `CookieJD${i ? i + 1 : "" }`);//cookie失效，故清空cookie。$.setdata('', `CookieJD${i ? i + 1 : "" }`);//cookie失效，故清空cookie。
         }
         continue
       }
@@ -411,7 +410,7 @@ function jsonParse(str) {
       return JSON.parse(str);
     } catch (e) {
       console.log(e);
-      $.msg($.name, '', '不要在BoxJS手动复制粘贴修改cookie')
+      $.msg($.name, '', '请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie')
       return [];
     }
   }
