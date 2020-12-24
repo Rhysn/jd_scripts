@@ -65,9 +65,9 @@ const JD_API_HOST = `https://api.m.jd.com/client.action`;
         collectScoreFunPrefix = collectScoreFunPrefixArr[j]||'harmony'
         lotteryResultFunPrefix = lotteryResultFunPrefixArr[j]||homeDataFunPrefix
         browseTime = browseTimeArr[j]||6
-        if (parseInt(j)) console.log(`\n开始第${parseInt(j) + 1}个抽奖活动`)
+        console.log(`\n开始第【${parseInt(j) + 1}】个抽奖活动，助力列表1`)
         await interact_template_getHomeData();
-        console.log(`\n开始第${parseInt(j) + 1}个抽奖活动，助力列表2`)
+        console.log(`\n开始助力列表2`)
         shareCode = shareCodeArr2[j];
         await interact_template_getHomeData();
         //break
