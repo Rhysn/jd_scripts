@@ -22,7 +22,7 @@ const printDetail = false;        //是否显示出参详情
 //【闪购盲盒】【疯狂砸金蛋】【健康服务】【新店福利】【健康福利】【砸蛋抽好礼】【京东好声音】
 const appIdArr = ['1EFRRxA','1EFRQwA','1EFRTwg','1EFRTyg','1EFRSxw','1EFRTxQ','1EFRSxQ'];
 const appNameArr = ['闪购盲盒','疯狂砸金蛋','健康服务','新店福利','健康福利','砸蛋抽好礼','京东好声音'];
-const zenusIdArr = ['3vzA7uGuWL2QeJ5UeecbbAVKXftQ','','3HBUP66Gnx92mRt2bXbT9VamYWSx','47difLTAizWFNf9DqPteuCaLvbaS','','','2Adm4DSZ1ZSm85BHE7o7RAk2YCvU'];
+const zeusIdArr = ['3vzA7uGuWL2QeJ5UeecbbAVKXftQ','','3HBUP66Gnx92mRt2bXbT9VamYWSx','47difLTAizWFNf9DqPteuCaLvbaS','','','2Adm4DSZ1ZSm85BHE7o7RAk2YCvU'];
 const shareCodeArr = ['P04z54XCjVWmIaW5m9cZ2f-3n0YlHdruJTsA9A','P04z54XCjVXnIaW5m9cZ2f-3n0YlMvv1qNf7Uo','P04z54XCjVUnoaW5m9cZ2f-3n0YlI4IkViXpeg','P04z54XCjVUloaW5m9cZ2f-3n0YlK2hgTLjcVQ','P04z54XCjVVm4aW5mlRVjyhg31Pk4UBQRQ','T0184qQtHEdH9FHRJBn3kQCjVUmYaW5kRrbA','T0184qQtHEdH9FHRJBn3kQCjVVmYaW5kRrbA'];
 const shareCodeArr2 = ['P04z54XCjVWmIaW5mlRVjyhg31PkxxRQQA','P04z54XCjVXnIaW5mlRVjyhg31PkzULYoQ','P04z54XCjVUnoaW5mlRVjyhg31Pk5yQ45A','P04z54XCjVUloaW5mlRVjyhg31PkwB1JXc','P04z54XCjVVm4aW5m9cZ2f-3n0YlNxzyfhC1Yc','P04z54XCjVUmYaW5m9cZ2f-3n0YlCj8l1OiUl8','T0225KkcRxga9AbWIhzykfJYcgCjVVmYaW5kRrbA'];
 const homeDataFunPrefixArr = ['','','healthyDay','healthyDay','healthyDay','ts','healthyDay'];
@@ -67,7 +67,7 @@ const JD_API_HOST = `https://api.m.jd.com/client.action`;
         collectScoreFunPrefix = collectScoreFunPrefixArr[j]||'harmony'
         lotteryResultFunPrefix = lotteryResultFunPrefixArr[j]||homeDataFunPrefix
         browseTime = browseTimeArr[j]||6
-        zenusId = zenusIdArr[j] === '' ? '2WBcKYkn8viyxv7MoKKgfzmu7Dss' : zenusIdArr[j]
+        zeusId = zeusIdArr[j] === '' ? '2WBcKYkn8viyxv7MoKKgfzmu7Dss' : zeusIdArr[j]
         appName = appNameArr[j]
         
         console.log(`\n开始【${appName}】抽奖活动`)
@@ -124,7 +124,7 @@ function interact_template_getHomeData(timeout = 0) {
           'Cookie' : cookie,
           'Connection' : `keep-alive`,
           'Accept' : `application/json, text/plain, */*`,
-          'Referer' : `https://h5.m.jd.com/babelDiy/Zeus/${zenusId}/index.html`,
+          'Referer' : `https://h5.m.jd.com/`,
           'Host' : `api.m.jd.com`,
           'Accept-Encoding' : `gzip, deflate, br`,
           'Accept-Language' : `zh-cn`
@@ -216,7 +216,7 @@ function harmony_collectScore(taskToken,taskId,itemId = "",actionType = 0,timeou
           'Cookie' : cookie,
           'Connection' : `keep-alive`,
           'Accept' : `application/json, text/plain, */*`,
-          'Referer' : `https://h5.m.jd.com/babelDiy/Zeus/${zenusIdArr}/index.html`,//?inviteId=P225KkcRx4b8lbWJU72wvZZcwCjVXmYaS5jQ P225KkcRx4b8lbWJU72wvZZcwCjVXmYaS5jQ?inviteId=${shareCode}
+          'Referer' : `https://h5.m.jd.com/`,//?inviteId=P225KkcRx4b8lbWJU72wvZZcwCjVXmYaS5jQ P225KkcRx4b8lbWJU72wvZZcwCjVXmYaS5jQ?inviteId=${shareCode}
           'Host' : `api.m.jd.com`,
           'Accept-Encoding' : `gzip, deflate, br`,
           'Accept-Language' : `zh-cn`
@@ -253,7 +253,7 @@ function interact_template_getLotteryResult(taskId,timeout = 0) {
           'Cookie' : cookie,
           'Connection' : `keep-alive`,
           'Accept' : `application/json, text/plain, */*`,
-          'Referer' : `https://h5.m.jd.com/babelDiy/Zeus/${zenusId}/index.html`,//?inviteId=P225KkcRx4b8lbWJU72wvZZcwCjVXmYaS5jQ P225KkcRx4b8lbWJU72wvZZcwCjVXmYaS5jQ
+          'Referer' : `https://h5.m.jd.com/`,//?inviteId=P225KkcRx4b8lbWJU72wvZZcwCjVXmYaS5jQ P225KkcRx4b8lbWJU72wvZZcwCjVXmYaS5jQ
           'Host' : `api.m.jd.com`,
           'Accept-Encoding' : `gzip, deflate, br`,
           'Accept-Language' : `zh-cn`
@@ -309,7 +309,7 @@ function ts_smashGoldenEggs(taskId,timeout = 0) {
           'Cookie' : cookie,
           'Connection' : `keep-alive`,
           'Accept' : `application/json, text/plain, */*`,
-          'Referer' : `https://h5.m.jd.com/babelDiy/Zeus/${zenusId}/index.html`,//?inviteId=P225KkcRx4b8lbWJU72wvZZcwCjVXmYaS5jQ P225KkcRx4b8lbWJU72wvZZcwCjVXmYaS5jQ
+          'Referer' : `https://h5.m.jd.com/`,//?inviteId=P225KkcRx4b8lbWJU72wvZZcwCjVXmYaS5jQ P225KkcRx4b8lbWJU72wvZZcwCjVXmYaS5jQ
           'Host' : `api.m.jd.com`,
           'Accept-Encoding' : `gzip, deflate, br`,
           'Accept-Language' : `zh-cn`
@@ -354,7 +354,7 @@ function initial() {
 //通知
 function msgShow() {
   let message = "";//https://h5.m.jd.com/babelDiy/Zeus/YgnrqBaEmVHWppzCgW8zjZj3VjV/index.html
-  let url ={ "open-url" : `openjd://virtual?params=%7B%20%22category%22:%20%22jump%22,%20%22des%22:%20%22m%22,%20%22url%22:%20%22https://h5.m.jd.com/babelDiy/Zeus/${zenusId}/index.html%22%20%7D`}
+  let url ={ "open-url" : `openjd://virtual?params=%7B%20%22category%22:%20%22jump%22,%20%22des%22:%20%22m%22,%20%22url%22:%20%22https://h5.m.jd.com/babelDiy/Zeus/${zeusId}/index.html%22%20%7D`}
   let title = `京东账号：${merge.nickname}`;
   for (let i in merge) {
     if (typeof (merge[i]) !== "object" || !merge[i].show) continue;
