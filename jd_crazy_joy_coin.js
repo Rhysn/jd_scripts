@@ -605,6 +605,7 @@ function jsonParse(str) {
 function getStopKey(){
   var date_key = new Date();
   var min_key = date_key.getMinutes();
+  console.log(date_key.getHours() + ":" + min_key + ":" + date_key.getSeconds());
   return min_key < 17 && min_key > 15 ? true : false;
 }
 // prettier-ignore
