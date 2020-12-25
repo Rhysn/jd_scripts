@@ -15,19 +15,21 @@ cron "11 1 * * *" script-path=https://raw.githubusercontent.com/yangtingxiao/Qua
  */
 const $ = new Env('京东抽奖机');
 //Node.js用户请在jdCookie.js处填写京东ck;
+const notify = $.isNode() ? require('./sendNotify') : '';
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const STRSPLIT = "|";
 const needSum = false;            //是否需要显示汇总
 const printDetail = false;        //是否显示出参详情
-//【闪购盲盒】【疯狂砸金蛋】【健康服务】【新店福利】【健康福利】【砸蛋抽好礼】【京东好声音】
-const appIdArr = ['1EFRRxA','1EFRQwA','1EFRTwg','1EFRTyg','1EFRSxw','1EFRTxQ','1EFRSxQ'];
-const shareCodeArr = ['P04z54XCjVWmIaW5m9cZ2f-3n0YlHdruJTsA9A','P04z54XCjVXnIaW5m9cZ2f-3n0YlMvv1qNf7Uo','P04z54XCjVUnoaW5m9cZ2f-3n0YlI4IkViXpeg','P04z54XCjVUloaW5m9cZ2f-3n0YlK2hgTLjcVQ','P04z54XCjVVm4aW5mlRVjyhg31Pk4UBQRQ','T0184qQtHEdH9FHRJBn3kQCjVUmYaW5kRrbA','T0184qQtHEdH9FHRJBn3kQCjVVmYaW5kRrbA'];
-const shareCodeArr2 = ['P04z54XCjVWmIaW5mlRVjyhg31PkxxRQQA','P04z54XCjVXnIaW5mlRVjyhg31PkzULYoQ','P04z54XCjVUnoaW5mlRVjyhg31Pk5yQ45A','P04z54XCjVUloaW5mlRVjyhg31PkwB1JXc','P04z54XCjVVm4aW5m9cZ2f-3n0YlNxzyfhC1Yc','P04z54XCjVUmYaW5m9cZ2f-3n0YlCj8l1OiUl8','T0225KkcRxga9AbWIhzykfJYcgCjVVmYaW5kRrbA'];
-const homeDataFunPrefixArr = ['','','healthyDay','healthyDay','healthyDay','ts','healthyDay'];
-const collectScoreFunPrefixArr = ['','','','','harmony','harmony','harmony'];
-const lotteryResultFunPrefixArr = ['','','interact_template','interact_template','interact_template','ts','interact_template'];
-const browseTimeArr = ['','','15','','','6','']
+//【闪购盲盒】【疯狂砸金蛋】【健康服务】【新店福利】【砸蛋抽好礼】【京东好声音】
+const appIdArr = ['1EFRRxA','1EFRQwA','1EFRTwg','1EFRTyg','1EFRTxQ','1EFRSxQ'];
+const shareCodeArr = ['P04z54XCjVWmIaW5m9cZ2f-3n0YlHdruJTsA9A','P04z54XCjVXnIaW5m9cZ2f-3n0YlMvv1qNf7Uo','P04z54XCjVUnoaW5m9cZ2f-3n0YlI4IkViXpeg','P04z54XCjVUloaW5m9cZ2f-3n0YlK2hgTLjcVQ','T0184qQtHEdH9FHRJBn3kQCjVUmYaW5kRrbA','T0184qQtHEdH9FHRJBn3kQCjVVmYaW5kRrbA'];
+const shareCodeArr2 = ['P04z54XCjVWmIaW5mlRVjyhg31PkxxRQQA','P04z54XCjVXnIaW5mlRVjyhg31PkzULYoQ','P04z54XCjVUnoaW5mlRVjyhg31Pk5yQ45A','P04z54XCjVUloaW5mlRVjyhg31PkwB1JXc','P04z54XCjVUmYaW5m9cZ2f-3n0YlCj8l1OiUl8','T0225KkcRxga9AbWIhzykfJYcgCjVVmYaW5kRrbA'];
+const homeDataFunPrefixArr = ['','','healthyDay','healthyDay','ts','healthyDay'];
+const collectScoreFunPrefixArr = ['','','','','harmony','harmony'];
+const lotteryResultFunPrefixArr = ['','','interact_template','interact_template','ts','interact_template'];
+const browseTimeArr = ['','','15','','6','']
 let merge = {}
+let gameOverMessage = ""
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '';
 if ($.isNode()) {
@@ -65,9 +67,9 @@ const JD_API_HOST = `https://api.m.jd.com/client.action`;
         collectScoreFunPrefix = collectScoreFunPrefixArr[j]||'harmony'
         lotteryResultFunPrefix = lotteryResultFunPrefixArr[j]||homeDataFunPrefix
         browseTime = browseTimeArr[j]||6
-        console.log(`\n开始第【${parseInt(j) + 1}】个抽奖活动，助力列表1`)
+        console.log(`\n开始第【${parseInt(j) + 1}】个抽奖活动【${appId}】，助力列表1`)
         await interact_template_getHomeData();
-        console.log(`\n开始助力列表2`)
+        console.log(`\n*助力列表2`)
         shareCode = shareCodeArr2[j];
         await interact_template_getHomeData();
         //break
@@ -135,6 +137,7 @@ function interact_template_getHomeData(timeout = 0) {
             console.log(data.data.bizMsg);
             merge.jdBeans.fail++;
             merge.jdBeans.notify = `${data.data.bizMsg}`;
+            gameOverMessage += `【${appId}】：${data.data.bizMsg}\n`;
             return
           }
           scorePerLottery = data.data.result.userInfo.scorePerLottery||data.data.result.userInfo.lotteryMinusScore
@@ -373,6 +376,8 @@ function msgShow() {
   message += `请点击通知跳转至APP查看`
   //message = message.substr(0,message.length - 1);
   $.msg($.name, title, message, url);
+  
+  if($.isNode() && gameOverMessage !== "") await notify.sendNotify('抽奖机活动过期', gameOverMessage);
 }
 
 
