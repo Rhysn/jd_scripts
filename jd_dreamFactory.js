@@ -34,7 +34,7 @@ const randomCount = 0;
 const tuanActiveId = `gaVXW_NJ0KPEA2LyUhoXzA==`;
 const jxOpenUrl = `openjd://virtual?params=%7B%20%22category%22:%20%22jump%22,%20%22des%22:%20%22m%22,%20%22url%22:%20%22https://wqsd.jd.com/pingou/dream_factory/index.html%22%20%7D`;
 let cookiesArr = [], cookie = '', message = '';
-const inviteCodes = [ 'NTXGxnRwTQkr7rbDn08j4w==','XU6GKz30yCKA4LYvpnm5zw==','q0aZPe-QA6AChOBXOoOMBA==','QDotuqdYVNrSa3atJZ_V9Q==' ];
+const inviteCodes = [ 'NTXGxnRwTQkr7rbDn08j4w==@XU6GKz30yCKA4LYvpnm5zw==@q0aZPe-QA6AChOBXOoOMBA==@QDotuqdYVNrSa3atJZ_V9Q==' ];
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 if ($.isNode()) {
   Object.keys(jdCookieNode).forEach((item) => {
@@ -94,7 +94,7 @@ if ($.isNode()) {
 async function jdDreamFactory() {
   await userInfo();
   await QueryFriendList();//查询今日招工情况以及剩余助力次数
-  await joinLeaderTuan();//参团
+  //await joinLeaderTuan();//参团
   await helpFriends();
   if (!$.unActive) return
   await getUserElectricity();
