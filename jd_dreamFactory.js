@@ -1186,7 +1186,7 @@ function tuanAward(activeId, tuanId, isTuanLeader = true) {
 }
 function updateTuanIds(url = 'https://allgreat.xyz/Scripts/JD/InviteCodes/jd_updateFactoryTuanId.json') {
   return new Promise(resolve => {
-    $.get({url}, (err, resp, data) => {
+    $.get(url, (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
