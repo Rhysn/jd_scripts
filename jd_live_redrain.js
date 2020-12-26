@@ -37,7 +37,6 @@ const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 let jdNotify = true;//是否关闭通知，false打开通知推送，true关闭通知推送
-path = "https://allgreat.xyz/Scripts/JD/InviteCodes/jd_live_redRain.json";
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
 if ($.isNode()) {
@@ -81,12 +80,12 @@ const JD_API_HOST = 'https://api.m.jd.com/api';
   }
   $.log(`=====远程红包雨信息=====`)
   await getRedRain();
-  let nowTs = new Date().getTime();
-  if(!($.st <= nowTs && nowTs < $.ed) || !$.activityId) await getRedRain(path);
+	if(!$.activityId) return
+  let nowTs = new Date().getTime()
   if (!($.st <= nowTs && nowTs < $.ed)) {
     $.log(`远程红包雨配置获取错误，从本地读取配置`)
     $.log(`\n`)
-    let hour = new Date().getUTCHours() + 8
+    let hour = (new Date().getUTCHours() + 8) %24
     if (ids[hour]){
       $.activityId = ids[hour]
       $.log(`本地红包雨配置获取成功`)
@@ -104,7 +103,7 @@ const JD_API_HOST = 'https://api.m.jd.com/api';
       $.index = i + 1;
       $.isLogin = true;
       $.nickName = '';
-      message = `【${new Date($.st).getHours()}点${$.name}】`
+      message = `【${new Date().getUTCHours()+8}点${$.name}】`
       await TotalBean();
       console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
       if (!$.isLogin) {
@@ -137,10 +136,10 @@ async function showMsg() {
   })
 }
 
-function getRedRain(url_ = "http://ql4kk90rw.hb-bkt.clouddn.com/jd_live_redRain.json") {
+function getRedRain() {
   return new Promise(resolve => {
     $.get({
-      url: url_ + "?" + Date.now(),
+      url: "http://ql4kk90rw.hb-bkt.clouddn.com/jd_live_redRain.json?" + Date.now(),
       }, (err, resp, data) => {
       try {
         if (err) {
@@ -186,6 +185,7 @@ function receiveRedRain() {
               message += `领取失败，已领过\n`;
             } else {
               console.log(`异常：${JSON.stringify(data)}`)
+              message += `暂无红包雨\n`;
             }
           }
         }
@@ -210,7 +210,7 @@ function taskUrl(function_id, body = {}) {
       "Host": "api.m.jd.com",
       "Referer": "https://h5.m.jd.com/active/redrain/index.html",
       "Cookie": cookie,
-      "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : "JD4iPhone/167490 (iPhone; iOS 14.2.1; Scale/3.00)") : ($.getdata('JDUA') ? $.getdata('JDUA') : "JD4iPhone/167490 (iPhone; iOS 14.2.1; Scale/3.00)"),
+      "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0") : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0"),
     }
   }
 }
@@ -227,7 +227,7 @@ function TotalBean() {
         "Connection": "keep-alive",
         "Cookie": cookie,
         "Referer": "https://wqs.jd.com/my/jingdou/my.shtml?sceneval=2",
-        "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : "JD4iPhone/167490 (iPhone; iOS 14.2.1; Scale/3.00)") : ($.getdata('JDUA') ? $.getdata('JDUA') : "JD4iPhone/167490 (iPhone; iOS 14.2.1; Scale/3.00)")
+        "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0") : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0")
       }
     }
     $.post(options, (err, resp, data) => {
