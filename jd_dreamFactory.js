@@ -1186,7 +1186,7 @@ function tuanAward(activeId, tuanId, isTuanLeader = true) {
 }
 function updateTuanIds(url = 'https://allgreat.xyz/Scripts/JD/InviteCodes/jd_updateFactoryTuanId.json') {
   return new Promise(resolve => {
-    $.get(url, (err, resp, data) => {
+    $.get({url}, async (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
@@ -1203,17 +1203,13 @@ function updateTuanIds(url = 'https://allgreat.xyz/Scripts/JD/InviteCodes/jd_upd
 }
 function updateTuanIdsCDN(url = 'https://allgreat.xyz/Scripts/JD/InviteCodes/jd_updateFactoryTuanId.json') {
   return new Promise(async resolve => {
-    $.get({url,
-      headers:{
-        "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/87.0.4280.88"
-      }}, (err, resp, data) => {
+    $.get({url}, async (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
+          console.log(`${$.name} API请求失败，请检查网路重试`)
         } else {
-          if (safeGet(data)) {
-            $.tuanIdS = JSON.parse(data);
-          }
+          $.tuanIdS = JSON.parse(data);
         }
       } catch (e) {
         $.logErr(e, resp)
