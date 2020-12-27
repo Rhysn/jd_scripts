@@ -1342,8 +1342,7 @@ function requireConfig() {
     //if (!$.tuanIdS) await updateTuanIdsCDN('https://cdn.jsdelivr.net/gh/lxk0301/updateTeam@master/jd_updateFactoryTuanId.json');
     await updateTuanIds();
     if ($.tuanIdS && $.tuanIdS.tuanActiveId) {
-      //tuanActiveId = $.tuanIdS.tuanActiveId;
-      console.log($.tuanIdS.tuanActiveId)
+      tuanActiveId = $.tuanIdS.tuanActiveId.toString();
     }
     console.log(`开始获取${$.name}配置文件\n`);
     //console.log(`tuanActiveId: ${tuanActiveId}`)
