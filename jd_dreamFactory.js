@@ -1,6 +1,6 @@
 /*
 京东京喜工厂
-更新时间：2020-12-07
+更新时间：2020-12-27
 活动入口 :京东APP->游戏与互动->查看更多->京喜工厂
 或者: 京东APP首页搜索 "玩一玩" ,造物工厂即可
 
@@ -94,7 +94,7 @@ if ($.isNode()) {
 async function jdDreamFactory() {
   await userInfo();
   await QueryFriendList();//查询今日招工情况以及剩余助力次数
-  //await joinLeaderTuan();//参团
+  await joinLeaderTuan();//参团
   await helpFriends();
   if (!$.unActive) return
   await getUserElectricity();
@@ -103,8 +103,8 @@ async function jdDreamFactory() {
   await QueryHireReward();//收取招工电力
   await PickUp();//收取自家的地下零件
   await stealFriend();
-  //await tuanActivity();
-  //await QueryAllTuan();
+  await tuanActivity();
+  await QueryAllTuan();
   await exchangeProNotify();
   await showMsg();
 }
@@ -566,8 +566,8 @@ function userInfo() {
                 } else if (data.factoryList && !data.productionList) {
                   console.log(`【提示】京东账号${$.index}[${$.nickName}]京喜工厂未选购商品\n请手动去京东APP->游戏与互动->查看更多->京喜工厂 选购\n`)
                   let nowTimes = new Date(new Date().getTime() + new Date().getTimezoneOffset()*60*1000 + 8*60*60*1000);
-                  if (nowTimes.getHours() % 6 === 0) {
-                    //如按每小时运行一次，则此处将一天推送4次提醒
+                  if (nowTimes.getHours() % 12 === 0) {
+                    //如按每小时运行一次，则此处将一天推送2次提醒
                     $.msg($.name, '提醒⏰', `京东账号${$.index}[${$.nickName}]京喜工厂未选择商品\n请手动去京东APP->游戏与互动->查看更多->京喜工厂 选择商品`);
                     if ($.isNode()) await notify.sendNotify(`${$.name} - 京东账号${$.index} - ${$.nickName}`, `京东账号${$.index}[${$.nickName}]京喜工厂未选择商品\n请手动去京东APP->游戏与互动->查看更多->京喜工厂 选择商品`)
                   }
@@ -991,7 +991,7 @@ function CreateTuan() {
         "Cookie": cookie,
         "Host": "m.jingxi.com",
         "Referer": "https://st.jingxi.com/pingou/dream_factory/divide.html",
-        "User-Agent": "jdpingou;iPhone;3.15.2;14.2;b9258b553ea775415a5ddfde269718c4ce52f77f;network/wifi;model/iPhone10,1;appBuild/100365;ADID/00000000-0000-0000-0000-000000000000;supportApplePay/1;hasUPPay/0;pushNoticeIsOpen/1;hasOCPay/0;supportBestPay/0;session/1;pap/JA2015_311210;brand/apple;supportJDSHWK/1;Mozilla/5.0 (iPhone; CPU iPhone OS 14_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
+        "User-Agent": "jdpingou;iPhone;3.15.2;13.5.1;90bab9217f465a83a99c0b554a946b0b0d5c2f7a;network/wifi;model/iPhone12,1;appBuild/100365;ADID/696F8BD2-0820-405C-AFC0-3C6D028040E5;supportApplePay/1;hasUPPay/0;pushNoticeIsOpen/1;hasOCPay/0;supportBestPay/0;session/14;pap/JA2015_311210;brand/apple;supportJDSHWK/1;"
       }
     }
     $.get(options, (err, resp, data) => {
@@ -1045,7 +1045,7 @@ function JoinTuan(tuanId) {
         "Cookie": cookie,
         "Host": "m.jingxi.com",
         "Referer": "https://st.jingxi.com/pingou/dream_factory/divide.html?exchange=%7B%22activeId%22:%22ilOin38J30PcT9xnWbx9lw%3D%3D%22,%22sTuanId%22:%22QvqM7GtgQQJUO8jaz1CYBA%3D%3D%22,%22sPin%22:%22V5LkjP4WRyjeCKR9VRwcRX0bBuTz7MEK0-E99EJ7u0k%3D%22,%22sType%22:%22101%22%7D&ptag=139022.1.2?srv=jinshusongjin_https://wq.jd.com/cube/front/activePublish/dream_factory_report/380556.html_jing",
-        "User-Agent": "jdpingou;iPhone;3.15.2;14.2;b9258b553ea775415a5ddfde269718c4ce52f77f;network/wifi;model/iPhone10,1;appBuild/100365;ADID/00000000-0000-0000-0000-000000000000;supportApplePay/1;hasUPPay/0;pushNoticeIsOpen/1;hasOCPay/0;supportBestPay/0;session/1;pap/JA2015_311210;brand/apple;supportJDSHWK/1;Mozilla/5.0 (iPhone; CPU iPhone OS 14_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
+        "User-Agent": "jdpingou"
       }
     }
     $.get(options, (err, resp, data) => {
@@ -1186,7 +1186,7 @@ function tuanAward(activeId, tuanId, isTuanLeader = true) {
 }
 function updateTuanIds(url = 'https://allgreat.xyz/Scripts/JD/InviteCodes/jd_updateFactoryTuanId.json') {
   return new Promise(resolve => {
-    $.get({url}, async (err, resp, data) => {
+    $.get({url}, (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
@@ -1203,13 +1203,17 @@ function updateTuanIds(url = 'https://allgreat.xyz/Scripts/JD/InviteCodes/jd_upd
 }
 function updateTuanIdsCDN(url = 'https://allgreat.xyz/Scripts/JD/InviteCodes/jd_updateFactoryTuanId.json') {
   return new Promise(async resolve => {
-    $.get({url}, async (err, resp, data) => {
+    $.get({url,
+      headers:{
+        "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/87.0.4280.88"
+      }}, (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
-          console.log(`${$.name} API请求失败，请检查网路重试`)
         } else {
-          $.tuanIdS = JSON.parse(data);
+          if (safeGet(data)) {
+            $.tuanIdS = JSON.parse(data);
+          }
         }
       } catch (e) {
         $.logErr(e, resp)
@@ -1327,10 +1331,10 @@ function shareCodesFormat() {
       const tempIndex = $.index > inviteCodes.length ? (inviteCodes.length - 1) : ($.index - 1);
       $.newShareCodes = inviteCodes[tempIndex].split('@');
     }
-    //const readShareCodeRes = await readShareCode();
-    //if (readShareCodeRes && readShareCodeRes.code === 200) {
-      //$.newShareCodes = [...new Set([...$.newShareCodes, ...(readShareCodeRes.data || [])])];
-    //}
+    const readShareCodeRes = await readShareCode();
+    if (readShareCodeRes && readShareCodeRes.code === 200) {
+      $.newShareCodes = [...new Set([...$.newShareCodes, ...(readShareCodeRes.data || [])])];
+    }
     console.log(`第${$.index}个京东账号将要助力的好友${JSON.stringify($.newShareCodes)}`)
     resolve();
   })
@@ -1340,10 +1344,12 @@ function requireConfig() {
     //await updateTuanIdsCDN('https://gitee.com/lxk0301/updateTeam/raw/master/jd_updateFactoryTuanId.json');
     //if (!$.tuanIdS) await updateTuanIds();
     //if (!$.tuanIdS) await updateTuanIdsCDN('https://cdn.jsdelivr.net/gh/lxk0301/updateTeam@master/jd_updateFactoryTuanId.json');
-    //await updateTuanIds();
-    //if ($.tuanIdS && $.tuanIdS.tuanActiveId) tuanActiveId = $.tuanIdS.tuanActiveId;
+    await updateTuanIds();
+    if ($.tuanIdS && $.tuanIdS.tuanActiveId) {
+      tuanActiveId = $.tuanIdS.tuanActiveId;
+    }
     console.log(`开始获取${$.name}配置文件\n`);
-    //console.log(`tuanActiveId: ${tuanActiveId}`)
+    console.log(`tuanActiveId: ${tuanActiveId}`)
     //Node.js用户请在jdCookie.js处填写京东ck;
     const shareCodes = $.isNode() ? require('./jdDreamFactoryShareCodes.js') : '';
     console.log(`共${cookiesArr.length}个京东账号\n`);
@@ -1372,7 +1378,7 @@ function TotalBean() {
         "Connection": "keep-alive",
         "Cookie": cookie,
         "Referer": "https://wqs.jd.com/my/jingdou/my.shtml?sceneval=2",
-        "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 14_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/7.0.18(0x1700122f) NetType/WIFI Language/zh_CN"
+        "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 14_0_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Mobile/15E148 Safari/604.1"
       }
     }
     $.post(options, (err, resp, data) => {
