@@ -94,7 +94,7 @@ if ($.isNode()) {
 async function jdDreamFactory() {
   await userInfo();
   await QueryFriendList();//查询今日招工情况以及剩余助力次数
-  await joinLeaderTuan();//参团
+  //await joinLeaderTuan();//参团
   await helpFriends();
   if (!$.unActive) return
   await getUserElectricity();
@@ -103,8 +103,8 @@ async function jdDreamFactory() {
   await QueryHireReward();//收取招工电力
   await PickUp();//收取自家的地下零件
   await stealFriend();
-  await tuanActivity();
-  await QueryAllTuan();
+  //await tuanActivity();
+  //await QueryAllTuan();
   await exchangeProNotify();
   await showMsg();
 }
@@ -1340,10 +1340,8 @@ function requireConfig() {
     //await updateTuanIdsCDN('https://gitee.com/lxk0301/updateTeam/raw/master/jd_updateFactoryTuanId.json');
     //if (!$.tuanIdS) await updateTuanIds();
     //if (!$.tuanIdS) await updateTuanIdsCDN('https://cdn.jsdelivr.net/gh/lxk0301/updateTeam@master/jd_updateFactoryTuanId.json');
-    await updateTuanIds();
-    if ($.tuanIdS && $.tuanIdS.tuanActiveId) {
-      tuanActiveId = $.tuanIdS.tuanActiveId.toString();
-    }
+    //await updateTuanIds();
+    //if ($.tuanIdS && $.tuanIdS.tuanActiveId) tuanActiveId = $.tuanIdS.tuanActiveId;
     console.log(`开始获取${$.name}配置文件\n`);
     //console.log(`tuanActiveId: ${tuanActiveId}`)
     //Node.js用户请在jdCookie.js处填写京东ck;
