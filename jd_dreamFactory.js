@@ -1021,6 +1021,7 @@ async function joinLeaderTuan() {
   if ($.tuanIdS && $.tuanIdS.tuanIds) {
     for (let tuanId of $.tuanIdS.tuanIds) {
       if (!tuanId) continue
+      console.log(`\n参加团ID：${tuanId}\n`);
       await JoinTuan(tuanId);
     }
   }
