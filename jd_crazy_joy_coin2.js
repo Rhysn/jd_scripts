@@ -279,8 +279,9 @@ function getJoyShop() {
         } else {
           data = JSON.parse(data);
           if (data.success && data.data && data.data.shop) {
-            const shop = data.data.shop.filter(vo => vo.status === 1) || []
+            $.shop = data.data.shop.filter(vo => vo.status === 1) || []
             console.log(shop)
+            
             //$.buyJoyLevel = shop.length ? shop[shop.length - 1]['joyId'] : 1
             //$.cost = shop.length ? shop[shop.length - 1]['coins'] : Infinity
             getBuyJoyLevelArr(shop.length - 1)
@@ -617,7 +618,8 @@ function getStopKey(){
 }
 function getBuyJoyLevelArr(num){
     var next = num - 1;
-    if(next !== -1 && parseInt($.shop[num].coins) > (parseInt($.shop[next].coins) * 2 )){
+    console.log();
+    if(next !== -1 && $.shop[num].coins > ($.shop[next].coins * 2 )){
         getBuyJoyLevelArr(next);
     }
     buyJoyLevelArr.push(shop[num]['joyId']);
