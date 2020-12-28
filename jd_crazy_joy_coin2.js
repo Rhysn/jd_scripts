@@ -280,7 +280,7 @@ function getJoyShop() {
           data = JSON.parse(data);
           if (data.success && data.data && data.data.shop) {
             $.shop = data.data.shop.filter(vo => vo.status === 1) || []
-            console.log(shop)
+            console.log($.shop)
             
             //$.buyJoyLevel = shop.length ? shop[shop.length - 1]['joyId'] : 1
             //$.cost = shop.length ? shop[shop.length - 1]['coins'] : Infinity
