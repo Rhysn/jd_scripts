@@ -285,7 +285,7 @@ function getJoyShop() {
             joysArr = shop
             //$.buyJoyLevel = shop.length ? shop[shop.length - 1]['joyId'] : 1
             //$.cost = shop.length ? shop[shop.length - 1]['coins'] : Infinity
-            getBuyJoyLevelArr(joysArr.length - 1, 2)
+            getBuyJoyLevelArr(joysArr.length - 1, 1)
             buyJoyLevelArr.sort(function(a, b){return b - a})
           }
         }
