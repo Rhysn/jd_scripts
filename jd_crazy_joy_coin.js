@@ -202,18 +202,18 @@ async function jdJxStory() {
 
   $.canBuy = true
   await getJoyList()
-  await $.wait(1000)
+  //await $.wait(1000)
   if(buyJoyLevelArr.length === 0) await getJoyShop();
   console.log(`待购买：${buyJoyLevelArr}`);
-  await $.wait(1000)
+  //await $.wait(1000)
   for (let i = 0; i < $.joyIds.length; ++i) {
-    if (!$.canBuy) {
+    if (!$.canBuy || buyJoyLevelArr.length === 0) {
       $.log(`金币不足，跳过购买`)
       break
     }
     if ($.joyIds[i] === 0) {
       await buyJoy(buyJoyLevelArr.pop())
-      await $.wait(1000)
+      //await $.wait(1000)
     }
   }
   await getJoyList()
@@ -231,16 +231,16 @@ async function jdJxStory() {
     const vo = obj[idx]
     if (idx < 34 && vo.length >= 2) {
       await mergeJoy(vo[0], vo[1])
-      await $.wait(3000)
+      await $.wait(1000)
     }
   }
 
   await hourBenefit()
-  await $.wait(1000)
+  //await $.wait(1000)
   await getCoin()
   await $.wait(1000)
   await getUserBean()
-  await $.wait(5000)
+  //await $.wait(5000)
   console.log(`当前信息：${$.bean} 京豆，${$.coin} 金币`)
 }
 
@@ -339,7 +339,7 @@ function buyJoy(joyId) {
               await openBox(data.data.eventInfo.eventType, data.data.eventInfo.eventRecordId)
               $.canBuy = false
               buyJoyLevelArr.push(joyId)
-              buyJoyLevelArr.sort(function(a, b){return b - a})
+              
               return
             }
             $.log(`购买${joyId}级joy成功，剩余金币【${data.data.totalCoins}】`)
