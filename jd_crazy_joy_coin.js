@@ -27,7 +27,7 @@ const $ = new Env('crazyJoy挂机');
 const JD_API_HOST = 'https://api.m.jd.com/';
 
 const notify = $.isNode() ? require('./sendNotify') : '';
-let cookiesArr = [], cookie = '', message = '';
+let cookiesArr = [], cookie = '', message = '', buyJoyLevelArr = [];
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 if ($.isNode()) {
   Object.keys(jdCookieNode).forEach((item) => {
@@ -166,7 +166,6 @@ if ($.isNode()) {
     return;
   }
   let count = 0
-  let buyJoyLevelArr = []
   while (true) {
     if(getStopKey()) break;
     count++
