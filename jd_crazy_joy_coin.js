@@ -310,6 +310,7 @@ function mergeJoy(x, y) {
             data = JSON.parse(data);
             if (data.success && data.data.newJoyId) {
               console.log(`合并成功，获得${data.data.newJoyId}级Joy`)
+              buyJoyLevelArr.pop()
             } else
               console.log(`合并失败，错误`)
           }
@@ -451,6 +452,7 @@ function openBox(eventType = 'LUCKY_BOX_DROP', boxId) {
         } else {
           if (safeGet(data)) {
             data = JSON.parse(data);
+            buyJoyLevelArr.pop();
             if (data['success']) {
               $.log(`点击幸运盒子成功，剩余观看视频次数：${data.data.advertViewTimes}, ${data.data.advertViewTimes > 0 ? '等待30秒' : '跳出'}`)
               if (data.data.advertViewTimes > 0) {
