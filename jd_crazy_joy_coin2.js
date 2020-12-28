@@ -617,7 +617,7 @@ function getStopKey(){
 }
 function getBuyJoyLevelArr(num){
     var next = num - 1;
-    if(next !== -1 && parseInt($.shop[num]['coins']) > (parseInt($.shop[next]['coins']) * 2 )){
+    if(next !== -1 && parseInt($.shop[num].coins) > (parseInt($.shop[next].coins) * 2 )){
         getBuyJoyLevelArr(next);
     }
     buyJoyLevelArr.push(shop[num]['joyId']);
