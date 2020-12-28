@@ -620,7 +620,8 @@ function getStopKey(){
 function getBuyJoyLevelArr(num, n){
     var next = num - 1;
     if( next !== -1 && joysArr[num].coins > (joysArr[next].coins * 2) ){
-        getBuyJoyLevelArr(next, n*2);
+        //n = n * 2
+        getBuyJoyLevelArr(next, n);
         return
     }
     while(n--){
