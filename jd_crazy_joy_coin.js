@@ -27,7 +27,7 @@ const $ = new Env('crazyJoy挂机');
 const JD_API_HOST = 'https://api.m.jd.com/';
 
 const notify = $.isNode() ? require('./sendNotify') : '';
-let cookiesArr = [], cookie = '', message = '', buyJoyLevelArr = [], joysArr = [];
+let cookiesArr = [], cookie = '', message = '', buyJoyLevelArr = [], joysArr = [], zero = 0;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 if ($.isNode()) {
   Object.keys(jdCookieNode).forEach((item) => {
@@ -617,8 +617,25 @@ function getStopKey(){
   return min_key < 17 && min_key > 15 ? true : false;
 }
 function getBuyJoyLevel(num){
+    
+    if(zero === 1){
+      var myJoyArr = $.joyIds;
+      var minJoyCoins = 0;
+      for(let item of myJoyArr){
+        if(item < 31 && item > 0){
+          var thisitem = item - 1;
+          if(minJoyCoins === 0 || joysArr[thisitem].coins < minJoyCoins){
+            num = thisitem;
+            minJoyCoins = joysArr[thisitem].coins;
+          }
+        }
+      }
+      buyJoyLevelArr.push(joysArr[num].joyId);
+      return
+    }
+    
     var next = num - 1;
-    if( next !== -1 && joysArr[num].coins > (joysArr[next].coins * 2) ){
+    if(next !== -1 && joysArr[num].coins > (joysArr[next].coins * 2)){
         //n = n * 2
         getBuyJoyLevel(next);
         return
@@ -627,10 +644,14 @@ function getBuyJoyLevel(num){
 }
 function getNeedJoyLevel(){
   var myJoyArr = $.joyIds;
+  zero = 0;
   myJoyArr.sort(function(a, b){return b - a});
   while(myJoyArr.length){
     var item = myJoyArr.pop();
-    if(item === 0) continue;
+    if(item === 0){
+      zero++;
+      continue;
+    }
     return item < 30 ? item : 30;
   }
 
