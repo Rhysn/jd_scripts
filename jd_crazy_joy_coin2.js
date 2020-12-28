@@ -165,10 +165,8 @@ if ($.isNode()) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {"open-url": "https://bean.m.jd.com/"});
     return;
   }
-  let count = 0
-  while (true) {
-    if(getStopKey()) break;
-    count++
+  let count = 1
+  while (count--) {
     console.log(`============开始第${count}次挂机=============`)
     for (let i = 0; i < cookiesArr.length; i++) {
       if (cookiesArr[i]) {
@@ -282,6 +280,7 @@ function getJoyShop() {
           data = JSON.parse(data);
           if (data.success && data.data && data.data.shop) {
             const shop = data.data.shop.filter(vo => vo.status === 1) || []
+            console.log(shop)
             //$.buyJoyLevel = shop.length ? shop[shop.length - 1]['joyId'] : 1
             //$.cost = shop.length ? shop[shop.length - 1]['coins'] : Infinity
             getBuyJoyLevelArr(shop.length - 1)
