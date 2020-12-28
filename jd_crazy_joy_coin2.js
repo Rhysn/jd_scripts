@@ -621,8 +621,8 @@ function getBuyJoyLevelArr(num){
     var next = num - 1;
     if(next !== -1 && joysArr[num].coins > (joysArr[next].coins * 2 )){
         getBuyJoyLevelArr(next);
+        return
     }
-    buyJoyLevelArr.push(joysArr[num].joyId);
     buyJoyLevelArr.push(joysArr[num].joyId);
 }
 // prettier-ignore
