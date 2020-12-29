@@ -257,9 +257,12 @@ async function jdJxStory() {
     sellList.sort(function(a, b){return b - a});
     while(sellnum--){
       var sellitem = sellList.pop();
+      console.log(`准备出售【${sellitem}】级Joy`);
       for(let i in $.joyIds){
+        console.log(`当前【${$.joyIds[i]}】级Joy`);
         if(sellitem > 29) break;
         if(sellitem === $.joyIds[i]){
+          console.log(`开始出售第【${i}】个【${$.joyIds[i]}】级Joy`);
           await sellJoy(sellitem, i);
           break;
         }
