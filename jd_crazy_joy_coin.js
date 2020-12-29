@@ -252,7 +252,7 @@ async function jdJxStory() {
   await getNeedJoyLevel();
   if(zero === 0){
     var sellList = $.joyIds;
-    let sellnum = 3;
+    let sellnum = 4;
     sellList.sort(function(a, b){return b - a});
     while(sellnum--){
       var sellitem = sellList.pop();
@@ -672,7 +672,7 @@ function getStopKey(){
 }
 function getBuyJoyLevel(num){
     
-    if(zero === 2){
+    if(zero === 4){
       var myJoyArr = $.joyIds;
       var minJoyCoins = 0;
       for(let item of myJoyArr){
