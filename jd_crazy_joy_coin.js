@@ -249,6 +249,7 @@ async function jdJxStory() {
   console.log(`当前信息：${$.bean} 京豆，${$.coin} 金币`)
   
   await getJoyList();
+  console.log(`现有Joy等级表：${$.joyIds}`);
   await getNeedJoyLevel();
   console.log(`剩余Joy空格：${zero}个`);
   if(zero === 0){
