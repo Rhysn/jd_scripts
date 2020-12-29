@@ -264,6 +264,7 @@ async function jdJxStory() {
         if(sellitem === $.joyIds[i]){
           console.log(`开始出售第【${i}】个【${$.joyIds[i]}】级Joy`);
           await sellJoy(sellitem, i);
+          await $.wait(1000);
           break;
         }
       }
