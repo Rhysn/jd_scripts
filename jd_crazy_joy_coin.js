@@ -250,6 +250,7 @@ async function jdJxStory() {
   
   await getJoyList();
   await getNeedJoyLevel();
+  console.log(`剩余Joy空格：${zero}个`);
   if(zero === 0){
     var sellList = $.joyIds;
     let sellnum = 4;
