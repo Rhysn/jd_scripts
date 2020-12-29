@@ -314,7 +314,8 @@ function getJoyShop() {
             joysArr = shop.concat();
             //$.buyJoyLevel = shop.length ? shop[shop.length - 1]['joyId'] : 1
             //$.cost = shop.length ? shop[shop.length - 1]['coins'] : Infinity
-            getBuyJoyLevel(getNeedJoyLevel() - 1);
+            var needLevel = joysArr.length < 30 ? joysArr.length - 1 : getNeedJoyLevel() - 1;
+            getBuyJoyLevel(needLevel);
           }
         }
       } catch (e) {
@@ -694,7 +695,6 @@ function getBuyJoyLevel(num) {
     buyJoyLevelArr.push(joysArr[num].joyId);
     return
   }
-  num = joysArr.length < 30 ? joysArr.length - 1 : num;
   var next = num - 1;
   if (next !== -1 && joysArr[num].coins > (joysArr[next].coins * 2)) {
     getBuyJoyLevel(next);
