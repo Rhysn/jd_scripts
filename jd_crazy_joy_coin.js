@@ -673,7 +673,7 @@ function getStopKey(){
 }
 function getBuyJoyLevel(num){
     
-    if(zero === 4){
+    if(zero < 5){
       var myJoyArr = $.joyIds;
       var minJoyCoins = 0;
       for(let item of myJoyArr){
