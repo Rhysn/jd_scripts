@@ -216,7 +216,7 @@ function jdhealth_getLottery() {
 
 function getTaskSharecode(homedata, appId, taskType) {
   return new Promise(resolve => {
-    $.post(taskPostUrl("${homedata}_getHomeData", {"appId":"${appId}","taskToken":""}, ), async (err, resp, data) => {
+    $.post(taskPostUrl(homedata + "_getHomeData", {"appId": appId,"taskToken":""}, ), async (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
