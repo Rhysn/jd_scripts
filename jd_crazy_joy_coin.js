@@ -202,10 +202,10 @@ async function jdJxStory() {
 
   $.canBuy = true
   await getJoyList()
-  //await $.wait(1000)
+  await $.wait(1000)
   if(buyJoyLevelArr.length === 0) await getJoyShop();
   console.log(`待购买：${buyJoyLevelArr}`);
-  //await $.wait(1000)
+  await $.wait(1000)
   for (let i = 0; i < $.joyIds.length; ++i) {
     if (!$.canBuy || buyJoyLevelArr.length === 0) {
       $.log(`金币不足，跳过购买`)
@@ -213,7 +213,7 @@ async function jdJxStory() {
     }
     if ($.joyIds[i] === 0) {
       await buyJoy(buyJoyLevelArr.pop())
-      //await $.wait(1000)
+      await $.wait(1000)
     }
   }
   var mergeKey = true;
@@ -241,11 +241,11 @@ async function jdJxStory() {
   }
 
   await hourBenefit()
-  //await $.wait(1000)
+  await $.wait(1000)
   await getCoin()
   await $.wait(1000)
   await getUserBean()
-  //await $.wait(5000)
+  await $.wait(1000)
   console.log(`当前信息：${$.bean} 京豆，${$.coin} 金币`)
   
   await getJoyList();
@@ -266,6 +266,7 @@ async function jdJxStory() {
     }
     buyJoyLevelArr.pop();
   }
+  await $.wait(5000)
 }
 
 function getJoyList() {
