@@ -675,7 +675,6 @@ function getStopKey(){
   return min_key < 17 && min_key > 15 ? true : false;
 }
 function getBuyJoyLevel(num) {
-
   if (zero < 5) {
     var myJoyArr = $.joyIds.concat();
     var minJoyCoins = 0;
@@ -690,9 +689,9 @@ function getBuyJoyLevel(num) {
           }
         }
       }
-      buyJoyLevelArr.push(joysArr[num].joyId);
-      return
     }
+    buyJoyLevelArr.push(joysArr[num].joyId);
+    return
   }
   var next = num - 1;
   if (next !== -1 && joysArr[num].coins > (joysArr[next].coins * 2)) {
