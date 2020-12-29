@@ -674,15 +674,17 @@ function getStopKey(){
   var min_key = date_key.getMinutes();
   return min_key < 17 && min_key > 15 ? true : false;
 }
-function getBuyJoyLevel(num){
-    
-    if(zero < 5){
-      var myJoyArr = $.joyIds.concat();
-      var minJoyCoins = 0;
-      for(let item of myJoyArr){
-        if(item < 31 && item > 0){
+function getBuyJoyLevel(num) {
+
+  if (zero < 5) {
+    var myJoyArr = $.joyIds.concat();
+    var minJoyCoins = 0;
+    if (joysArr.length < 30) num = joysArr.length - 1;
+    else {
+      for (let item of myJoyArr) {
+        if (item < 31 && item > 0) {
           var thisitem = item - 1;
-          if(minJoyCoins === 0 || joysArr[thisitem].coins < minJoyCoins){
+          if (minJoyCoins === 0 || joysArr[thisitem].coins < minJoyCoins) {
             num = thisitem;
             minJoyCoins = joysArr[thisitem].coins;
           }
@@ -691,14 +693,13 @@ function getBuyJoyLevel(num){
       buyJoyLevelArr.push(joysArr[num].joyId);
       return
     }
-    
-    var next = num - 1;
-    if(next !== -1 && joysArr[num].coins > (joysArr[next].coins * 2)){
-        //n = n * 2
-        getBuyJoyLevel(next);
-        return
-    }
-    buyJoyLevelArr.push(joysArr[num].joyId);
+  }
+  var next = num - 1;
+  if (next !== -1 && joysArr[num].coins > (joysArr[next].coins * 2)) {
+    getBuyJoyLevel(next);
+    return
+  }
+  buyJoyLevelArr.push(joysArr[num].joyId);
 }
 function getNeedJoyLevel(){
   var myJoyArr = $.joyIds.concat();
