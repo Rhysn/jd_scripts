@@ -79,10 +79,10 @@ const inviteCodes = ['P04z54XCjVUnoaW5m9cZ2f-3n0YlI4IkViXpeg'];
       $.done();
     })
 async function jdShareCode() {
-  var taskId = 6;
+  var taskType = 14;
   var homedata = 'healthyDay';
   var appId = '1EFRSyg';
-  await getTaskSharecode(homedata, appId, taskId);
+  await getTaskSharecode(homedata, appId, taskType);
   
   
   await showMsg();
