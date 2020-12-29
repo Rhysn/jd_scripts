@@ -226,6 +226,7 @@ function getTaskSharecode(homedata, appId, taskType) {
             data = JSON.parse(data);
             console.log(data);
             if (data.data.bizCode === 0) {
+              $.taskVos = data.data.result.taskVos;
               $.taskVos.map(item => {
                 if (item.taskType === taskType) {
                   console.log(`\n您的${$.name}好友助力邀请码：${item.assistTaskDetailVo.taskToken}\n`)
