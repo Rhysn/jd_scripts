@@ -694,7 +694,7 @@ function getBuyJoyLevel(num) {
     buyJoyLevelArr.push(joysArr[num].joyId);
     return
   }
-  num = joysArr.length < 30 ? josArr.length - 1 : num;
+  num = joysArr.length < 30 ? joysArr.length - 1 : num;
   var next = num - 1;
   if (next !== -1 && joysArr[num].coins > (joysArr[next].coins * 2)) {
     getBuyJoyLevel(next);
