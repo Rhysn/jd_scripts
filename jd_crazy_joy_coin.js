@@ -689,6 +689,7 @@ function getBuyJoyLevel(num) {
           }
         }
       }
+      if(minJoyCoins === 0) num = joysArr.length - 1; 
     }
     buyJoyLevelArr.push(joysArr[num].joyId);
     return
