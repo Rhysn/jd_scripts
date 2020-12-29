@@ -224,6 +224,7 @@ function getTaskSharecode(homedata, appId, taskType) {
         } else {
           if (safeGet(data)) {
             data = JSON.parse(data);
+            console.log(data.data);
             if (data.data.bizCode === 0) {
               $.taskVos.map(item => {
                 if (item.taskType === taskType) {
