@@ -216,22 +216,27 @@ async function jdJxStory() {
       //await $.wait(1000)
     }
   }
-  await getJoyList()
-  let obj = {};
-  $.joyIds.map((vo, idx) => {
-    if (vo !== 0) {
-      if (obj[vo]) {
-        obj[vo].push(idx)
-      } else {
-        obj[vo] = [idx]
+  var mergeKey = true;
+  while(mergeKey){
+    mergeKey = false;
+    await getJoyList();
+    let obj = {};
+    $.joyIds.map((vo, idx) => {
+      if (vo !== 0) {
+        if (obj[vo]) {
+          obj[vo].push(idx);
+        } else {
+          obj[vo] = [idx];
+        }
       }
-    }
-  })
-  for (let idx in obj) {
-    const vo = obj[idx]
-    if (idx < 34 && vo.length >= 2) {
-      await mergeJoy(vo[0], vo[1])
-      await $.wait(1000)
+    })
+    for (let idx in obj) {
+      const vo = obj[idx];
+      if (idx < 34 && vo.length >= 2) {
+        await mergeJoy(vo[0], vo[1]);
+        await $.wait(1000);
+        mergeKey = true;
+      }
     }
   }
 
@@ -253,7 +258,7 @@ async function jdJxStory() {
       var sellitem = sellList.pop();
       for(let i in $.joyIds){
         if(sellitem > 29) break;
-        if(sellitem === joyIds[i]){
+        if(sellitem === $.joyIds[i]){
           await sellJoy(sellitem, i);
           break;
         }
