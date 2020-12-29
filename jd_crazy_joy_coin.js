@@ -676,10 +676,10 @@ function getStopKey(){
 }
 function getBuyJoyLevel(num) {
   if (zero < 5) {
-    var myJoyArr = $.joyIds.concat();
-    var minJoyCoins = 0;
+    var myJoyArr = $.joyIds;
     if (joysArr.length < 30) num = joysArr.length - 1;
     else {
+      var minJoyCoins = 0;
       for (let item of myJoyArr) {
         if (item < 31 && item > 0) {
           var thisitem = item - 1;
@@ -694,6 +694,7 @@ function getBuyJoyLevel(num) {
     buyJoyLevelArr.push(joysArr[num].joyId);
     return
   }
+  num = joysArr.length < 30 ? josArr.length - 1 : num;
   var next = num - 1;
   if (next !== -1 && joysArr[num].coins > (joysArr[next].coins * 2)) {
     getBuyJoyLevel(next);
