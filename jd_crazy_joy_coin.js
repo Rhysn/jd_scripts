@@ -252,14 +252,13 @@ async function jdJxStory() {
   await getNeedJoyLevel();
   console.log(`剩余Joy空格：${zero}个`);
   if(zero === 0){
-    var sellList = $.joyIds;
+    var sellList = $.joyIds.concat();
     let sellnum = 4;
     sellList.sort(function(a, b){return b - a});
     while(sellnum--){
       var sellitem = sellList.pop();
       console.log(`准备出售【${sellitem}】级Joy`);
       for(let i in $.joyIds){
-        console.log(`当前【${$.joyIds[i]}】级Joy`);
         if(sellitem > 29) break;
         if(sellitem === $.joyIds[i]){
           console.log(`开始出售第【${i}】个【${$.joyIds[i]}】级Joy`);
@@ -312,7 +311,7 @@ function getJoyShop() {
           data = JSON.parse(data);
           if (data.success && data.data && data.data.shop) {
             const shop = data.data.shop.filter(vo => vo.status === 1) || []
-            joysArr = shop
+            joysArr = shop.concat();
             //$.buyJoyLevel = shop.length ? shop[shop.length - 1]['joyId'] : 1
             //$.cost = shop.length ? shop[shop.length - 1]['coins'] : Infinity
             getBuyJoyLevel(getNeedJoyLevel() - 1);
@@ -678,7 +677,7 @@ function getStopKey(){
 function getBuyJoyLevel(num){
     
     if(zero < 5){
-      var myJoyArr = $.joyIds;
+      var myJoyArr = $.joyIds.concat();
       var minJoyCoins = 0;
       for(let item of myJoyArr){
         if(item < 31 && item > 0){
@@ -702,7 +701,7 @@ function getBuyJoyLevel(num){
     buyJoyLevelArr.push(joysArr[num].joyId);
 }
 function getNeedJoyLevel(){
-  var myJoyArr = $.joyIds;
+  var myJoyArr = $.joyIds.concat();
   zero = 0;
   myJoyArr.sort(function(a, b){return b - a});
   while(myJoyArr.length){
