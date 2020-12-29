@@ -242,6 +242,25 @@ async function jdJxStory() {
   await getUserBean()
   //await $.wait(5000)
   console.log(`当前信息：${$.bean} 京豆，${$.coin} 金币`)
+  
+  await getJoyList();
+  await getNeedJoyLevel();
+  if(zero === 0){
+    var sellList = $.joyIds;
+    let sellnum = 3;
+    sellList.sort(function(a, b){return b - a});
+    while(sellnum--){
+      var sellitem = sellList.pop();
+      for(let i in $.joyIds){
+        if(sellitem > 29) break;
+        if(sellitem === joyIds[i]){
+          await sellJoy(sellitem, i);
+          break;
+        }
+      }
+    }
+    buyJoyLevelArr.pop();
+  }
 }
 
 function getJoyList() {
@@ -613,6 +632,33 @@ function jsonParse(str) {
     }
   }
 }
+
+function sellJoy(joyId, boxId) {
+  const body = {"action": "SELL", "joyId": joyId, "boxId": boxId}
+  return new Promise((resolve) => {
+    $.get(taskUrl('crazyJoy_joy_trade', JSON.stringify(body)), async (err, resp, data) => {
+      try {
+        if (err) {
+          console.log(`${JSON.stringify(err)}`)
+          console.log(`${$.name} API请求失败，请检查网路重试`)
+        } else {
+          data = JSON.parse(data);
+          if (data.success) {
+            $.log(`出售${boxId}位置${joyId}级joy成功，售价【${data.data.coins}】，总金币【${data.data.totalCoins}】`)
+            $.coin = data.data.totalCoins
+          } else {
+            console.log(data.message)
+          }
+        }
+      } catch (e) {
+        $.logErr(e, resp);
+      } finally {
+        resolve(data);
+      }
+    })
+  })
+}
+
 function getStopKey(){
   var date_key = new Date();
   var min_key = date_key.getMinutes();
