@@ -66,7 +66,8 @@ async function jdShareCode() {
         console.log("活动信息读取成功\n");
         for (let item of taskInfo.data) {
             console.log(`开始获取【${item.appName}】活动的用户分享码\n`);
-            item.method === "post" ? await postTaskShareCode(item.homeData, item.appId, item.appId2, item.shareTaskType, item.appName) : await getTaskShareCode(item.homeData, item.appId, item.appId2, item.shareRakType, item.appName);
+            item.method === "post" ? await postTaskShareCode(item.homeData, item.appId, item.appId2, item.shareTaskType, item.appName) : continue;
+            //await getTaskShareCode(item.homeData, item.appId, item.appId2, item.shareRakType, item.appName);
         }
     }
     else {
