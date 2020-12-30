@@ -71,6 +71,10 @@ async function jdShareCode() {
     else {
         console.log("未能成功读取活动信息");
     }
+  var taskType = 14;
+  var homedata = 'healthyDay';
+  var appId = '1EFRSyg';
+  await getTaskSharecode(homedata, appId, taskType, '新活动');
     await showMsg();
 }
 
