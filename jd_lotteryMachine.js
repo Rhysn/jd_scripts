@@ -60,13 +60,13 @@ const JD_API_HOST = `https://api.m.jd.com/client.action`;
                 $.msg($.name, `【提示】京东账号${i + 1} cookie已过期！请先获取cookie\n直接使用NobyDa的京东签到获取`, 'https://bean.m.jd.com/', { "open-url": "https://bean.m.jd.com/" });
                 continue;
             }
-            var sharecodes = [];
+            var shareCodes = [];
             const taskInfo = await readTaskInfo(taskInfoPath);
             if (taskInfo && taskInfo.code === 200) {
                 for (let item of taskInfo.data) {
                     //j = appIdArr.length - 1
                     appId = item.appId
-                    sharecodes = item.sharecodes
+                    shareCodes = item.sharecodes
                     homeDataFunPrefix = item.homeData || 'interact_template'
                     collectScoreFunPrefix = item.collectScore[j] || 'harmony'
                     lotteryResultFunPrefix = item.lotteryResult[j] || homeDataFunPrefix
