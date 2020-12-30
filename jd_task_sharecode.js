@@ -66,8 +66,7 @@ async function jdShareCode() {
         console.log("活动信息读取成功\n");
         for (let item of taskInfo.data) {
             console.log(`开始获取【${item.appName}】活动的用户分享码\n`);
-            if(item.method === "post") await postTaskShareCode(item.homeData, item.appId, item.appId2, item.shareTaskType, item.appName);
-            //else await getTaskShareCode(item.homeData, item.appId, item.appId2, item.shareRakType, item.appName);
+            item.method === "post" ? await postTaskShareCode(item.homeData, item.appId, item.appId2, item.shareTaskType, item.appName) : await getTaskShareCode(item.homeData, item.appId, item.appId2, item.shareRakType, item.appName);
         }
     }
     else {
@@ -173,7 +172,7 @@ function readTaskInfo(path) {
 
 function taskPostUrl(function_id, body = {}, function_id2) {
     let url = `${JD_API_HOST}`;
-    if (function_id2 !== "") {
+    if (function_id2.length === 0) {
         url += `?functionId=${function_id2}`;
     }
     return {
@@ -191,7 +190,7 @@ function taskPostUrl(function_id, body = {}, function_id2) {
 
 function taskGetUrl(function_id, body = {}, function_id2) {
   return {
-    url: function_id2 === "" ? `${JD_API_GET_HOST}?body=${escape(JSON.stringify(body))}&client=m&clientVersion=8.0.0&t=${new Date().getTime()}` : `${JD_API_GET_HOST}?functionId=${function_id2}&body=${escape(JSON.stringify(body))}&client=m&clientVersion=8.0.0&t=${new Date().getTime()}`,
+    url: function_id2.length === 0 ? `${JD_API_GET_HOST}?body=${escape(JSON.stringify(body))}&client=m&clientVersion=8.0.0&t=${new Date().getTime()}` : `${JD_API_GET_HOST}?functionId=${function_id2}&body=${escape(JSON.stringify(body))}&client=m&clientVersion=8.0.0&t=${new Date().getTime()}`,
     headers: {
       "Accept": "application/json, text/plain, */*",
       "Accept-Encoding": "gzip, deflate, br",
