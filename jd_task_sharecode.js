@@ -24,6 +24,7 @@ if ($.isNode()) {
     cookiesArr = cookiesArr.filter(item => item !== "" && item !== null && item !== undefined);
 }
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
+const JD_API_GET_HOST = 'https://api.m.jd.com/api';
 const taskInfoPath = 'https://allgreat.xyz/Scripts/JD/InviteCodes/jd_lotteryMachine.json';
 !(async () => {
     if (!cookiesArr[0]) {
@@ -65,7 +66,7 @@ async function jdShareCode() {
         console.log("活动信息读取成功\n");
         for (let item of taskInfo.data) {
             console.log(`开始获取【${item.appName}】活动的用户分享码\n`);
-            await getTaskShareCode(item.homeData, item.appId, item.shareTaskType, item.appName);
+            item.method === "post" ? await postTaskShareCode(item.homeData, item.appId, item.appId2, item.shareTaskType, item.appName) : await getTaskShareCode(item.homeData, item.appId, item.appId2, item.shareRakType, item.appName);
         }
     }
     else {
@@ -88,9 +89,9 @@ function showMsg() {
     })
 }
 
-function getTaskShareCode(homedata, appId, taskType, appName) {
+function postTaskShareCode(homedata, appId, appId2, taskType, appName) {
     return new Promise(resolve => {
-        $.post(taskPostUrl(homedata + "_getHomeData", { "appId": appId, "taskToken": "" },), async (err, resp, data) => {
+        $.post(taskPostUrl(homedata + "_getHomeData", { "appId": appId, "taskToken": "" }, appId2), async (err, resp, data) => {
             try {
                 if (err) {
                     console.log(`${JSON.stringify(err)}`)
@@ -102,7 +103,7 @@ function getTaskShareCode(homedata, appId, taskType, appName) {
                             $.taskVos = data.data.result.taskVos;
                             $.taskVos.map(item => {
                                 if (item.taskType === taskType) {
-                                    console.log(`\n您的【${appName}】好友助力邀请码：${item.assistTaskDetailVo.taskToken}\n`)
+                                    //console.log(`\n您的【${appName}】好友助力邀请码：${item.assistTaskDetailVo.taskToken}\n`)
                                     message += `\n您的【${appName}】好友助力邀请码：${item.assistTaskDetailVo.taskToken}\n`
                                 }
                             })
@@ -117,7 +118,34 @@ function getTaskShareCode(homedata, appId, taskType, appName) {
         })
     })
 }
-
+function getTaskShareCode(homedata, appId, appId2, taskType, appName) {
+  return new Promise(resolve => {
+    $.get(taskGetUrl(homedata + "_getHomeData", { "appId": appId, "taskToken": "" }, appId2), (err, resp, data) => {
+      try {
+        if (err) {
+          console.log(`${JSON.stringify(err)}`)
+          console.log(`${$.name} API请求失败，请检查网路重试`)
+        } else {
+          if (safeGet(data)) {
+            data = JSON.parse(data);
+            if (data.data.bizCode === 0) {
+             $.taskVos = data.data.result.taskVos;
+                            $.taskVos.map(item => {
+                                if (item.taskType === taskType) {
+                                    message += `\n您的【${appName}】好友助力邀请码：${item.assistTaskDetailVo.taskToken}\n`;
+                                    }
+            })
+          }
+        }
+       }
+      } catch (e) {
+        $.logErr(e, resp)
+      } finally {
+        resolve();
+      }
+    })
+  })
+}
 function readTaskInfo(path) {
     console.log(`开始`)
     return new Promise(async resolve => {
@@ -144,7 +172,7 @@ function readTaskInfo(path) {
 
 function taskPostUrl(function_id, body = {}, function_id2) {
     let url = `${JD_API_HOST}`;
-    if (function_id2) {
+    if (function_id2 !== "") {
         url += `?functionId=${function_id2}`;
     }
     return {
@@ -159,6 +187,23 @@ function taskPostUrl(function_id, body = {}, function_id2) {
         }
     }
 }
+
+function taskGetUrl(function_id, body = {}, function_id2) {
+  return {
+    url: function_id2 === "" ? `${JD_API_GET_HOST}?body=${escape(JSON.stringify(body))}&client=m&clientVersion=8.0.0&t=${new Date().getTime()}` : `${JD_API_GET_HOST}?functionId=${function_id2}&body=${escape(JSON.stringify(body))}&client=m&clientVersion=8.0.0&t=${new Date().getTime()}`,
+    headers: {
+      "Accept": "application/json, text/plain, */*",
+      "Accept-Encoding": "gzip, deflate, br",
+      "Accept-Language": "zh-cn",
+      "Connection": "keep-alive",
+      "Host": "api.m.jd.com",
+      "Referer": `https://${function_id2}.jd.com/`,
+      "Cookie": cookie,
+      "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0") : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0"),
+    }
+  }
+
+
 function TotalBean() {
     return new Promise(async resolve => {
         const options = {
