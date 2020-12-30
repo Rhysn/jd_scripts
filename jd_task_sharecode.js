@@ -26,7 +26,6 @@ if ($.isNode()) {
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
 const taskInfoPath = 'https://allgreat.xyz/Scripts/JD/InviteCodes/jd_lotteryMachine.json';
 !(async () => {
-    await requireConfig();
     if (!cookiesArr[0]) {
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', { "open-url": "https://bean.m.jd.com/" });
         return;
@@ -66,7 +65,7 @@ async function jdShareCode() {
         console.log("活动信息读取成功\n");
         for (let item of taskInfo.data) {
             console.log(`开始获取【${item.appName}】活动的用户分享码\n`);
-            await getTaskShareCode(item.homeData, item.appId, item.shareTaskType);
+            await getTaskShareCode(item.homeData, item.appId, item.shareTaskType, item.appName);
         }
     }
     else {
@@ -89,7 +88,7 @@ function showMsg() {
     })
 }
 
-function getTaskShareCode(homedata, appId, taskType) {
+function getTaskShareCode(homedata, appId, taskType, appName) {
     return new Promise(resolve => {
         $.post(taskPostUrl(homedata + "_getHomeData", { "appId": appId, "taskToken": "" },), async (err, resp, data) => {
             try {
@@ -99,13 +98,12 @@ function getTaskShareCode(homedata, appId, taskType) {
                 } else {
                     if (safeGet(data)) {
                         data = JSON.parse(data);
-                        console.log(data);
                         if (data.data.bizCode === 0) {
                             $.taskVos = data.data.result.taskVos;
                             $.taskVos.map(item => {
                                 if (item.taskType === taskType) {
-                                    console.log(`\n您的${$.name}好友助力邀请码：${item.assistTaskDetailVo.taskToken}\n`)
-                                    message += `\n您的${$.name}好友助力邀请码：${item.assistTaskDetailVo.taskToken}\n`
+                                    console.log(`\n您的【${appName}】好友助力邀请码：${item.assistTaskDetailVo.taskToken}\n`)
+                                    message += `\n您的【${appName}】好友助力邀请码：${item.assistTaskDetailVo.taskToken}\n`
                                 }
                             })
                         }
@@ -141,25 +139,6 @@ function readTaskInfo(path) {
         })
         await $.wait(2000);
         resolve();
-    })
-}
-
-function requireConfig() {
-    return new Promise(resolve => {
-        console.log(`开始获取${$.name}配置文件\n`);
-        //Node.js用户请在jdCookie.js处填写京东ck;
-        const shareCodes = [] //$.isNode() ? require('./jdSplitShareCodes.js') : '';
-        console.log(`共${cookiesArr.length}个京东账号\n`);
-        $.shareCodesArr = [];
-        if ($.isNode()) {
-            Object.keys(shareCodes).forEach((item) => {
-                if (shareCodes[item]) {
-                    $.shareCodesArr.push(shareCodes[item])
-                }
-            })
-        }
-        console.log(`您提供了${$.shareCodesArr.length}个账号的${$.name}助力码\n`);
-        resolve()
     })
 }
 
