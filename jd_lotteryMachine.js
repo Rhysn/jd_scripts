@@ -80,7 +80,7 @@ const JD_API_HOST = `https://api.m.jd.com/client.action`;
                 for (let j in appIdArr) {
                     //j = appIdArr.length - 1
                     appId = appIdArr[j]
-                    shareCode = shareCodeArr[j]
+                    shareCodes.push(shareCodeArr[j])
                     homeDataFunPrefix = homeDataFunPrefixArr[j] || 'interact_template'
                     collectScoreFunPrefix = collectScoreFunPrefixArr[j] || 'harmony'
                     lotteryResultFunPrefix = lotteryResultFunPrefixArr[j] || homeDataFunPrefix
@@ -182,8 +182,6 @@ function interact_template_getHomeData(timeout = 0) {
                                 for (item of shareCodes) {
                                     await harmony_collectScore(item, data.data.result.taskVos[i].taskId);
                                 }
-                            }else{
-                            await harmony_collectScore(shareCode, data.data.result.taskVos[i].taskId);
                             }
                             for (let j = 0; j < (data.data.result.userInfo.lotteryNum || 0); j++) {
                                 if (appId === "1EFRTxQ") {
