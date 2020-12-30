@@ -60,7 +60,7 @@ const JD_API_HOST = `https://api.m.jd.com/client.action`;
                 $.msg($.name, `【提示】京东账号${i + 1} cookie已过期！请先获取cookie\n直接使用NobyDa的京东签到获取`, 'https://bean.m.jd.com/', { "open-url": "https://bean.m.jd.com/" });
                 continue;
             }
-            var shareCodes = [];
+            //var shareCodes = [];
             const taskInfo = await readTaskInfo(taskInfoPath);
             if (taskInfo && taskInfo.code === 200) {
                 for (let item of taskInfo.data) {
