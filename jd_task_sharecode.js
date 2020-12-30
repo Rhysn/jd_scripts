@@ -172,7 +172,7 @@ function readTaskInfo(path) {
 
 function taskPostUrl(function_id, body = {}, function_id2) {
     let url = `${JD_API_HOST}`;
-    if (function_id2.length === 0) {
+    if (function_id2.length > 0) {
         url += `?functionId=${function_id2}`;
     }
     return {
