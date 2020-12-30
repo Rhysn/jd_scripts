@@ -20,8 +20,8 @@ const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const STRSPLIT = "|";
 const needSum = false;            //是否需要显示汇总
 const printDetail = false;        //是否显示出参详情
-//【闪购盲盒】【疯狂砸金蛋】【健康服务】【新店福利】【砸蛋抽好礼】【东东福利屋】【京东焕新家】【京豆大转盘】
-const appIdArr = ['1EFRRxA','1EFRQwA','1EFRTwg','1EFRTyg','1EFRTxQ','1EFRSxA','1EFRSyw','1EFRSyg'];
+//【闪购盲盒】【疯狂砸金蛋】【健康服务】【新店福利】【砸蛋抽好礼】【东东福利屋】【京东焕新家】
+const appIdArr = ['1EFRRxA','1EFRQwA','1EFRTwg','1EFRTyg','1EFRTxQ','1EFRSxA','1EFRSyw'];
 const shareCodeArr = ['P04z54XCjVWmIaW5m9cZ2f-3n0YlHdruJTsA9A','P04z54XCjVXnIaW5m9cZ2f-3n0YlMvv1qNf7Uo','P04z54XCjVUnoaW5m9cZ2f-3n0YlI4IkViXpeg','P04z54XCjVUloaW5m9cZ2f-3n0YlK2hgTLjcVQ','T0184qQtHEdH9FHRJBn3kQCjVUmYaW5kRrbA','T0225KkcRxga9AbWIhzykfJYcgCjVVmIaW5kRrbA','T0225KkcRxga9AbWIhzykfJYcgCjVVl4aW5kRrbA','T0225KkcRxga9AbWIhzykfJYcgCjVVloaW5kRrbA'];
 const shareCodeArr2 = ['P04z54XCjVWmIaW5mlRVjyhg31PkxxRQQA','P04z54XCjVXnIaW5mlRVjyhg31PkzULYoQ','P04z54XCjVUnoaW5mlRVjyhg31Pk5yQ45A','P04z54XCjVUloaW5mlRVjyhg31PkwB1JXc','P04z54XCjVUmYaW5m9cZ2f-3n0YlCj8l1OiUl8','T0184qQtHEdH9FHRJBn3kQCjVVmIaW5kRrbA','T0184qQtHEdH9FHRJBn3kQCjVVl4aW5kRrbA','T0184qQtHEdH9FHRJBn3kQCjVVloaW5kRrbA'];
 const homeDataFunPrefixArr = ['','','healthyDay','healthyDay','ts','wfh','healthyDay','healthyDay'];
