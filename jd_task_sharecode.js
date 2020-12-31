@@ -193,7 +193,7 @@ function taskPostUrl(function_id, body = {}, function_id2) {
 
 function taskGetUrl(function_id, body = {}, function_id2) {
     return {
-        url: function_id2.length === 0 ? `${JD_API_GET_HOST}?body=${escape(JSON.stringify(body))}&client=m&clientVersion=8.0.0&t=${new Date().getTime()}` : `${JD_API_GET_HOST}?functionId=${function_id2}&body=${escape(JSON.stringify(body))}&client=m&clientVersion=8.0.0&t=${new Date().getTime()}`,
+        url: function_id2.length === 0 ? `${JD_API_GET_HOST}?functionId=${function_id}&body=${escape(JSON.stringify(body))}&client=m&clientVersion=8.0.0&t=${new Date().getTime()}` : `${JD_API_GET_HOST}?appId=${function_id2}&functionId=${function_id}&body=${escape(JSON.stringify(body))}&client=m&clientVersion=8.0.0&t=${new Date().getTime()}`,
         headers: {
             "Accept": "application/json, text/plain, */*",
             "Accept-Encoding": "gzip, deflate, br",
