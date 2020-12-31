@@ -26,6 +26,9 @@ if ($.isNode()) {
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
 const JD_API_GET_HOST = 'https://api.m.jd.com/api';
 const taskInfoPath = 'https://allgreat.xyz/Scripts/JD/InviteCodes/jd_lotteryMachine.json';
+
+const get_ua = "jdapp;iPhone;9.3.2;14.2.1;app_device/IOS;pap/JA2015_311210|9.3.2|IOS 14.2.1;Mozilla/5.0 (iPhone; CPU iPhone OS 14_2_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1";
+
 !(async () => {
     if (!cookiesArr[0]) {
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', { "open-url": "https://bean.m.jd.com/" });
@@ -173,10 +176,10 @@ function readTaskInfo(path) {
     })
 }
 
-function taskPostUrl(function_id, body = {}, function_id2) {
+function taskPostUrl(function_id, body = {}, appid2) {
     let url = `${JD_API_HOST}`;
-    if (function_id2.length > 0) {
-        url += `?functionId=${function_id2}`;
+    if (appid2.length > 0) {
+        url += `?appid=${appid2}`;
     }
     return {
         url,
@@ -191,18 +194,19 @@ function taskPostUrl(function_id, body = {}, function_id2) {
     }
 }
 
-function taskGetUrl(function_id, body = {}, function_id2) {
+function taskGetUrl(function_id, body = {}, appid2) {
     return {
-        url: function_id2.length === 0 ? `${JD_API_GET_HOST}?functionId=${function_id}&body=${escape(JSON.stringify(body))}&client=m&clientVersion=8.0.0&t=${new Date().getTime()}` : `${JD_API_GET_HOST}?appId=${function_id2}&functionId=${function_id}&body=${escape(JSON.stringify(body))}&client=m&clientVersion=8.0.0&t=${new Date().getTime()}`,
+        url: appid2.length === 0 ? `${JD_API_GET_HOST}?functionId=${function_id}&body=${escape(JSON.stringify(body))}&client=m&clientVersion=8.0.0&t=${new Date().getTime()}` : `${JD_API_GET_HOST}?appid=${appid2}&functionId=${function_id}&body=${escape(JSON.stringify(body))}&client=m&clientVersion=8.0.0&t=${new Date().getTime()}`,
         headers: {
             "Accept": "application/json, text/plain, */*",
             "Accept-Encoding": "gzip, deflate, br",
             "Accept-Language": "zh-cn",
             "Connection": "keep-alive",
             "Host": "api.m.jd.com",
-            "Referer": `https://${function_id2}.jd.com/`,
+            "Referer": `https://${appid2}.jd.com/`,
+            "Origin": `https://${appid2}.jd.com`,
             "Cookie": cookie,
-            "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0") : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0"),
+            "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : get_ua) : ($.getdata('JDUA') ? $.getdata('JDUA') : get_ua),
         }
     }
 }
