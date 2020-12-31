@@ -65,9 +65,9 @@ async function jdShareCode() {
 
     if (taskInfo && taskInfo.code === 200) {
         console.log("活动信息读取成功\n");
-        for (let item of taskInfo.data) {
+        for (let item of taskInfoJson.data) {
             console.log(`开始获取【${item.appName}】活动的用户分享码\n`);
-            item.method === "post" ? await postTaskShareCode(item.homeData, item.appId, item.appId2, item.shareTaskType, item.appName) : await getTaskShareCode(item.homeData, item.appId, item.appId2, item.shareRakType, item.appName);
+            item.methon === "post" ? await postTaskShareCode(item.homeData, item.appId, item.appId2, item.shareTaskType, item.appName) : await getTaskShareCode(item.homeData, item.appId, item.appId2, item.shareTaskType, item.appName);
         }
     }
     else {
@@ -92,7 +92,7 @@ function showMsg() {
 
 function postTaskShareCode(homedata, appId, appId2, taskType, appName) {
     return new Promise(resolve => {
-        $.post(taskPostUrl(homedata + "_getHomeData", { "appId": appId, "taskToken": "" }, ), async (err, resp, data) => {
+        $.post(taskPostUrl(homedata + "_getHomeData", { "appId": appId, "taskToken": "" }, appId2), async (err, resp, data) => {
             try {
                 if (err) {
                     console.log(`${JSON.stringify(err)}`)
@@ -130,7 +130,6 @@ function getTaskShareCode(homedata, appId, appId2, taskType, appName) {
                 } else {
                     if (safeGet(data)) {
                         data = JSON.parse(data);
-                        console.log(data);
                         if (data.data.bizCode === 0) {
                             $.taskVos = data.data.result.taskVos;
                             $.taskVos.map(item => {
@@ -181,7 +180,7 @@ function taskPostUrl(function_id, body = {}, function_id2) {
     }
     return {
         url,
-        body: `functionId=${function_id}&body=${escape(JSON.stringify(body))}&client=wh5&clientVersion=9.1.0`,
+        body: `functionId=${function_id}&body=${escape(JSON.stringify(body))}&client=wh5&clientVersion=1.0.0`,
         headers: {
             "Cookie": cookie,
             "origin": "https://h5.m.jd.com",
