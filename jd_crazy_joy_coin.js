@@ -677,7 +677,7 @@ function getStopKey(){
   return min_key < 17 && min_key > 15 ? true : false;
 }
 function getBuyJoyLevel(num) {
-  if (zero < 5) {
+  if (zero < 2) {
     var myJoyArr = $.joyIds;
     if (joysArr.length < 30) num = joysArr.length - 1;
     else {
