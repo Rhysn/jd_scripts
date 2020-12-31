@@ -65,7 +65,7 @@ async function jdShareCode() {
 
     if (taskInfo && taskInfo.code === 200) {
         console.log("活动信息读取成功\n");
-        for (let item of taskInfoJson.data) {
+        for (let item of taskInfo.data) {
             console.log(`开始获取【${item.appName}】活动的用户分享码\n`);
             item.methon === "post" ? await postTaskShareCode(item.homeData, item.appId, item.appId2, item.shareTaskType, item.appName) : await getTaskShareCode(item.homeData, item.appId, item.appId2, item.shareTaskType, item.appName);
         }
