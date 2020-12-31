@@ -400,7 +400,7 @@ async function msgShow() {
     if ($.isNode() && gameOverMessage !== "") await notify.sendNotify('抽奖机活动过期', gameOverMessage);
 }
 //获取活动目录
-function readTaskInfo(path, timeout = 200) {
+function readTaskInfo(path, timeout = 10000) {
     return new Promise((resolve) => {
         setTimeout(() => {
             let url = {

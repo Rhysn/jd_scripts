@@ -152,27 +152,26 @@ function getTaskShareCode(homedata, appId, appId2, taskType, appName) {
     })
 }
 
-function readTaskInfo(path) {
-    console.log(`开始`)
+function readTaskInfo(path, timeout = 10000) {
     return new Promise(async resolve => {
-        $.get({ url: path }, (err, resp, data) => {
-            try {
-                if (err) {
-                    console.log(`${JSON.stringify(err)}`);
-                    console.log(`${$.name} API请求失败，请检查网路重试`);
-                } else {
-                    if (safeGet(data)) {
-                        data = JSON.parse(data);
+        setTimeout(() => {
+            $.get({ url: path }, (err, resp, data) => {
+                try {
+                    if (err) {
+                        console.log(`${JSON.stringify(err)}`);
+                        console.log(`${$.name} API请求失败，请检查网路重试`);
+                    } else {
+                        if (safeGet(data)) {
+                            data = JSON.parse(data);
+                        }
                     }
+                } catch (e) {
+                    $.logErr(e, resp)
+                } finally {
+                    resolve(data);
                 }
-            } catch (e) {
-                $.logErr(e, resp)
-            } finally {
-                resolve(data);
-            }
-        })
-        await $.wait(2000);
-        resolve();
+            })
+        }, timeout)
     })
 }
 
