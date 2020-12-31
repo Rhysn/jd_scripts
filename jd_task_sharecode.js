@@ -92,7 +92,7 @@ function showMsg() {
 
 function postTaskShareCode(homedata, appId, appId2, taskType, appName) {
     return new Promise(resolve => {
-        $.post(taskPostUrl(homedata + "_getHomeData", { "appId": appId, "taskToken": "" }, appId2), async (err, resp, data) => {
+        $.post(taskPostUrl(homedata + "_getHomeData", { "appId": appId, "taskToken": "" }, ), async (err, resp, data) => {
             try {
                 if (err) {
                     console.log(`${JSON.stringify(err)}`)
