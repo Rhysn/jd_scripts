@@ -39,7 +39,7 @@ const taskInfoPath = 'https://allgreat.xyz/Scripts/JD/InviteCodes/jd_lotteryMach
             $.isLogin = true;
             $.nickName = '';
             message = '';
-            await TotalBean();
+            await loginIN();
             console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
             if (!$.isLogin) {
                 $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/`, { "open-url": "https://bean.m.jd.com/" });
@@ -47,9 +47,9 @@ const taskInfoPath = 'https://allgreat.xyz/Scripts/JD/InviteCodes/jd_lotteryMach
                 if ($.isNode()) {
                     await notify.sendNotify(`${$.name}cookie已失效 - ${$.UserName}`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
                 }
-                continue
+                continue;
             }
-            await jdShareCode()
+            await jdShareCode();
         }
     }
 })()
@@ -59,6 +59,7 @@ const taskInfoPath = 'https://allgreat.xyz/Scripts/JD/InviteCodes/jd_lotteryMach
     .finally(() => {
         $.done();
     })
+
 async function jdShareCode() {
     const taskInfo = await readTaskInfo(taskInfoPath);
 
@@ -118,42 +119,44 @@ function postTaskShareCode(homedata, appId, appId2, taskType, appName) {
         })
     })
 }
+
 function getTaskShareCode(homedata, appId, appId2, taskType, appName) {
-  return new Promise(resolve => {
-    $.get(taskGetUrl(homedata + "_getHomeData", { "appId": appId, "taskToken": "" }, appId2), (err, resp, data) => {
-      try {
-        if (err) {
-          console.log(`${JSON.stringify(err)}`)
-          console.log(`${$.name} API请求失败，请检查网路重试`)
-        } else {
-          if (safeGet(data)) {
-            data = JSON.parse(data);
-            if (data.data.bizCode === 0) {
-             $.taskVos = data.data.result.taskVos;
+    return new Promise(resolve => {
+        $.get(taskGetUrl(homedata + "_getHomeData", { "appId": appId, "taskToken": "" }, appId2), (err, resp, data) => {
+            try {
+                if (err) {
+                    console.log(`${JSON.stringify(err)}`)
+                    console.log(`${$.name} API请求失败，请检查网路重试`)
+                } else {
+                    if (safeGet(data)) {
+                        data = JSON.parse(data);
+                        if (data.data.bizCode === 0) {
+                            $.taskVos = data.data.result.taskVos;
                             $.taskVos.map(item => {
                                 if (item.taskType === taskType) {
                                     message += `\n您的【${appName}】好友助力邀请码：${item.assistTaskDetailVo.taskToken}\n`;
-                                    }
-            })
-          }
-        }
-       }
-      } catch (e) {
-        $.logErr(e, resp)
-      } finally {
-        resolve();
-      }
+                                }
+                            })
+                        }
+                    }
+                }
+            } catch (e) {
+                $.logErr(e, resp)
+            } finally {
+                resolve();
+            }
+        })
     })
-  })
 }
+
 function readTaskInfo(path) {
     console.log(`开始`)
     return new Promise(async resolve => {
         $.get({ url: path }, (err, resp, data) => {
             try {
                 if (err) {
-                    console.log(`${JSON.stringify(err)}`)
-                    console.log(`${$.name} API请求失败，请检查网路重试`)
+                    console.log(`${JSON.stringify(err)}`);
+                    console.log(`${$.name} API请求失败，请检查网路重试`);
                 } else {
                     if (safeGet(data)) {
                         data = JSON.parse(data);
@@ -189,22 +192,22 @@ function taskPostUrl(function_id, body = {}, function_id2) {
 }
 
 function taskGetUrl(function_id, body = {}, function_id2) {
-  return {
-    url: function_id2.length === 0 ? `${JD_API_GET_HOST}?body=${escape(JSON.stringify(body))}&client=m&clientVersion=8.0.0&t=${new Date().getTime()}` : `${JD_API_GET_HOST}?functionId=${function_id2}&body=${escape(JSON.stringify(body))}&client=m&clientVersion=8.0.0&t=${new Date().getTime()}`,
-    headers: {
-      "Accept": "application/json, text/plain, */*",
-      "Accept-Encoding": "gzip, deflate, br",
-      "Accept-Language": "zh-cn",
-      "Connection": "keep-alive",
-      "Host": "api.m.jd.com",
-      "Referer": `https://${function_id2}.jd.com/`,
-      "Cookie": cookie,
-      "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0") : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0"),
+    return {
+        url: function_id2.length === 0 ? `${JD_API_GET_HOST}?body=${escape(JSON.stringify(body))}&client=m&clientVersion=8.0.0&t=${new Date().getTime()}` : `${JD_API_GET_HOST}?functionId=${function_id2}&body=${escape(JSON.stringify(body))}&client=m&clientVersion=8.0.0&t=${new Date().getTime()}`,
+        headers: {
+            "Accept": "application/json, text/plain, */*",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept-Language": "zh-cn",
+            "Connection": "keep-alive",
+            "Host": "api.m.jd.com",
+            "Referer": `https://${function_id2}.jd.com/`,
+            "Cookie": cookie,
+            "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0") : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0"),
+        }
     }
-  }
+}
 
-
-function TotalBean() {
+function loginIN() {
     return new Promise(async resolve => {
         const options = {
             "url": `https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2`,
@@ -244,6 +247,7 @@ function TotalBean() {
         })
     })
 }
+
 function safeGet(data) {
     try {
         if (typeof JSON.parse(data) == "object") {
@@ -251,10 +255,11 @@ function safeGet(data) {
         }
     } catch (e) {
         console.log(e);
-        console.log(`京东服务器访问数据为空，请检查自身设备网络情况`);
+        console.log(`服务器返回数据为空，请检查自身设备网络情况`);
         return false;
     }
 }
+
 function jsonParse(str) {
     if (typeof str == "string") {
         try {
