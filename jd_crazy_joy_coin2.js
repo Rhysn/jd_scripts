@@ -27,7 +27,7 @@ const $ = new Env('crazyJoy挂机');
 const JD_API_HOST = 'https://api.m.jd.com/';
 
 const notify = $.isNode() ? require('./sendNotify') : '';
-let cookiesArr = [], cookie = '', message = '', buyJoyLevelArr = [], joysArr = [];
+let cookiesArr = [], cookie = '', message = '', buyJoyLevelArr = [], joysArr = [], zero = 0;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 if ($.isNode()) {
   Object.keys(jdCookieNode).forEach((item) => {
@@ -165,8 +165,10 @@ if ($.isNode()) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {"open-url": "https://bean.m.jd.com/"});
     return;
   }
-  let count = 1
-  while (count--) {
+  let count = 0
+  while (true) {
+    if(getStopKey()) break;
+    count++
     console.log(`============开始第${count}次挂机=============`)
     for (let i = 0; i < cookiesArr.length; i++) {
       if (cookiesArr[i]) {
@@ -205,7 +207,7 @@ async function jdJxStory() {
   console.log(`待购买：${buyJoyLevelArr}`);
   await $.wait(1000)
   for (let i = 0; i < $.joyIds.length; ++i) {
-    if (!$.canBuy) {
+    if (!$.canBuy || buyJoyLevelArr.length === 0) {
       $.log(`金币不足，跳过购买`)
       break
     }
@@ -214,22 +216,27 @@ async function jdJxStory() {
       await $.wait(1000)
     }
   }
-  await getJoyList()
-  let obj = {};
-  $.joyIds.map((vo, idx) => {
-    if (vo !== 0) {
-      if (obj[vo]) {
-        obj[vo].push(idx)
-      } else {
-        obj[vo] = [idx]
+  var mergeKey = true;
+  while(mergeKey){
+    mergeKey = false;
+    await getJoyList();
+    let obj = {};
+    $.joyIds.map((vo, idx) => {
+      if (vo !== 0) {
+        if (obj[vo]) {
+          obj[vo].push(idx);
+        } else {
+          obj[vo] = [idx];
+        }
       }
-    }
-  })
-  for (let idx in obj) {
-    const vo = obj[idx]
-    if (idx < 34 && vo.length >= 2) {
-      await mergeJoy(vo[0], vo[1])
-      await $.wait(3000)
+    })
+    for (let idx in obj) {
+      const vo = obj[idx];
+      if (idx < 34 && vo.length >= 2) {
+        await mergeJoy(vo[0], vo[1]);
+        await $.wait(1000);
+        mergeKey = true;
+      }
     }
   }
 
@@ -238,8 +245,33 @@ async function jdJxStory() {
   await getCoin()
   await $.wait(1000)
   await getUserBean()
-  await $.wait(5000)
+  await $.wait(1000)
   console.log(`当前信息：${$.bean} 京豆，${$.coin} 金币`)
+  
+  await getJoyList();
+  console.log(`现有Joy等级表：${$.joyIds}`);
+  await getNeedJoyLevel();
+  console.log(`剩余Joy空格：${zero}个`);
+  if(zero === 0){
+    var sellList = $.joyIds.concat();
+    let sellnum = 1;
+    sellList.sort(function(a, b){return b - a});
+    while(sellnum--){
+      var sellitem = sellList.pop();
+      console.log(`准备出售【${sellitem}】级Joy`);
+      for(let i in $.joyIds){
+        if(sellitem > 29) break;
+        if(sellitem === $.joyIds[i]){
+          console.log(`开始出售第【${i}】个【${$.joyIds[i]}】级Joy`);
+          await sellJoy(sellitem, i);
+          await $.wait(1000);
+          break;
+        }
+      }
+    }
+    buyJoyLevelArr.pop();
+  }
+  await $.wait(5000)
 }
 
 function getJoyList() {
@@ -255,7 +287,6 @@ function getJoyList() {
             data = JSON.parse(data);
             if (data.success && data.data.joyIds) {
               $.joyIds = data.data.joyIds
-              console.log($.joyIds)
             } else
               console.log(`joy信息获取信息失败`)
           }
@@ -281,10 +312,11 @@ function getJoyShop() {
           data = JSON.parse(data);
           if (data.success && data.data && data.data.shop) {
             const shop = data.data.shop.filter(vo => vo.status === 1) || []
-            joysArr = shop
+            joysArr = shop.concat();
             //$.buyJoyLevel = shop.length ? shop[shop.length - 1]['joyId'] : 1
             //$.cost = shop.length ? shop[shop.length - 1]['coins'] : Infinity
-            getBuyJoyLevel(getNeedJoyLevel() - 1)
+            var needLevel = joysArr.length < 30 ? joysArr.length - 1 : getNeedJoyLevel() - 1;
+            getBuyJoyLevel(needLevel);
           }
         }
       } catch (e) {
@@ -309,6 +341,7 @@ function mergeJoy(x, y) {
             data = JSON.parse(data);
             if (data.success && data.data.newJoyId) {
               console.log(`合并成功，获得${data.data.newJoyId}级Joy`)
+              buyJoyLevelArr.pop()
             } else
               console.log(`合并失败，错误`)
           }
@@ -337,7 +370,7 @@ function buyJoy(joyId) {
               await openBox(data.data.eventInfo.eventType, data.data.eventInfo.eventRecordId)
               $.canBuy = false
               buyJoyLevelArr.push(joyId)
-              buyJoyLevelArr.sort(function(a, b){return b - a})
+              
               return
             }
             $.log(`购买${joyId}级joy成功，剩余金币【${data.data.totalCoins}】`)
@@ -450,6 +483,7 @@ function openBox(eventType = 'LUCKY_BOX_DROP', boxId) {
         } else {
           if (safeGet(data)) {
             data = JSON.parse(data);
+            buyJoyLevelArr.pop();
             if (data['success']) {
               $.log(`点击幸运盒子成功，剩余观看视频次数：${data.data.advertViewTimes}, ${data.data.advertViewTimes > 0 ? '等待30秒' : '跳出'}`)
               if (data.data.advertViewTimes > 0) {
@@ -610,26 +644,75 @@ function jsonParse(str) {
     }
   }
 }
+
+function sellJoy(joyId, boxId) {
+  const body = {"action": "SELL", "joyId": joyId, "boxId": boxId}
+  return new Promise((resolve) => {
+    $.get(taskUrl('crazyJoy_joy_trade', JSON.stringify(body)), async (err, resp, data) => {
+      try {
+        if (err) {
+          console.log(`${JSON.stringify(err)}`)
+          console.log(`${$.name} API请求失败，请检查网路重试`)
+        } else {
+          data = JSON.parse(data);
+          if (data.success) {
+            $.log(`出售${boxId}位置${joyId}级joy成功，售价【${data.data.coins}】，总金币【${data.data.totalCoins}】`)
+            $.coin = data.data.totalCoins
+          } else {
+            console.log(data.message)
+          }
+        }
+      } catch (e) {
+        $.logErr(e, resp);
+      } finally {
+        resolve(data);
+      }
+    })
+  })
+}
+
 function getStopKey(){
   var date_key = new Date();
   var min_key = date_key.getMinutes();
   return min_key < 17 && min_key > 15 ? true : false;
 }
-function getBuyJoyLevel(num){
-    var next = num - 1;
-    if( next !== -1 && joysArr[num].coins > (joysArr[next].coins * 2) ){
-        //n = n * 2
-        getBuyJoyLevel(next);
-        return
+function getBuyJoyLevel(num) {
+  if (zero < 2) {
+    var myJoyArr = $.joyIds;
+    if (joysArr.length < 30) num = joysArr.length - 1;
+    else {
+      var minJoyCoins = 0;
+      for (let item of myJoyArr) {
+        if (item < 31 && item > 0) {
+          var thisitem = item - 1;
+          if (minJoyCoins === 0 || joysArr[thisitem].coins < minJoyCoins) {
+            num = thisitem;
+            minJoyCoins = joysArr[thisitem].coins;
+          }
+        }
+      }
+      if(minJoyCoins === 0) num = joysArr.length - 1; 
     }
     buyJoyLevelArr.push(joysArr[num].joyId);
+    return
+  }
+  var next = num - 1;
+  if (next !== -1 && joysArr[num].coins > (joysArr[next].coins * 2)) {
+    getBuyJoyLevel(next);
+    return
+  }
+  buyJoyLevelArr.push(joysArr[num].joyId);
 }
 function getNeedJoyLevel(){
-  var myJoyArr = $.joyIds;
+  var myJoyArr = $.joyIds.concat();
+  zero = 0;
   myJoyArr.sort(function(a, b){return b - a});
   while(myJoyArr.length){
     var item = myJoyArr.pop();
-    if(item === 0) continue;
+    if(item === 0){
+      zero++;
+      continue;
+    }
     return item < 30 ? item : 30;
   }
 }
