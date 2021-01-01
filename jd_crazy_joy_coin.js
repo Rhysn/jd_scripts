@@ -256,11 +256,13 @@ async function jdJxStory() {
   if(zero === 0){
     var sellList = $.joyIds.concat();
     sellList.sort(function(a, b){return b - a});
+    let sellnum = 1;
 
     //最高收益队列 34 * 4;[33 32 31 30] * 1
     /* 满足最高收益队列且当前金币数可购买96个当前30级Joy时，合并一组34级Joy */
     var biggestJoys = [34,34,34,34,34,34,34,34,33,32,31,30];
     if(sellList.equals(biggestJoys)){
+        sellnum = 0;
         if($.coin > 96 * joysArr[29].coins){
             let obj = {};
             $.joyIds.map((vo, idx) => {
@@ -276,10 +278,7 @@ async function jdJxStory() {
             await mergeJoy(vo[0], vo[1]);
             await $.wait(1000);
         }
-        break;
     }
-
-    let sellnum = 1;
     while(sellnum--){
       var sellitem = sellList.pop();
       console.log(`准备出售【${sellitem}】级Joy`);
