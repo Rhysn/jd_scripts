@@ -254,7 +254,7 @@ async function jdJxStory() {
   console.log(`剩余Joy空格：${zero}个`);
   if(zero === 0){
     var sellList = $.joyIds.concat();
-    let sellnum = 4;
+    let sellnum = 1;
     sellList.sort(function(a, b){return b - a});
     while(sellnum--){
       var sellitem = sellList.pop();
