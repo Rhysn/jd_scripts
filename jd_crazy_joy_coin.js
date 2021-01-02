@@ -277,6 +277,10 @@ async function jdJxStory() {
             const vo = obj[34];
             await mergeJoy(vo[0], vo[1]);
             await $.wait(1000);
+        } else {
+            console.log(`34级合并进度：${$.coin / joysArr[29].coins / 96 * 100}%`);
+            await $.wait(30000);
+            return 
         }
     }
     while(sellnum--){
