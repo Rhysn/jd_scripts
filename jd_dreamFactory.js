@@ -876,7 +876,7 @@ async function tuanActivity() {
       if (QueryTuanRes && QueryTuanRes.ret === 0) {
         const { tuanInfo } = QueryTuanRes.data;
         for (let item of tuanInfo) {
-          const { realTuanNum, tuanNum, userInfo } = item;
+          const { realTuanNum, tuanNum, userInfo, endTime } = item;
           $.log(`\n开团情况:${realTuanNum}/${tuanNum}\n`);
           if (realTuanNum === tuanNum) {
             for (let user of userInfo) {
@@ -891,7 +891,8 @@ async function tuanActivity() {
               }
             }
           } else {
-            $.log(`\n此团未达领取团奖励人数：${tuanNum}人\n`)
+            $.log(`\n此团未达领取团奖励人数：${tuanNum}人\n`);
+            if(QueryTuanRes.nowTime > endTime && $.surplusOpenTuanNum > 0) await CreateTuan();
           }
         }
       }
