@@ -277,7 +277,7 @@ async function jdJxStory() {
             await $.wait(1000);
             return
         } else {
-            console.log(`34级合并进度：${$.coin / (joysArr[29].coins * 64 + 6597069766656000) * 100}%`);
+            console.log(`34级合并进度：${$.coin / (joysArr[29].coins * 64 + 6493990551552000) * 100}%`);
             await $.wait(30000);
             return 
         }
