@@ -261,7 +261,7 @@ async function jdJxStory() {
     /* 满足最高收益队列且当前金币数可再购买2个34级Joy时，合并一组34级Joy */
     var biggestJoys = [34,34,34,34,34,34,34,34,33,32,31,30];
     if(sellList.equals(biggestJoys)){
-        if($.coin > joysArr[29].coins * 64 + 6597069766656000){
+        if($.coin > joysArr[29].coins * 64 + 6493990551552000){
             let obj = {};
             $.joyIds.map((vo, idx) => {
                 if (vo !== 0) {
