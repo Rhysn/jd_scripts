@@ -75,6 +75,7 @@ const JD_API_HOST = `https://api.m.jd.com/client.action`;
                     collectScoreFunPrefix = item.collectScore;
                     lotteryResultFunPrefix = item.lotteryResult || homeDataFunPrefix;
                     browseTime = item.timeout || 6;
+                    appName = item.appName;
                     await interact_template_getHomeData();
                 }
             }
@@ -82,7 +83,7 @@ const JD_API_HOST = `https://api.m.jd.com/client.action`;
                 console.log("未能成功读取远程活动信息，使用本地配置");
                 for (let j in appIdArr) {
                     //j = appIdArr.length - 1
-                    appId = appIdArr[j]
+                    appName, appId = appIdArr[j]
                     //shareCode = shareCodeArr[j]
                     shareCodeList.push(shareCodeArr[j])
                     shareCodeList.push(shareCodeArr2[j])
@@ -158,7 +159,7 @@ function interact_template_getHomeData(timeout = 0) {
                         console.log(data.data.bizMsg);
                         merge.jdBeans.fail++;
                         merge.jdBeans.notify = `${data.data.bizMsg}`;
-                        gameOverMessage += `【${appId}】：${data.data.bizMsg}\n`;
+                        gameOverMessage += `【${appName}】：${data.data.bizMsg}\n`;
                         return
                     }
                     scorePerLottery = data.data.result.userInfo.scorePerLottery || data.data.result.userInfo.lotteryMinusScore

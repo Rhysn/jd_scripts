@@ -205,6 +205,7 @@ async function jdJxStory() {
   await $.wait(1000)
   if(buyJoyLevelArr.length === 0) await getJoyShop();
   console.log(`待购买Joy等级：${buyJoyLevelArr}，价格：${joysArr[buyJoyLevelArr[0] - 1].coins}`);
+  console.log(joyArr[29].coins);
   await $.wait(1000)
   for (let i = 0; i < $.joyIds.length; ++i) {
     if (buyJoyLevelArr.length > 0 && $.joyIds[i] === 0) {
