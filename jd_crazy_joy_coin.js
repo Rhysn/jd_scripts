@@ -205,7 +205,6 @@ async function jdJxStory() {
   await $.wait(1000)
   if(buyJoyLevelArr.length === 0) await getJoyShop();
   console.log(`待购买Joy等级：${buyJoyLevelArr}，价格：${joysArr[buyJoyLevelArr[0] - 1].coins}`);
-  console.log(joysArr[29].coins);
   await $.wait(1000)
   for (let i = 0; i < $.joyIds.length; ++i) {
     if (buyJoyLevelArr.length > 0 && $.joyIds[i] === 0) {
@@ -259,10 +258,10 @@ async function jdJxStory() {
     sellList.sort(function(a, b){return b - a});
 
     //最高收益队列 34 * 4;[33 32 31 30] * 1
-    /* 满足最高收益队列且当前金币数可购买96个当前30级Joy时，合并一组34级Joy */
+    /* 满足最高收益队列且当前金币数可再购买2个34级Joy时，合并一组34级Joy */
     var biggestJoys = [34,34,34,34,34,34,34,34,33,32,31,30];
     if(sellList.equals(biggestJoys)){
-        if($.coin > 96 * joysArr[29].coins){
+        if($.coin > joysArr[29].coins * 64 + 6597069766656000){
             let obj = {};
             $.joyIds.map((vo, idx) => {
                 if (vo !== 0) {
@@ -278,7 +277,7 @@ async function jdJxStory() {
             await $.wait(1000);
             return
         } else {
-            console.log(`34级合并进度：${$.coin / joysArr[29].coins / 96 * 100}%`);
+            console.log(`34级合并进度：${$.coin / (joysArr[29].coins * 64 + 6597069766656000) * 100}%`);
             await $.wait(30000);
             return 
         }
