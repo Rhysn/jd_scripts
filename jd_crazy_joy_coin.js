@@ -27,7 +27,7 @@ const $ = new Env('crazyJoy挂机');
 const JD_API_HOST = 'https://api.m.jd.com/';
 
 const notify = $.isNode() ? require('./sendNotify') : '';
-let cookiesArr = [], cookie = '', message = '', buyJoyLevelArr = [], joysArr = [], zero = 0;
+let cookiesArr = [], cookie = '', message = '', buyJoyLevelArr = [], joysArr = [], zero = 0, produceCoins = 0;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 if ($.isNode()) {
   Object.keys(jdCookieNode).forEach((item) => {
@@ -274,11 +274,11 @@ async function jdJxStory() {
             })
             const vo = obj[34];
             await mergeJoy(vo[0], vo[1]);
-            await $.wait(1000);
+            await $.wait(5000);
             return
         } else {
-            console.log(`34级合并进度：${$.coin / (joysArr[29].coins * 64 + 6493990551552000) * 100}%`);
-            await $.wait(30000);
+            console.log(`34级合并进度：${$.coin / (joysArr[29].coins * 64 + 6493990551552000) * 100}%，预测合并所需时间为：${(joysArr[29].coins * 64 + 6493990551552000 - $.coin) /  produceCoins /3600}小时`);
+            await $.wait(5000);
             return 
         }
     }
@@ -486,7 +486,8 @@ function getCoin() {
               await openBox('LUCKY_BOX_DROP',data.data.luckyBoxRecordId)
             }
             if (data.data) {
-              $.log(`此次在线收益：获得 ${data.data['coins']} 金币`)
+              produceCoins = data.data['coins'];
+              $.log(`此次在线收益：获得 ${data.data['coins']} 金币`);
             }
           }
         }
