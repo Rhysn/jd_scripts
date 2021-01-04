@@ -27,7 +27,7 @@ const $ = new Env('crazyJoy挂机');
 const JD_API_HOST = 'https://api.m.jd.com/';
 
 const notify = $.isNode() ? require('./sendNotify') : '';
-let cookiesArr = [], cookie = '', message = '', buyJoyLevelArr = [], joysArr = [], zero = 0, produceCoins = 0;
+let cookiesArr = [], cookie = '', message = '', buyJoyLevelArr = [], joysArr = [], zero = 0;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 if ($.isNode()) {
   Object.keys(jdCookieNode).forEach((item) => {
@@ -204,7 +204,7 @@ async function jdJxStory() {
   await getJoyList()
   await $.wait(1000)
   if(buyJoyLevelArr.length === 0) await getJoyShop();
-  console.log(`待购买Joy等级：${buyJoyLevelArr}，价格：${joysArr[buyJoyLevelArr[0] - 1].coins}`);
+  console.log(`待购买Joy等级：${buyJoyLevelArr}`);
   await $.wait(1000)
   for (let i = 0; i < $.joyIds.length; ++i) {
     if (buyJoyLevelArr.length > 0 && $.joyIds[i] === 0) {
@@ -277,7 +277,7 @@ async function jdJxStory() {
             await $.wait(5000);
             return
         } else {
-            console.log(`34级合并进度：${$.coin / (joysArr[29].coins * 64 + 6493990551552000) * 100}%，预测合并所需时间为：${(joysArr[29].coins * 64 + 6493990551552000 - $.coin) /  produceCoins /3600}小时`);
+            console.log(`34级合并进度：${$.coin / (joysArr[29].coins * 64 + 6493990551552000) * 100}%`);
             await $.wait(5000);
             return 
         }
@@ -486,7 +486,6 @@ function getCoin() {
               await openBox('LUCKY_BOX_DROP',data.data.luckyBoxRecordId)
             }
             if (data.data) {
-              produceCoins = data.data['coins'];
               $.log(`此次在线收益：获得 ${data.data['coins']} 金币`);
             }
           }
