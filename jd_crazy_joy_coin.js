@@ -289,7 +289,6 @@ async function jdJxStory() {
       for(let i in $.joyIds){
         if(sellitem > 29) break;
         if(sellitem === $.joyIds[i]){
-          console.log(`开始出售第【${i}】个【${$.joyIds[i]}】级Joy`);
           await sellJoy(sellitem, i);
           await $.wait(1000);
           break;
@@ -683,7 +682,7 @@ function sellJoy(joyId, boxId) {
         } else {
           data = JSON.parse(data);
           if (data.success) {
-            $.log(`出售${boxId}位置${joyId}级joy成功，售价【${data.data.coins}】，总金币【${data.data.totalCoins}】`)
+            $.log(`出售${boxId}位置${joyId}级joy成功，售价【${data.data.coins}】，当前总金币【${data.data.totalCoins}】`)
             $.coin = data.data.totalCoins
           } else {
             console.log(data.message)
