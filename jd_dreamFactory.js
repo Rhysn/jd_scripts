@@ -790,8 +790,8 @@ async function stealFriend() {
       continue
     }
     await PickUp(pin, true);
-    // await getFactoryIdByPin(pin);//获取好友工厂ID
-    // if ($.stealFactoryId) await collectElectricity($.stealFactoryId,true, pin);
+    await getFactoryIdByPin(pin);//获取好友工厂ID
+    if ($.stealFactoryId) await collectElectricity($.stealFactoryId,true, pin);
   }
 }
 function getFriendList(sort = 0) {
