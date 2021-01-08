@@ -787,6 +787,7 @@ async function stealFriend() {
     }
     await getFactoryIdByPin(pin);//获取好友工厂ID
     if ($.stealFactoryId) await collectElectricity($.stealFactoryId,true, pin);
+    await $.wait(3000);
     if (!$.pickUpMyselfComponent) {
       //$.log(`今日收取零件已达上限，偷好友零件也达到上限，故跳出`)
       continue
