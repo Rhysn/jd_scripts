@@ -206,7 +206,7 @@ function taskList() {
                 if (vo.completedTimes >= vo.targetTimes) {
                   console.log(`任务：${vo.description}可完成`)
                   await completeTask(vo.taskId, vo.taskName)
-                  await $.wait(1000);//延迟等待一秒
+                  await $.wait(5000);//延迟等待一秒
                 } else {
                   switch (vo.taskType) {
                     case 2: // 逛一逛任务
@@ -216,7 +216,7 @@ function taskList() {
                         console.log(`去做任务：${vo.taskName}`)
                         await doTask(vo.taskId)
                         await completeTask(vo.taskId, vo.taskName)
-                        await $.wait(1000);//延迟等待一秒
+                        await $.wait(5000);//延迟等待一秒
                       }
                       break
                     case 4: // 招工
