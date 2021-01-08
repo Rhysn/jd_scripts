@@ -778,10 +778,6 @@ function PickUpComponent(index, encryptPin) {
 }
 //偷好友的电力
 async function stealFriend() {
-  if (!$.pickUpMyselfComponent) {
-    $.log(`今日收取零件已达上限，偷好友零件也达到上限，故跳出`)
-    return
-  }
   await getFriendList();
   $.friendList = [...new Set($.friendList)];
   for (let i = 0; i < $.friendList.length; i++) {
@@ -792,6 +788,10 @@ async function stealFriend() {
     await getFactoryIdByPin(pin);//获取好友工厂ID
     if ($.stealFactoryId) await collectElectricity($.stealFactoryId,true, pin);
     await $.wait(3000);
+    if (!$.pickUpMyselfComponent) {
+      //$.log(`今日收取零件已达上限，偷好友零件也达到上限，故跳出`)
+      continue
+    }
     await PickUp(pin, true);
   }
 }
