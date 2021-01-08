@@ -30,8 +30,8 @@ const JD_API_HOST = 'https://m.jingxi.com';
 
 const notify = $.isNode() ? require('./sendNotify') : '';
 let jdNotify = true;//是否关闭通知，false打开通知推送，true关闭通知推送
-const randomCount = 0;
-var tuanActiveId = `gaVXW_NJ0KPEA2LyUhoXzA==`;
+const randomCount = $.isNode() ? 20 : 5;
+let tuanActiveId = `6S9y4sJUfA2vPQP6TLdVIQ==`;
 const jxOpenUrl = `openjd://virtual?params=%7B%20%22category%22:%20%22jump%22,%20%22des%22:%20%22m%22,%20%22url%22:%20%22https://wqsd.jd.com/pingou/dream_factory/index.html%22%20%7D`;
 let cookiesArr = [], cookie = '', message = '';
 const inviteCodes = [ 'NTXGxnRwTQkr7rbDn08j4w==@XU6GKz30yCKA4LYvpnm5zw==@q0aZPe-QA6AChOBXOoOMBA==@60y72tM8PjtxKeL4EMpTOQ==@QDotuqdYVNrSa3atJZ_V9Q==' ];
@@ -1307,7 +1307,7 @@ function readShareCode() {
           console.log(`${$.name} API请求失败，请检查网路重试`)
         } else {
           if (data) {
-            console.log(`随机取${randomCount}个码放到您固定的互助码后面`)
+            console.log(`随机取${randomCount}个码放到您固定的互助码后面(不影响已有固定互助)`)
             data = JSON.parse(data);
           }
         }
