@@ -790,8 +790,11 @@ async function stealFriend() {
       continue
     }
     await PickUp(pin, true);
-    // await getFactoryIdByPin(pin);//获取好友工厂ID
-    // if ($.stealFactoryId) await collectElectricity($.stealFactoryId,true, pin);
+    await $.wait(1000);
+    await getFactoryIdByPin(pin);//获取好友工厂ID
+    await $.wait(1000);
+    if ($.stealFactoryId) await collectElectricity($.stealFactoryId,true, pin);
+    await $.wait(1000);
   }
 }
 function getFriendList(sort = 0) {
@@ -1422,13 +1425,13 @@ function safeGet(data) {
 
 function taskurl(functionId, body = '') {
   return {
-    url: `${JD_API_HOST}/dreamfactory/${functionId}?zone=dream_factory&${body}&sceneval=2&g_login_type=1&_time=${Date.now()}&_=${Date.now()}`,
+    url: `${JD_API_HOST}/dreamfactory/${functionId}?zone=dream_factory&${body}&sceneval=2&g_login_type=1&callback=jsonpCBKJ&g_ty=ls&_time=${Date.now()}&_=${Date.now()}`,
     headers: {
       'Cookie': cookie,
       'Host': 'm.jingxi.com',
       'Accept': '*/*',
       'Connection': 'keep-alive',
-      'User-Agent': 'jdpingou;iPhone;3.14.4;14.0;ae75259f6ca8378672006fc41079cd8c90c53be8;network/wifi;model/iPhone10,2;appBuild/100351;ADID/00000000-0000-0000-0000-000000000000;supportApplePay/1;hasUPPay/0;pushNoticeIsOpen/1;hasOCPay/0;supportBestPay/0;session/62;pap/JA2015_311210;brand/apple;supportJDSHWK/1;Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148',
+      'User-Agent': 'jdpingou;iPhone;4.0.2;14.2.1;b9258b553ea775415a5ddfde269718c4ce52f77f;network/wifi;model/iPhone13,4;appBuild/100402;ADID/00000000-0000-0000-0000-000000000000;supportApplePay/1;hasUPPay/0;pushNoticeIsOpen/1;hasOCPay/0;supportBestPay/0;session/129;pap/JA2019_3111789;brand/apple;supportJDSHWK/1;Mozilla/5.0 (iPhone; CPU iPhone OS 14_2_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148',
       'Accept-Language': 'zh-cn',
       'Referer': 'https://wqsd.jd.com/pingou/dream_factory/index.html',
       'Accept-Encoding': 'gzip, deflate, br',
