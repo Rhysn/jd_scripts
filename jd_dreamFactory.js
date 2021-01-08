@@ -117,7 +117,7 @@ function collectElectricity(facId = $.factoryId, help = false, master) {
     // if (help && master) {
     //   url = `/dreamfactory/generator/CollectCurrentElectricity?zone=dream_factory&factoryid=${facId}&master=${master}&sceneval=2&g_login_type=1`;
     // }
-    let body = `factoryid=${facId}&apptoken=&pgtimestamp=&phoneID=&doubleflag=1`;
+    let body = `factoryid=${facId}&apptoken=&pgtimestamp=&phoneID=&doubleflag=1&_stk=_time,apptoken,doubleflag,factoryid,pgtimestamp,phoneID,timeStamp,zone`;
     if (help && master) {
       body += `factoryid=${facId}&master=${master}`;
     }
@@ -206,7 +206,7 @@ function taskList() {
                 if (vo.completedTimes >= vo.targetTimes) {
                   console.log(`任务：${vo.description}可完成`)
                   await completeTask(vo.taskId, vo.taskName)
-                  await $.wait(5000);//延迟等待一秒
+                  await $.wait(1000);//延迟等待一秒
                 } else {
                   switch (vo.taskType) {
                     case 2: // 逛一逛任务
@@ -216,7 +216,7 @@ function taskList() {
                         console.log(`去做任务：${vo.taskName}`)
                         await doTask(vo.taskId)
                         await completeTask(vo.taskId, vo.taskName)
-                        await $.wait(5000);//延迟等待一秒
+                        await $.wait(1000);//延迟等待一秒
                       }
                       break
                     case 4: // 招工
@@ -1025,7 +1025,6 @@ async function joinLeaderTuan() {
   if ($.tuanIdS && $.tuanIdS.tuanIds) {
     for (let tuanId of $.tuanIdS.tuanIds) {
       if (!tuanId) continue
-      console.log(`\n参加团ID：${tuanId}\n`);
       await JoinTuan(tuanId);
     }
   }
@@ -1431,7 +1430,7 @@ function taskurl(functionId, body = '') {
       'Host': 'm.jingxi.com',
       'Accept': '*/*',
       'Connection': 'keep-alive',
-      'User-Agent': 'jdpingou;iPhone;4.0.2;14.2.1;b9258b553ea775415a5ddfde269718c4ce52f77f;network/wifi;model/iPhone13,4;appBuild/100402;ADID/00000000-0000-0000-0000-000000000000;supportApplePay/1;hasUPPay/0;pushNoticeIsOpen/1;hasOCPay/0;supportBestPay/0;session/129;pap/JA2019_3111789;brand/apple;supportJDSHWK/1;Mozilla/5.0 (iPhone; CPU iPhone OS 14_2_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148',
+      'User-Agent': 'jdpingou;iPhone;3.14.4;14.0;ae75259f6ca8378672006fc41079cd8c90c53be8;network/wifi;model/iPhone10,2;appBuild/100351;ADID/00000000-0000-0000-0000-000000000000;supportApplePay/1;hasUPPay/0;pushNoticeIsOpen/1;hasOCPay/0;supportBestPay/0;session/62;pap/JA2015_311210;brand/apple;supportJDSHWK/1;Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148',
       'Accept-Language': 'zh-cn',
       'Referer': 'https://wqsd.jd.com/pingou/dream_factory/index.html',
       'Accept-Encoding': 'gzip, deflate, br',
