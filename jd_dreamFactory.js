@@ -1425,7 +1425,7 @@ function safeGet(data) {
 
 function taskurl(functionId, body = '') {
   return {
-    url: `${JD_API_HOST}/dreamfactory/${functionId}?zone=dream_factory&${body}&sceneval=2&g_login_type=1&callback=jsonpCBKJ&g_ty=ls&_time=${Date.now()}&_=${Date.now()}`,
+    url: `${JD_API_HOST}/dreamfactory/${functionId}?zone=dream_factory&${body}&sceneval=2&g_login_type=1&_time=${Date.now()}&_=${Date.now()}`,
     headers: {
       'Cookie': cookie,
       'Host': 'm.jingxi.com',
