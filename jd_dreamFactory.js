@@ -687,7 +687,7 @@ async function PickUp(encryptPin = $.encryptPin, help = false) {
       } else {
         $.log(`自家地下暂无零件可收`)
       }
-      $.pickUpMyselfComponent = false;
+      //$.pickUpMyselfComponent = false;
     }
     for (let item of componentList) {
       await $.wait(1000);
@@ -705,9 +705,10 @@ async function PickUp(encryptPin = $.encryptPin, help = false) {
         } else {
           if (help) {
             console.log(`收好友[${encryptPin}]零件失败：${PickUpComponentRes.msg},直接跳出`)
+            $.pickUpMyselfComponent = false;
           } else {
             console.log(`收自己地下零件失败：${PickUpComponentRes.msg},直接跳出`);
-            $.pickUpMyselfComponent = false;
+            //$.pickUpMyselfComponent = false;
           }
           break
         }
