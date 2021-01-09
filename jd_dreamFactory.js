@@ -1438,7 +1438,7 @@ function taskurl(functionId, body = '') {
   }
 }
 function newtasksysUrl(functionId, taskId) {
-  let url = `${JD_API_HOST}/newtasksys/newtasksys_front/${functionId}?source=dreamfactory&bizCode=dream_factory&sceneval=2&g_login_type=1&_time=${Date.now()}&_=${Date.now()}`;
+  let url = `${JD_API_HOST}/newtasksys/newtasksys_front/${functionId}?source=dreamfactory&bizCode=dream_factory&sceneval=2&g_login_type=1&_stk=_time,apptoken,doubleflag,factoryid,pgtimestamp,phoneID,timeStamp,zone&_time=${Date.now()}&_=${Date.now()}`;
   if (taskId) {
     url += `&taskId=${taskId}`;
   }
