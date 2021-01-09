@@ -685,7 +685,7 @@ async function PickUp(encryptPin = $.encryptPin, help = false) {
       } else {
         $.log(`自家地下暂无零件可收`)
       }
-      $.pickUpMyselfComponent = false;
+      //$.pickUpMyselfComponent = false;
     }
     for (let item of componentList) {
       await $.wait(1000);
@@ -703,9 +703,9 @@ async function PickUp(encryptPin = $.encryptPin, help = false) {
         } else {
           if (help) {
             console.log(`收好友[${encryptPin}]零件失败：${PickUpComponentRes.msg},直接跳出`)
+            $.pickUpMyselfComponent = false;
           } else {
             console.log(`收自己地下零件失败：${PickUpComponentRes.msg},直接跳出`);
-            $.pickUpMyselfComponent = false;
           }
           break
         }
@@ -789,8 +789,10 @@ async function stealFriend() {
     if (pin === 'XU6GKz30yCKA4LYvpnm5zw==' || pin === 'NTXGxnRwTQkr7rbDn08j4w==') {
       continue
     }
-    await PickUp(pin, true);
-    await $.wait(1000);
+    if($.pickUpMyselfComponent) {
+      await PickUp(pin, true);
+      await $.wait(1000);
+    }
     await getFactoryIdByPin(pin);//获取好友工厂ID
     await $.wait(1000);
     if ($.stealFactoryId) await collectElectricity($.stealFactoryId,true, pin);
