@@ -117,7 +117,7 @@ function collectElectricity(facId = $.factoryId, help = false, master) {
     // if (help && master) {
     //   url = `/dreamfactory/generator/CollectCurrentElectricity?zone=dream_factory&factoryid=${facId}&master=${master}&sceneval=2&g_login_type=1`;
     // }
-    let body = `factoryid=${facId}&apptoken=&pgtimestamp=&phoneID=&doubleflag=1&_stk=_time,apptoken,doubleflag,factoryid,pgtimestamp,phoneID,timeStamp,zone`;
+    let body = `factoryid=${facId}&apptoken=&pgtimestamp=&phoneID=&doubleflag=1`;
     if (help && master) {
       body += `factoryid=${facId}&master=${master}`;
     }
@@ -320,7 +320,7 @@ function QueryHireReward() {
 function hireAward(date, type = 0) {
   return new Promise(async resolve => {
     // const url = `/dreamfactory/friend/HireAward?zone=dream_factory&date=${new Date().Format("yyyyMMdd")}&type=0&sceneval=2&g_login_type=1`
-    $.get(taskurl('friend/HireAward', `date=${date}&type=${type}&_stk=_time,apptoken,doubleflag,factoryid,pgtimestamp,phoneID,timeStamp,zone`), async (err, resp, data) => {
+    $.get(taskurl('friend/HireAward', `date=${date}&type=${type}`), async (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
@@ -1424,7 +1424,7 @@ function safeGet(data) {
 
 function taskurl(functionId, body = '') {
   return {
-    url: `${JD_API_HOST}/dreamfactory/${functionId}?zone=dream_factory&${body}&sceneval=2&g_login_type=1&_time=${Date.now()}&_=${Date.now()}`,
+    url: `${JD_API_HOST}/dreamfactory/${functionId}?zone=dream_factory&${body}&_stk=_time,apptoken,doubleflag,factoryid,pgtimestamp,phoneID,timeStamp,zone&sceneval=2&g_login_type=1&_time=${Date.now()}&_=${Date.now()}`,
     headers: {
       'Cookie': cookie,
       'Host': 'm.jingxi.com',
