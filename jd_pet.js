@@ -38,7 +38,7 @@ let message = '', subTitle = '', option = {};
 let jdNotify = false;//是否关闭通知，false打开通知推送，true关闭通知推送
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
 let goodsUrl = '', taskInfoKey = [];
-let randomCount = 0;
+let randomCount = $.isNode() ? 20 : 5;
 !(async () => {
   await requireConfig();
   if (!cookiesArr[0]) {
@@ -123,7 +123,7 @@ async function jdPet() {
 
     await petSport();//遛弯
     await slaveHelp();//助力好友
-    await masterHelpInit();//获取助力的信息
+    //await masterHelpInit();//获取助力的信息
     await doTask();//做日常任务
     await feedPetsAgain();//再次投食
     await energyCollect();//收集好感度
@@ -475,9 +475,10 @@ function shareCodesFormat() {
     }
     //因好友助力功能下线。故暂时屏蔽
     // const readShareCodeRes = await readShareCode();
-    // if (readShareCodeRes && readShareCodeRes.code === 200) {
-    //   newShareCodes = [...new Set([...newShareCodes, ...(readShareCodeRes.data || [])])];
-    // }
+    const readShareCodeRes = null;
+    if (readShareCodeRes && readShareCodeRes.code === 200) {
+      newShareCodes = [...new Set([...newShareCodes, ...(readShareCodeRes.data || [])])];
+    }
     console.log(`第${$.index}个京东账号将要助力的好友${JSON.stringify(newShareCodes)}`)
     resolve();
   })
