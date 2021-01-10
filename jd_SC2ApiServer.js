@@ -758,12 +758,12 @@ function Push2ApiServer(theUrl,sharecode,name) {
       try {
          const obj = JSON.parse(data)
         if (obj.code == 200) {
-          $.result.push("${name}互助码添加成功✅")
+          console.log("${name}互助码添加成功✅")
         }else
 		if(obj.code == 400) {
-          $.result.push("${name}互助码已存在")
+          console.log("${name}互助码已存在")
         }else{
-          $.result.push("${name}互助码添加异常")
+          console.log("${name}互助码添加异常")
         }
       } catch (e) {
         $.logErr(e, resp)
