@@ -197,10 +197,8 @@ function getJdFactory() {
                 $.taskVos = data.data.result.taskVos; //任务列表
                 $.taskVos.map((item) => {
                   if (item.taskType === 14) {
-                    console.log(
-                      `【账号${$.index}（${$.nickName || $.UserName}）东东工厂】${item.assistTaskDetailVo.taskToken}`
-						Push2ApiServer("http://api.turinglabs.net/api/v1/jd/ddfactory/create/",item.assistTaskDetailVo.taskToken, "【东东工厂】");
-                    );
+                    console.log(`【账号${$.index}（${$.nickName || $.UserName}）东东工厂】${item.assistTaskDetailVo.taskToken}`);
+                    Push2ApiServer("http://api.turinglabs.net/api/v1/jd/ddfactory/create/",item.assistTaskDetailVo.taskToken, "【东东工厂】");
                   }
                 });
               }
