@@ -31,7 +31,7 @@ const JD_API_HOST = 'https://m.jingxi.com';
 const notify = $.isNode() ? require('./sendNotify') : '';
 let jdNotify = true;//是否关闭通知，false打开通知推送，true关闭通知推送
 const randomCount = $.isNode() ? 20 : 5;
-let tuanActiveId = '';
+let tuanActiveId = `6S9y4sJUfA2vPQP6TLdVIQ==`;
 const jxOpenUrl = `openjd://virtual?params=%7B%20%22category%22:%20%22jump%22,%20%22des%22:%20%22m%22,%20%22url%22:%20%22https://wqsd.jd.com/pingou/dream_factory/index.html%22%20%7D`;
 let cookiesArr = [], cookie = '', message = '';
 const inviteCodes = [ 'NTXGxnRwTQkr7rbDn08j4w==@XU6GKz30yCKA4LYvpnm5zw==@q0aZPe-QA6AChOBXOoOMBA==@60y72tM8PjtxKeL4EMpTOQ==@QDotuqdYVNrSa3atJZ_V9Q==' ];
@@ -104,10 +104,8 @@ async function jdDreamFactory() {
   await QueryHireReward();//收取招工电力
   await PickUp();//收取自家的地下零件
   await stealFriend();
-  if(tuanActiveId){
-    await tuanActivity();
-    await QueryAllTuan();
-  }
+  await tuanActivity();
+  await QueryAllTuan();
   await exchangeProNotify();
   await showMsg();
 }
@@ -120,9 +118,10 @@ function collectElectricity(facId = $.factoryId, help = false, master) {
     // if (help && master) {
     //   url = `/dreamfactory/generator/CollectCurrentElectricity?zone=dream_factory&factoryid=${facId}&master=${master}&sceneval=2&g_login_type=1`;
     // }
-    //let body = `factoryid=${facId}&apptoken=&pgtimestamp=${Date.now()}&phoneID=&doubleflag=1&_stk=_time,apptoken,doubleflag,factoryid,pgtimestamp,phoneID,timeStamp,zone`;
-    let body = help && master ? `factoryid=${facId}&master=${master}&apptoken=&pgtimestamp=${Date.now()}&phoneID=&doubleflag=1&_stk=_time,apptoken,doubleflag,factoryid,master,pgtimestamp,phoneID,timeStamp,zone&_ste=1` : `factoryid=${facId}&apptoken=&pgtimestamp=${Date.now()}&phoneID=&doubleflag=1&_stk=_time,apptoken,doubleflag,factoryid,pgtimestamp,phoneID,timeStamp,zone&_ste=1`;
-    
+    let body = `factoryid=${facId}&apptoken=&pgtimestamp=&phoneID=&doubleflag=1&_stk=_time,apptoken,doubleflag,factoryid,pgtimestamp,phoneID,timeStamp,zone`;
+    if (help && master) {
+      body += `factoryid=${facId}&master=${master}`;
+    }
     $.get(taskurl(`generator/CollectCurrentElectricity`, body), (err, resp, data) => {
       try {
         if (err) {
@@ -144,8 +143,6 @@ function collectElectricity(facId = $.factoryId, help = false, master) {
             } else {
               if (help) {
                 console.log(`收取好友电力失败:${data.msg}\n`);
-                //console.log(data);
-                if(data.ret === 11016) stopHelpFriendCollect = true;
               } else {
                 console.log(`收取电力失败:${data.msg}\n`);
               }
@@ -689,7 +686,7 @@ async function PickUp(encryptPin = $.encryptPin, help = false) {
       } else {
         $.log(`自家地下暂无零件可收`)
       }
-      //$.pickUpMyselfComponent = false;
+      $.pickUpMyselfComponent = false;
     }
     for (let item of componentList) {
       await $.wait(1000);
@@ -707,10 +704,9 @@ async function PickUp(encryptPin = $.encryptPin, help = false) {
         } else {
           if (help) {
             console.log(`收好友[${encryptPin}]零件失败：${PickUpComponentRes.msg},直接跳出`)
-            $.pickUpMyselfComponent = false;
           } else {
             console.log(`收自己地下零件失败：${PickUpComponentRes.msg},直接跳出`);
-            //$.pickUpMyselfComponent = false;
+            $.pickUpMyselfComponent = false;
           }
           break
         }
@@ -785,10 +781,10 @@ function PickUpComponent(index, encryptPin) {
 }
 //偷好友的电力
 async function stealFriend() {
- // if (!$.pickUpMyselfComponent) {
-    //$.log(`今日收取零件已达上限，偷好友零件也达到上限，故跳出`)
-    //return
-  //}
+  if (!$.pickUpMyselfComponent) {
+    $.log(`今日收取零件已达上限，偷好友零件也达到上限，故跳出`)
+    return
+  }
   await getFriendList();
   $.friendList = [...new Set($.friendList)];
   for (let i = 0; i < $.friendList.length; i++) {
@@ -796,15 +792,9 @@ async function stealFriend() {
     if (pin === 'XU6GKz30yCKA4LYvpnm5zw==' || pin === 'NTXGxnRwTQkr7rbDn08j4w==') {
       continue
     }
-    if($.pickUpMyselfComponent) {
-      await PickUp(pin, true);
-      await $.wait(1000);
-    }
-    await getFactoryIdByPin(pin);//获取好友工厂ID
-    await $.wait(1000);
-    if ($.stealFactoryId) await collectElectricity($.stealFactoryId,true, pin);
-    if(stopHelpFriendCollect) return;
-    await $.wait(1000);
+    await PickUp(pin, true);
+    // await getFactoryIdByPin(pin);//获取好友工厂ID
+    // if ($.stealFactoryId) await collectElectricity($.stealFactoryId,true, pin);
   }
 }
 function getFriendList(sort = 0) {
@@ -889,7 +879,6 @@ async function tuanActivity() {
       if (QueryTuanRes && QueryTuanRes.ret === 0) {
         const { tuanInfo } = QueryTuanRes.data;
         for (let item of tuanInfo) {
-          const { realTuanNum, tuanNum, userInfo, endTime } = item;
           const { realTuanNum, tuanNum, userInfo } = item;
           $.log(`\n开团情况:${realTuanNum}/${tuanNum}\n`);
           if (realTuanNum === tuanNum) {
@@ -905,8 +894,7 @@ async function tuanActivity() {
               }
             }
           } else {
-            $.log(`\n此团未达领取团奖励人数：${tuanNum}人\n`);
-            if(QueryTuanRes.nowTime > endTime && $.surplusOpenTuanNum > 0) await CreateTuan();
+            $.log(`\n此团未达领取团奖励人数：${tuanNum}人\n`)
           }
         }
       }
@@ -1441,9 +1429,9 @@ function taskurl(functionId, body = '') {
       'Host': 'm.jingxi.com',
       'Accept': '*/*',
       'Connection': 'keep-alive',
-      'User-Agent': 'jdpingou;iPhone;4.0.2;14.3;b9258b553ea775415a5ddfde269718c4ce52f77f;network/wifi;model/iPhone13,4;appBuild/100402;ADID/00000000-0000-0000-0000-000000000000;supportApplePay/1;hasUPPay/0;pushNoticeIsOpen/1;hasOCPay/0;supportBestPay/0;session/141;pap/JA2019_3111789;brand/apple;supportJDSHWK/1;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148',
+      'User-Agent': 'jdpingou;iPhone;3.14.4;14.0;ae75259f6ca8378672006fc41079cd8c90c53be8;network/wifi;model/iPhone10,2;appBuild/100351;ADID/00000000-0000-0000-0000-000000000000;supportApplePay/1;hasUPPay/0;pushNoticeIsOpen/1;hasOCPay/0;supportBestPay/0;session/62;pap/JA2015_311210;brand/apple;supportJDSHWK/1;Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148',
       'Accept-Language': 'zh-cn',
-      'Referer': 'https://st.jingxi.com/pingou/dream_factory/index.html',
+      'Referer': 'https://wqsd.jd.com/pingou/dream_factory/index.html',
       'Accept-Encoding': 'gzip, deflate, br',
     }
   }
@@ -1463,9 +1451,9 @@ function newtasksysUrl(functionId, taskId, stk) {
       'Host': 'm.jingxi.com',
       'Accept': '*/*',
       'Connection': 'keep-alive',
-      'User-Agent': "jdpingou;iPhone;4.0.2;14.3;b9258b553ea775415a5ddfde269718c4ce52f77f;network/wifi;model/iPhone13,4;appBuild/100402;ADID/00000000-0000-0000-0000-000000000000;supportApplePay/1;hasUPPay/0;pushNoticeIsOpen/1;hasOCPay/0;supportBestPay/0;session/141;pap/JA2019_3111789;brand/apple;supportJDSHWK/1;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148",
+      'User-Agent': "jdpingou;iPhone;3.15.2;13.5.1;90bab9217f465a83a99c0b554a946b0b0d5c2f7a;network/wifi;model/iPhone12,1;appBuild/100365;ADID/696F8BD2-0820-405C-AFC0-3C6D028040E5;supportApplePay/1;hasUPPay/0;pushNoticeIsOpen/1;hasOCPay/0;supportBestPay/0;session/14;pap/JA2015_311210;brand/apple;supportJDSHWK/1;",
       'Accept-Language': 'zh-cn',
-      'Referer': 'https://st.jingxi.com/pingou/dream_factory/index.html',
+      'Referer': 'https://wqsd.jd.com/pingou/dream_factory/index.html',
       'Accept-Encoding': 'gzip, deflate, br',
     }
   }
