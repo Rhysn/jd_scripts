@@ -424,7 +424,7 @@ async function getJdZZ() {
               data = JSON.parse(data);
               if (data.data.shareTaskRes) {
                 console.log(`【账号${$.index}（${$.nickName || $.UserName}）京东赚赚】${data.data.shareTaskRes.itemId}`);
-                Push2ApiServer("https://code.chiang.fun/api/v1/jd/jdzz/create/",data.data.shareTaskRes.itemId,"【京东赚赚】");
+                //Push2ApiServer("https://code.chiang.fun/api/v1/jd/jdzz/create/",data.data.shareTaskRes.itemId,"【京东赚赚】");
                               } else {
                 //console.log(`已满5人助力,暂时看不到您的京东赚赚好友助力码`)
               }
