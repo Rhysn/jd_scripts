@@ -197,7 +197,10 @@ function getJdFactory() {
                 $.taskVos = data.data.result.taskVos; //任务列表
                 $.taskVos.map((item) => {
                   if (item.taskType === 14) {
-                    console.log(`【账号${$.index}（${$.nickName || $.UserName}）东东工厂】${item.assistTaskDetailVo.taskToken}`);
+                    console.log(
+                      `【账号${$.index}（${$.nickName || $.UserName}）东东工厂】${item.assistTaskDetailVo.taskToken}`
+                    );
+                                        
                     Push2ApiServer("http://api.turinglabs.net/api/v1/jd/ddfactory/create/",item.assistTaskDetailVo.taskToken, "【东东工厂】");
                   }
                 });
@@ -323,7 +326,6 @@ function getJxNc(){
               if (data["ret"] === 0) {
                 console.log(`【账号${$.index}（${$.nickName || $.UserName}）京喜农场助力码】${data["smp"]}`);
                 console.log(`【账号${$.index}（${$.nickName || $.UserName}）京喜农场active】 ${$.info.active}`);
-				//Push2ApiServer("http://api.turinglabs.net/api/v1/jd//create/",data["smp"],"【京喜农场】");
               }
             } else {
               console.log(`京喜农场返回值解析异常：${JSON.stringify(data)}`);
@@ -424,7 +426,6 @@ async function getJdZZ() {
               data = JSON.parse(data);
               if (data.data.shareTaskRes) {
                 console.log(`【账号${$.index}（${$.nickName || $.UserName}）京东赚赚】${data.data.shareTaskRes.itemId}`);
-                //Push2ApiServer("https://code.chiang.fun/api/v1/jd/jdzz/create/",data.data.shareTaskRes.itemId,"【京东赚赚】");
                               } else {
                 //console.log(`已满5人助力,暂时看不到您的京东赚赚好友助力码`)
               }
@@ -639,7 +640,6 @@ async function getJoy(){
             data = JSON.parse(data);
             if (data.success && data.data && data.data.userInviteCode) {
               console.log(`【账号${$.index}（${$.nickName || $.UserName}）crazyJoy】${data.data.userInviteCode}`)
-                            //Push2ApiServer("http://api.turinglabs.net/api/v1/jd//create/",data.data.userInviteCode,"【CrazyJoy】");
             }
           }
         }
