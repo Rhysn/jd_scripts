@@ -120,10 +120,9 @@ function collectElectricity(facId = $.factoryId, help = false, master) {
     // if (help && master) {
     //   url = `/dreamfactory/generator/CollectCurrentElectricity?zone=dream_factory&factoryid=${facId}&master=${master}&sceneval=2&g_login_type=1`;
     // }
-    let body = `factoryid=${facId}&apptoken=&pgtimestamp=&phoneID=&doubleflag=1&_stk=_time,apptoken,doubleflag,factoryid,master,pgtimestamp,phoneID,timeStamp,zone`;
-    if (help && master) {
-      body += `factoryid=${facId}&master=${master}`;
-    }
+    //let body = `factoryid=${facId}&apptoken=&pgtimestamp=${Date.now()}&phoneID=&doubleflag=1&_stk=_time,apptoken,doubleflag,factoryid,pgtimestamp,phoneID,timeStamp,zone`;
+    let body = help && master ? `factoryid=${facId}&master=${master}&apptoken=&pgtimestamp=${Date.now()}&phoneID=&doubleflag=1&_stk=_time,apptoken,doubleflag,factoryid,master,pgtimestamp,phoneID,timeStamp,zone&_ste=1` : `factoryid=${facId}&apptoken=&pgtimestamp=${Date.now()}&phoneID=&doubleflag=1&_stk=_time,apptoken,doubleflag,factoryid,pgtimestamp,phoneID,timeStamp,zone&_ste=0`;
+    
     $.get(taskurl(`generator/CollectCurrentElectricity`, body), (err, resp, data) => {
       try {
         if (err) {
