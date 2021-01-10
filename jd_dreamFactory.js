@@ -144,8 +144,8 @@ function collectElectricity(facId = $.factoryId, help = false, master) {
             } else {
               if (help) {
                 console.log(`收取好友电力失败:${data.msg}\n`);
-                console.log(data);
-                if(data.msg === '活动火爆，请稍后再试~') stopHelpFriendCollect = true;
+                //console.log(data);
+                if(data.ret === 11016) stopHelpFriendCollect = true;
               } else {
                 console.log(`收取电力失败:${data.msg}\n`);
               }
