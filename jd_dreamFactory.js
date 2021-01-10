@@ -35,6 +35,7 @@ let tuanActiveId = '';
 const jxOpenUrl = `openjd://virtual?params=%7B%20%22category%22:%20%22jump%22,%20%22des%22:%20%22m%22,%20%22url%22:%20%22https://wqsd.jd.com/pingou/dream_factory/index.html%22%20%7D`;
 let cookiesArr = [], cookie = '', message = '';
 const inviteCodes = [ 'NTXGxnRwTQkr7rbDn08j4w==@XU6GKz30yCKA4LYvpnm5zw==@q0aZPe-QA6AChOBXOoOMBA==@60y72tM8PjtxKeL4EMpTOQ==@QDotuqdYVNrSa3atJZ_V9Q==' ];
+let stopHelpFriendCollect = false;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 if ($.isNode()) {
   Object.keys(jdCookieNode).forEach((item) => {
@@ -144,6 +145,8 @@ function collectElectricity(facId = $.factoryId, help = false, master) {
             } else {
               if (help) {
                 console.log(`收取好友电力失败:${data.msg}\n`);
+                console.log(data);
+                if(data.msg === '活动火爆，请稍后再试~') stopHelpFriendCollect = true;
               } else {
                 console.log(`收取电力失败:${data.msg}\n`);
               }
@@ -801,6 +804,7 @@ async function stealFriend() {
     await getFactoryIdByPin(pin);//获取好友工厂ID
     await $.wait(1000);
     if ($.stealFactoryId) await collectElectricity($.stealFactoryId,true, pin);
+    if(stopHelpFriendCollect) return;
     await $.wait(1000);
   }
 }
