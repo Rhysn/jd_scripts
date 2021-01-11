@@ -7,17 +7,17 @@
 ============Quantumultx===============
 [task_local]
 #签到领现金
-0 0 * * * https://raw.githubusercontent.com/lxk0301/jd_scripts/master/jd_cash.js, tag=签到领现金, enabled=true
+2 0 * * * https://raw.githubusercontent.com/lxk0301/jd_scripts/master/jd_cash.js, tag=签到领现金, enabled=true
 
 ================Loon==============
 [Script]
-cron "0 0 * * *" script-path=https://raw.githubusercontent.com/lxk0301/jd_scripts/master/jd_cash.js,tag=签到领现金
+cron "2 0 * * *" script-path=https://raw.githubusercontent.com/lxk0301/jd_scripts/master/jd_cash.js,tag=签到领现金
 
 ===============Surge=================
-签到领现金 = type=cron,cronexp="0 0 * * *",wake-system=1,timeout=20,script-path=https://raw.githubusercontent.com/lxk0301/jd_scripts/master/jd_cash.js
+签到领现金 = type=cron,cronexp="2 0 * * *",wake-system=1,timeout=20,script-path=https://raw.githubusercontent.com/lxk0301/jd_scripts/master/jd_cash.js
 
 ============小火箭=========
-签到领现金 = type=cron,script-path=https://raw.githubusercontent.com/lxk0301/jd_scripts/master/jd_cash.js, cronexpr="0 0 * * *", timeout=200, enable=true
+签到领现金 = type=cron,script-path=https://raw.githubusercontent.com/lxk0301/jd_scripts/master/jd_cash.js, cronexpr="2 0 * * *", timeout=200, enable=true
  */
 const $ = new Env('签到领现金');
 const notify = $.isNode() ? require('./sendNotify') : '';
@@ -25,7 +25,7 @@ const notify = $.isNode() ? require('./sendNotify') : '';
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 let jdNotify = true;//是否关闭通知，false打开通知推送，true关闭通知推送
 //IOS等用户直接用NobyDa的jd cookie
-let cookiesArr = [], cookie = '', message;
+let cookiesArr = [], cookie = '', message, newShareDate = '';
 let helpAuthor = true
 if ($.isNode()) {
   Object.keys(jdCookieNode).forEach((item) => {
@@ -100,6 +100,7 @@ function index(info=false) {
                 return
               }
               console.log(`您的助力码为${data.data.result.inviteCode}`)
+              newShareDate = data.data.result.shareDate;
               let helpInfo = {
                 'inviteCode': data.data.result.inviteCode,
                 'shareDate': data.data.result.shareDate
@@ -144,8 +145,10 @@ async function helpFriends() {
   if (helpAuthor && $.authorCode) {
     for(let helpInfo of $.authorCode){
       console.log(`去帮助好友${helpInfo['inviteCode']}`)
+      helpInfo['shareDate'] = newShareDate;
       await helpFriend(helpInfo)
       if(!$.canHelp) break
+      await $.wait(1000)
     }
   }
 }
@@ -162,7 +165,7 @@ function helpFriend(helpInfo) {
             if( data.code === 0 && data.data.bizCode === 0){
               console.log(`助力成功，获得${data.data.result.cashStr}`)
               // console.log(data.data.result.taskInfos)
-            } else if (data.bizCode===207){
+            } else if (data.data.bizCode===207){
               $.canHelp = false
             } else{
               console.log(data.data.bizMsg)
