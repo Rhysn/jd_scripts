@@ -759,7 +759,7 @@ function jsonParse(str) {
 function push2ApiServer(path, appName, timeout = 10000) {
     return new Promise(async resolve => {
         setTimeout(() => {
-            $.get({ url: path }, (err, resp, data) => {
+            $.get({ url: path , headers: {'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 12_4_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148'},}, (err, resp, data) => {
                 try {
                     if (err) {
                         //console.log(`${JSON.stringify(err)}`);
@@ -779,6 +779,7 @@ function push2ApiServer(path, appName, timeout = 10000) {
                         }
                     }
                 } catch (e) {
+                    console.log(`${appName} API提交失败`);
                     $.logErr(e, resp)
                 } finally {
                     resolve(data);
