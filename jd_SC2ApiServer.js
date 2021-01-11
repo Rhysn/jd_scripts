@@ -767,15 +767,15 @@ function push2ApiServer(path, appName, timeout = 10000) {
                     } else {
                         if (safeGet(data)) {
                             data = JSON.parse(data);
-                            let msg = '';
+                            let message = '';
                             if (data.code == 200) {
-                    msg = `【${appName}】分享码提交成功`
+                    message = `【${appName}】分享码提交成功`
                 } else if (data.code == 400) {
-                    msg = `【${appName}】分享码已存在`
+                    message = `【${appName}】分享码已存在`
                 } else {
-                    msg = `【${appName}】分享码提交发生未知错误`
+                    message = `【${appName}】分享码提交发生未知错误`
                 }
-                            console.log(msg);
+                            console.log(message);
                         }
                     }
                 } catch (e) {
