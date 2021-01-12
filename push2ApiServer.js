@@ -1,3 +1,4 @@
+const $ = new Env();
 function push2ApiServer(path, appName, timeout = 10000) {
     return new Promise(async resolve => {
         setTimeout(() => {
