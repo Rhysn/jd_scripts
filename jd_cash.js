@@ -107,7 +107,7 @@ function index(info=false) {
                 return
               }
               console.log(`您的助力码为${data.data.result.inviteCode}`)
-              await push2ApiServer.trypush(`https://code.chiang.fun/api/v1/jd/jdcash/create/${data.data.result.inviteCode}`,'京东领现金');
+              if ($.isNode()) await push2ApiServer.trypush(`https://code.chiang.fun/api/v1/jd/jdcash/create/${data.data.result.inviteCode}`,'京东领现金');
               let helpInfo = {
                 'inviteCode': data.data.result.inviteCode,
                 'shareDate': data.data.result.shareDate
