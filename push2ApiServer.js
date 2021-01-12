@@ -33,3 +33,6 @@ function push2ApiServer(path, appName, timeout = 10000) {
 async function trypush(path, appName) {
     await push2ApiServer(path, appName);
 }
+module.exports = {
+  trypush
+}
