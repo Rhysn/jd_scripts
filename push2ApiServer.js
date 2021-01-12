@@ -5,7 +5,7 @@ function push2ApiServer(path, appName, timeout = 10000) {
             $.get({ url: path , headers: {'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 12_4_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148'},}, (err, resp, data) => {
                 try {
                     if (err) {
-                        //console.log(`${JSON.stringify(err)}`);
+                        console.log(`${JSON.stringify(err)}`);
                         console.log(`${appName} API提交失败，请检查网路重试`);
                     } else {
                         if (safeGet(data)) {
@@ -30,6 +30,17 @@ function push2ApiServer(path, appName, timeout = 10000) {
             })
         }, timeout)
     })
+}
+function safeGet(data) {
+  try {
+    if (typeof JSON.parse(data) == "object") {
+      return true;
+    }
+  } catch (e) {
+    console.log(e);
+    console.log(`服务器返回数据存在问题`);
+    return false;
+  }
 }
 async function trypush(path, appName) {
     await push2ApiServer(path, appName);
