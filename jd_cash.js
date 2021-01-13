@@ -447,8 +447,6 @@ function jsonParse(str) {
     }
   }
 }
-
-
 function cashExchangeInfo() {
   return new Promise(async resolve => {
     const cashExchangeUrl = {
@@ -472,7 +470,7 @@ function cashExchangeInfo() {
         } else {
           if (data) {
             data = JSON.parse(data);
-            if(data.data.success && data.data.result.cashNodeAmount <== data.data.result.totalMoney){
+            if(data.data.success && data.data.result.cashNodeAmount <= data.data.result.totalMoney){
               message += `\n已可提现${data.data.result.cashNodeAmount}元,请手动提现。\n`;
               if ($.isNode()) {
                 await notify.sendNotify(`${$.name}提现提醒 - ${$.UserName}`, `${message}`);
