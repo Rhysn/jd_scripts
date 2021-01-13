@@ -473,7 +473,7 @@ function cashExchangeInfo() {
             if(data.data.success && data.data.result.cashNodeAmount <= data.data.result.totalMoney){
               message += `\n已可提现${data.data.result.cashNodeAmount}元,请手动提现。\n`;
               if ($.isNode()) {
-                await notify.sendNotify(`${$.name}提现提醒 - ${$.UserName}`, `${message}`);
+                await notify.sendNotify(`${$.name}提现提醒 - ${$.UserName}`, `已可提现${data.data.result.cashNodeAmount}元,请手动提现。`);
               }
             }else message += \n`距离提现还差${data.data.result.cashNodeAmount - data.data.result.totalMoney}元。\n`
           } else {
