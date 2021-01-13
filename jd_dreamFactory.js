@@ -890,7 +890,6 @@ async function tuanActivity() {
         const { tuanInfo } = QueryTuanRes.data;
         for (let item of tuanInfo) {
           const { realTuanNum, tuanNum, userInfo, endTime } = item;
-          const { realTuanNum, tuanNum, userInfo } = item;
           $.log(`\n开团情况:${realTuanNum}/${tuanNum}\n`);
           if (realTuanNum === tuanNum) {
             for (let user of userInfo) {
