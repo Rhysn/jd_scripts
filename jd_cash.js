@@ -470,6 +470,8 @@ function cashExchangeInfo() {
         } else {
           if (data) {
             data = JSON.parse(data);
+            console.log(data);
+            console.log(data.data.result.cashNodeAmount);
             if(data.data.success && data.data.result.cashNodeAmount <= data.data.result.totalMoney){
               message += `\n已可提现${data.data.result.cashNodeAmount}元,请手动提现。\n`;
               if ($.isNode()) {
