@@ -262,7 +262,7 @@ async function jdJxStory() {
     var biggestJoys = [34,34,34,34,34,34,34,34,33,32,31,30];
     if(sellList.equals(biggestJoys)){
         //if($.coin > joysArr[29].coins * 64 + 6493990551552000){
-        if($.coin > joysArr[29].coins * 2){
+        if($.coin > joysArr[29].coins * 32){
             let obj = {};
             $.joyIds.map((vo, idx) => {
                 if (vo !== 0) {
@@ -279,7 +279,7 @@ async function jdJxStory() {
             return
         } else {
             //console.log(`34级合并进度：${$.coin / (joysArr[29].coins * 64 + 6493990551552000) * 100}%`);
-            console.log(`34级合并进度：${$.coin / (joysArr[29].coins * 2) * 100}%`);
+            console.log(`34级合并进度：${$.coin / (joysArr[29].coins * 32) * 100}%`);
             await $.wait(5000);
             return 
         }
