@@ -27,7 +27,7 @@ const $ = new Env('crazyJoy挂机');
 const JD_API_HOST = 'https://api.m.jd.com/';
 
 const notify = $.isNode() ? require('./sendNotify') : '';
-let cookiesArr = [], cookie = '', message = '', buyJoyLevelArr = [], joysArr = [], zero = 0;
+let cookiesArr = [], cookie = '', message = '';
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 if ($.isNode()) {
   Object.keys(jdCookieNode).forEach((item) => {
@@ -162,11 +162,11 @@ if ($.isNode()) {
 }(this);
 !(async () => {
   if (!cookiesArr[0]) {
-    $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {"open-url": "https://bean.m.jd.com/"});
+    $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
     return;
   }
   let count = 0
-  
+
   if (cookiesArr.length) {
     console.log(`\n挂机开始，自动8s收一次金币`);
     setInterval(async () => {
@@ -174,9 +174,8 @@ if ($.isNode()) {
       await Promise.all(promiseArr);
     }, 8000);
   }
-  
+
   while (true) {
-    if(getStopKey()) break;
     count++
     console.log(`============开始第${count}次挂机=============`)
     for (let i = 0; i < cookiesArr.length; i++) {
@@ -212,41 +211,50 @@ async function jdCrazyJoy() {
   $.canBuy = true
   await getJoyList()
   await $.wait(1000)
-  if(buyJoyLevelArr.length === 0) await getJoyShop();
-  console.log(`待购买Joy等级：${buyJoyLevelArr}`);
+  await getJoyShop()
   await $.wait(1000)
+  if ($.joyIds && $.joyIds.length > 0) {
+    $.log('当前JOY分布情况')
+    $.log(`\n${$.joyIds[0]} ${$.joyIds[1]} ${$.joyIds[2]} ${$.joyIds[3]}`)
+    $.log(`${$.joyIds[4]} ${$.joyIds[5]} ${$.joyIds[6]} ${$.joyIds[7]}`)
+    $.log(`${$.joyIds[8]} ${$.joyIds[9]} ${$.joyIds[10]} ${$.joyIds[11]}\n`)
+  }
+
+  // 如果格子全部被占有且没有可以合并的JOY，只能回收低级的JOY (没有34级JOY时才会执行)
+  if(checkHasFullOccupied() && !checkCanMerge() && !checkHas34Level()) {
+    const minJoyId = Math.min(...$.joyIds);
+    const boxId = $.joyIds.indexOf(minJoyId);
+    console.log(`格子全部被占有且没有可以合并的JOY，回收${boxId + 1}号位等级为${minJoyId}的JOY`)
+    await sellJoy(minJoyId, boxId);
+    await getJoyList();
+  }
+
   for (let i = 0; i < $.joyIds.length; ++i) {
-    if (buyJoyLevelArr.length > 0 && $.joyIds[i] === 0) {
-      await buyJoy(buyJoyLevelArr.pop())
-      if (!$.canBuy) {
-        $.log(`金币不足，跳过购买`);
-        break;
-      }
-      if(buyJoyLevelArr.length < 1) break;
-      await $.wait(1000);
+    if (!$.canBuy) {
+      $.log(`金币不足，跳过购买`)
+      break
+    }
+    if ($.joyIds[i] === 0) {
+      await buyJoy($.buyJoyLevel)
+      await $.wait(1000)
     }
   }
-  var mergeKey = true;
-  while(mergeKey){
-    mergeKey = false;
-    await getJoyList();
-    let obj = {};
-    $.joyIds.map((vo, idx) => {
-      if (vo !== 0) {
-        if (obj[vo]) {
-          obj[vo].push(idx);
-        } else {
-          obj[vo] = [idx];
-        }
+  await getJoyList()
+  let obj = {};
+  $.joyIds.map((vo, idx) => {
+    if (vo !== 0) {
+      if (obj[vo]) {
+        obj[vo].push(idx)
+      } else {
+        obj[vo] = [idx]
       }
-    })
-    for (let idx in obj) {
-      const vo = obj[idx];
-      if (idx < 34 && vo.length >= 2) {
-        await mergeJoy(vo[0], vo[1]);
-        await $.wait(1000);
-        mergeKey = true;
-      }
+    }
+  })
+  for (let idx in obj) {
+    const vo = obj[idx]
+    if (idx < 34 && vo.length >= 2) {
+      await mergeJoy(vo[0], vo[1])
+      await $.wait(3000)
     }
   }
 
@@ -255,60 +263,33 @@ async function jdCrazyJoy() {
   await getCoin()
   await $.wait(1000)
   await getUserBean()
-  await $.wait(1000)
+  await $.wait(5000)
   console.log(`当前信息：${$.bean} 京豆，${$.coin} 金币`)
-  
-  await getJoyList();
-  console.log(`现有Joy等级表：${$.joyIds}`);
-  await getNeedJoyLevel();
-  console.log(`剩余Joy空格：${zero}个`);
-  if(zero === 0){
-    var sellList = $.joyIds.concat();
-    sellList.sort(function(a, b){return b - a});
+}
 
-    //最高收益队列 34 * 4;[33 32 31 30] * 1
-    /* 满足最高收益队列且当前金币数可再购买2个34级Joy时，合并一组34级Joy */
-    var biggestJoys = [34,34,34,34,34,34,34,34,33,32,31,30];
-    if(sellList.equals(biggestJoys)){
-        //if($.coin > joysArr[29].coins * 64 + 6493990551552000){
-        if($.coin > joysArr[29].coins * 32){
-            let obj = {};
-            $.joyIds.map((vo, idx) => {
-                if (vo !== 0) {
-                    if (obj[vo]) {
-                    obj[vo].push(idx);
-                    } else {
-                    obj[vo] = [idx];
-                    }
-                }
-            })
-            const vo = obj[34];
-            await mergeJoy(vo[0], vo[1]);
-            await $.wait(5000);
-            return
-        } else {
-            //console.log(`34级合并进度：${$.coin / (joysArr[29].coins * 64 + 6493990551552000) * 100}%`);
-            //console.log(`34级合并进度：${$.coin / (joysArr[29].coins * 32) * 100}%`);
-            await $.wait(5000);
-            return 
-        }
-    }
-    let sellnum = 1;
-    while(sellnum--){
-      var sellitem = sellList.pop();
-      console.log(`准备出售【${sellitem}】级Joy`);
-      for(let i in $.joyIds){
-        if(sellitem > 29) break;
-        if(sellitem === $.joyIds[i]){
-          await sellJoy(sellitem, i);
-          await $.wait(1000);
-          break;
-        }
+function checkHasFullOccupied() {
+  return !$.joyIds.includes(0);
+}
+
+// 查询是否有34级JOY
+function checkHas34Level() {
+  return $.joyIds.includes(34);
+}
+
+function checkCanMerge() {
+  let obj = {};
+  let canMerge = false;
+  $.joyIds.forEach((vo, idx) => {
+    if (vo !== 0 && vo !== 34) {
+      if (obj[vo]) {
+        obj[vo].push(idx)
+        canMerge = true;
+      } else {
+        obj[vo] = [idx]
       }
     }
-    buyJoyLevelArr.pop();
-  }
-  await $.wait(5000)
+  });
+  return canMerge;
 }
 
 function getJoyList() {
@@ -349,11 +330,14 @@ function getJoyShop() {
           data = JSON.parse(data);
           if (data.success && data.data && data.data.shop) {
             const shop = data.data.shop.filter(vo => vo.status === 1) || []
-            joysArr = shop.concat();
-            //$.buyJoyLevel = shop.length ? shop[shop.length - 1]['joyId'] : 1
-            //$.cost = shop.length ? shop[shop.length - 1]['coins'] : Infinity
-            var needLevel = joysArr.length < 30 ? joysArr.length - 1 : getNeedJoyLevel() - 1;
-            getBuyJoyLevel(needLevel);
+            $.buyJoyLevel = shop.length ? shop[shop.length - 1]['joyId'] : 1;//可购买的最大等级
+            if ($.isNode() && process.env.BUY_JOY_LEVEL) {
+              $.log(`当前可购买的最高JOY等级为${$.buyJoyLevel}级\n`)
+              $.buyJoyLevel = (process.env.BUY_JOY_LEVEL * 1) > $.buyJoyLevel ? $.buyJoyLevel : process.env.BUY_JOY_LEVEL * 1;
+              $.cost = shop[$.buyJoyLevel - 1]['coins']
+            } else {
+              $.cost = shop.length ? shop[shop.length - 1]['coins'] : Infinity
+            }
           }
         }
       } catch (e) {
@@ -378,7 +362,6 @@ function mergeJoy(x, y) {
             data = JSON.parse(data);
             if (data.success && data.data.newJoyId) {
               console.log(`合并成功，获得${data.data.newJoyId}级Joy`)
-              buyJoyLevelArr.pop()
             } else
               console.log(`合并失败，错误`)
           }
@@ -406,11 +389,41 @@ function buyJoy(joyId) {
             if (data.data.eventInfo) {
               await openBox(data.data.eventInfo.eventType, data.data.eventInfo.eventRecordId)
               $.canBuy = false
-              buyJoyLevelArr.push(joyId)
-              
               return
             }
             $.log(`购买${joyId}级joy成功，剩余金币【${data.data.totalCoins}】`)
+            $.coin = data.data.totalCoins
+          } else {
+            console.log(data.message)
+          }
+        }
+      } catch (e) {
+        $.logErr(e, resp);
+      } finally {
+        resolve(data);
+      }
+    })
+  })
+}
+
+// 出售（回收）joy
+function sellJoy(joyId, boxId) {
+  const body = {"action": "SELL", "joyId": joyId, "boxId": boxId}
+  return new Promise((resolve) => {
+    $.get(taskUrl('crazyJoy_joy_trade', JSON.stringify(body)), async (err, resp, data) => {
+      try {
+        if (err) {
+          console.log(`${JSON.stringify(err)}`)
+          console.log(`${$.name} API请求失败，请检查网路重试`)
+        } else {
+          data = JSON.parse(data);
+          if (data.success) {
+            if (data.data.eventInfo) {
+              await openBox(data.data.eventInfo.eventType, data.data.eventInfo.eventRecordId)
+              $.canBuy = false
+              return
+            }
+            $.log(`回收${joyId}级joy成功，剩余金币【${data.data.totalCoins}】`)
             $.coin = data.data.totalCoins
           } else {
             console.log(data.message)
@@ -496,7 +509,7 @@ function getCoin() {
               await openBox('LUCKY_BOX_DROP',data.data.luckyBoxRecordId)
             }
             if (data.data) {
-              $.log(`此次在线收益：获得 ${data.data['coins']} 金币`);
+              $.log(`此次在线收益：获得 ${data.data['coins']} 金币`)
             }
           }
         }
@@ -549,11 +562,10 @@ function openBox(eventType = 'LUCKY_BOX_DROP', boxId) {
         } else {
           if (safeGet(data)) {
             data = JSON.parse(data);
-            buyJoyLevelArr.pop();
             if (data['success']) {
-              $.log(`点击幸运盒子成功，剩余观看视频次数：${data.data.advertViewTimes}, ${data.data.advertViewTimes > 0 ? '等待30秒' : '跳出'}`)
+              $.log(`点击幸运盒子成功，剩余观看视频次数：${data.data.advertViewTimes}, ${data.data.advertViewTimes > 0 ? '等待32秒' : '跳出'}`)
               if (data.data.advertViewTimes > 0) {
-                await $.wait(30000)
+                await $.wait(32000)
                 await rewardBox(eventType, boxId);
               }
             }
@@ -625,7 +637,7 @@ function getGrowState() {
     })
   })
 }
-function taskUrl(functionId, body = '') {
+function taskUrl(functionId, body = '', taskCookie = cookie) {
   let t = Date.now().toString().substr(0, 10)
   let e = body || ""
   e = $.md5("aDvScBv$gGQvrXfva8dG!ZC@DA70Y%lX" + e + t)
@@ -633,11 +645,11 @@ function taskUrl(functionId, body = '') {
   return {
     url: `${JD_API_HOST}?uts=${e}&appid=crazy_joy&functionId=${functionId}&body=${escape(body)}&t=${t}`,
     headers: {
-      'Cookie': cookie,
+      'Cookie': taskCookie,
       'Host': 'api.m.jd.com',
       'Accept': '*/*',
       'Connection': 'keep-alive',
-      "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0") : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0"),
+      "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0"),
       'Accept-Language': 'zh-cn',
       'Referer': 'https://crazy-joy.jd.com/',
       'origin': 'https://crazy-joy.jd.com',
@@ -670,7 +682,7 @@ function TotalBean() {
         "Connection": "keep-alive",
         "Cookie": cookie,
         "Referer": "https://wqs.jd.com/my/jingdou/my.shtml?sceneval=2",
-        "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0") : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0")
+        "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0")
       }
     }
     $.post(options, (err, resp, data) => {
@@ -709,110 +721,6 @@ function jsonParse(str) {
       return [];
     }
   }
-}
-
-function sellJoy(joyId, boxId) {
-  const body = {"action": "SELL", "joyId": joyId, "boxId": boxId}
-  return new Promise((resolve) => {
-    $.get(taskUrl('crazyJoy_joy_trade', JSON.stringify(body)), async (err, resp, data) => {
-      try {
-        if (err) {
-          console.log(`${JSON.stringify(err)}`)
-          console.log(`${$.name} API请求失败，请检查网路重试`)
-        } else {
-          data = JSON.parse(data);
-          if (data.success) {
-            $.log(`出售${boxId}位置${joyId}级joy成功，售价【${data.data.coins}】，当前总金币【${data.data.totalCoins}】`)
-            $.coin = data.data.totalCoins
-          } else {
-            console.log(data.message)
-          }
-        }
-      } catch (e) {
-        $.logErr(e, resp);
-      } finally {
-        resolve(data);
-      }
-    })
-  })
-}
-
-function getStopKey(){
-  var date_key = new Date();
-  var min_key = date_key.getMinutes();
-  return min_key < 17 && min_key > 15 ? true : false;
-}
-function getBuyJoyLevel(num) {
-  if (zero < 2) {
-    var myJoyArr = $.joyIds;
-    if (joysArr.length < 30) num = joysArr.length - 1;
-    else {
-      var minJoyCoins = 0;
-      for (let item of myJoyArr) {
-        if (item < 31 && item > 0) {
-          var thisitem = item - 1;
-          if (minJoyCoins === 0 || joysArr[thisitem].coins < minJoyCoins) {
-            num = thisitem;
-            minJoyCoins = joysArr[thisitem].coins;
-          }
-        }
-      }
-      if(minJoyCoins === 0) num = joysArr.length - 1; 
-    }
-    buyJoyLevelArr.push(joysArr[num].joyId);
-    return
-  }
-  var next = num - 1;
-  if (next !== -1 && joysArr[num].coins > (joysArr[next].coins * 2)) {
-    getBuyJoyLevel(next);
-    return
-  }
-  buyJoyLevelArr.push(joysArr[num].joyId);
-}
-function getNeedJoyLevel(){
-  var myJoyArr = $.joyIds.concat();
-  zero = 0;
-  myJoyArr.sort(function(a, b){return b - a});
-  while(myJoyArr.length){
-    var item = myJoyArr.pop();
-    if(item === 0){
-      zero++;
-      continue;
-    }
-    return item < 30 ? item : 30;
-  }
-}
-Object.prototype.equals = function(object2) {
-    for (propName in this) {
-        if (this.hasOwnProperty(propName) != object2.hasOwnProperty(propName)) {
-            return false;
-        }
-        else if (typeof this[propName] != typeof object2[propName]) {
-            return false;
-        }
-    }
-    for(propName in object2) { 
-        if (this.hasOwnProperty(propName) != object2.hasOwnProperty(propName)) {
-            return false;
-        }
-        else if (typeof this[propName] != typeof object2[propName]) {
-            return false;
-        }
-        if(!this.hasOwnProperty(propName))
-          continue;
-        if (this[propName] instanceof Array && object2[propName] instanceof Array) {
-           if (!this[propName].equals(object2[propName]))
-                        return false;
-        }
-        else if (this[propName] instanceof Object && object2[propName] instanceof Object) {
-           if (!this[propName].equals(object2[propName]))
-                        return false;
-        }
-        else if(this[propName] != object2[propName]) {
-           return false;
-        }
-    }
-    return true;
 }
 // prettier-ignore
 function Env(t,e){class s{constructor(t){this.env=t}send(t,e="GET"){t="string"==typeof t?{url:t}:t;let s=this.get;return"POST"===e&&(s=this.post),new Promise((e,i)=>{s.call(this,t,(t,s,r)=>{t?i(t):e(s)})})}get(t){return this.send.call(this.env,t)}post(t){return this.send.call(this.env,t,"POST")}}return new class{constructor(t,e){this.name=t,this.http=new s(this),this.data=null,this.dataFile="box.dat",this.logs=[],this.isMute=!1,this.isNeedRewrite=!1,this.logSeparator="\n",this.startTime=(new Date).getTime(),Object.assign(this,e),this.log("",`\ud83d\udd14${this.name}, \u5f00\u59cb!`)}isNode(){return"undefined"!=typeof module&&!!module.exports}isQuanX(){return"undefined"!=typeof $task}isSurge(){return"undefined"!=typeof $httpClient&&"undefined"==typeof $loon}isLoon(){return"undefined"!=typeof $loon}toObj(t,e=null){try{return JSON.parse(t)}catch{return e}}toStr(t,e=null){try{return JSON.stringify(t)}catch{return e}}getjson(t,e){let s=e;const i=this.getdata(t);if(i)try{s=JSON.parse(this.getdata(t))}catch{}return s}setjson(t,e){try{return this.setdata(JSON.stringify(t),e)}catch{return!1}}getScript(t){return new Promise(e=>{this.get({url:t},(t,s,i)=>e(i))})}runScript(t,e){return new Promise(s=>{let i=this.getdata("@chavy_boxjs_userCfgs.httpapi");i=i?i.replace(/\n/g,"").trim():i;let r=this.getdata("@chavy_boxjs_userCfgs.httpapi_timeout");r=r?1*r:20,r=e&&e.timeout?e.timeout:r;const[o,h]=i.split("@"),a={url:`http://${h}/v1/scripting/evaluate`,body:{script_text:t,mock_type:"cron",timeout:r},headers:{"X-Key":o,Accept:"*/*"}};this.post(a,(t,e,i)=>s(i))}).catch(t=>this.logErr(t))}loaddata(){if(!this.isNode())return{};{this.fs=this.fs?this.fs:require("fs"),this.path=this.path?this.path:require("path");const t=this.path.resolve(this.dataFile),e=this.path.resolve(process.cwd(),this.dataFile),s=this.fs.existsSync(t),i=!s&&this.fs.existsSync(e);if(!s&&!i)return{};{const i=s?t:e;try{return JSON.parse(this.fs.readFileSync(i))}catch(t){return{}}}}}writedata(){if(this.isNode()){this.fs=this.fs?this.fs:require("fs"),this.path=this.path?this.path:require("path");const t=this.path.resolve(this.dataFile),e=this.path.resolve(process.cwd(),this.dataFile),s=this.fs.existsSync(t),i=!s&&this.fs.existsSync(e),r=JSON.stringify(this.data);s?this.fs.writeFileSync(t,r):i?this.fs.writeFileSync(e,r):this.fs.writeFileSync(t,r)}}lodash_get(t,e,s){const i=e.replace(/\[(\d+)\]/g,".$1").split(".");let r=t;for(const t of i)if(r=Object(r)[t],void 0===r)return s;return r}lodash_set(t,e,s){return Object(t)!==t?t:(Array.isArray(e)||(e=e.toString().match(/[^.[\]]+/g)||[]),e.slice(0,-1).reduce((t,s,i)=>Object(t[s])===t[s]?t[s]:t[s]=Math.abs(e[i+1])>>0==+e[i+1]?[]:{},t)[e[e.length-1]]=s,t)}getdata(t){let e=this.getval(t);if(/^@/.test(t)){const[,s,i]=/^@(.*?)\.(.*?)$/.exec(t),r=s?this.getval(s):"";if(r)try{const t=JSON.parse(r);e=t?this.lodash_get(t,i,""):e}catch(t){e=""}}return e}setdata(t,e){let s=!1;if(/^@/.test(e)){const[,i,r]=/^@(.*?)\.(.*?)$/.exec(e),o=this.getval(i),h=i?"null"===o?null:o||"{}":"{}";try{const e=JSON.parse(h);this.lodash_set(e,r,t),s=this.setval(JSON.stringify(e),i)}catch(e){const o={};this.lodash_set(o,r,t),s=this.setval(JSON.stringify(o),i)}}else s=this.setval(t,e);return s}getval(t){return this.isSurge()||this.isLoon()?$persistentStore.read(t):this.isQuanX()?$prefs.valueForKey(t):this.isNode()?(this.data=this.loaddata(),this.data[t]):this.data&&this.data[t]||null}setval(t,e){return this.isSurge()||this.isLoon()?$persistentStore.write(t,e):this.isQuanX()?$prefs.setValueForKey(t,e):this.isNode()?(this.data=this.loaddata(),this.data[e]=t,this.writedata(),!0):this.data&&this.data[e]||null}initGotEnv(t){this.got=this.got?this.got:require("got"),this.cktough=this.cktough?this.cktough:require("tough-cookie"),this.ckjar=this.ckjar?this.ckjar:new this.cktough.CookieJar,t&&(t.headers=t.headers?t.headers:{},void 0===t.headers.Cookie&&void 0===t.cookieJar&&(t.cookieJar=this.ckjar))}get(t,e=(()=>{})){t.headers&&(delete t.headers["Content-Type"],delete t.headers["Content-Length"]),this.isSurge()||this.isLoon()?(this.isSurge()&&this.isNeedRewrite&&(t.headers=t.headers||{},Object.assign(t.headers,{"X-Surge-Skip-Scripting":!1})),$httpClient.get(t,(t,s,i)=>{!t&&s&&(s.body=i,s.statusCode=s.status),e(t,s,i)})):this.isQuanX()?(this.isNeedRewrite&&(t.opts=t.opts||{},Object.assign(t.opts,{hints:!1})),$task.fetch(t).then(t=>{const{statusCode:s,statusCode:i,headers:r,body:o}=t;e(null,{status:s,statusCode:i,headers:r,body:o},o)},t=>e(t))):this.isNode()&&(this.initGotEnv(t),this.got(t).on("redirect",(t,e)=>{try{if(t.headers["set-cookie"]){const s=t.headers["set-cookie"].map(this.cktough.Cookie.parse).toString();s&&this.ckjar.setCookieSync(s,null),e.cookieJar=this.ckjar}}catch(t){this.logErr(t)}}).then(t=>{const{statusCode:s,statusCode:i,headers:r,body:o}=t;e(null,{status:s,statusCode:i,headers:r,body:o},o)},t=>{const{message:s,response:i}=t;e(s,i,i&&i.body)}))}post(t,e=(()=>{})){if(t.body&&t.headers&&!t.headers["Content-Type"]&&(t.headers["Content-Type"]="application/x-www-form-urlencoded"),t.headers&&delete t.headers["Content-Length"],this.isSurge()||this.isLoon())this.isSurge()&&this.isNeedRewrite&&(t.headers=t.headers||{},Object.assign(t.headers,{"X-Surge-Skip-Scripting":!1})),$httpClient.post(t,(t,s,i)=>{!t&&s&&(s.body=i,s.statusCode=s.status),e(t,s,i)});else if(this.isQuanX())t.method="POST",this.isNeedRewrite&&(t.opts=t.opts||{},Object.assign(t.opts,{hints:!1})),$task.fetch(t).then(t=>{const{statusCode:s,statusCode:i,headers:r,body:o}=t;e(null,{status:s,statusCode:i,headers:r,body:o},o)},t=>e(t));else if(this.isNode()){this.initGotEnv(t);const{url:s,...i}=t;this.got.post(s,i).then(t=>{const{statusCode:s,statusCode:i,headers:r,body:o}=t;e(null,{status:s,statusCode:i,headers:r,body:o},o)},t=>{const{message:s,response:i}=t;e(s,i,i&&i.body)})}}time(t){let e={"M+":(new Date).getMonth()+1,"d+":(new Date).getDate(),"H+":(new Date).getHours(),"m+":(new Date).getMinutes(),"s+":(new Date).getSeconds(),"q+":Math.floor(((new Date).getMonth()+3)/3),S:(new Date).getMilliseconds()};/(y+)/.test(t)&&(t=t.replace(RegExp.$1,((new Date).getFullYear()+"").substr(4-RegExp.$1.length)));for(let s in e)new RegExp("("+s+")").test(t)&&(t=t.replace(RegExp.$1,1==RegExp.$1.length?e[s]:("00"+e[s]).substr((""+e[s]).length)));return t}msg(e=t,s="",i="",r){const o=t=>{if(!t)return t;if("string"==typeof t)return this.isLoon()?t:this.isQuanX()?{"open-url":t}:this.isSurge()?{url:t}:void 0;if("object"==typeof t){if(this.isLoon()){let e=t.openUrl||t.url||t["open-url"],s=t.mediaUrl||t["media-url"];return{openUrl:e,mediaUrl:s}}if(this.isQuanX()){let e=t["open-url"]||t.url||t.openUrl,s=t["media-url"]||t.mediaUrl;return{"open-url":e,"media-url":s}}if(this.isSurge()){let e=t.url||t.openUrl||t["open-url"];return{url:e}}}};if(this.isMute||(this.isSurge()||this.isLoon()?$notification.post(e,s,i,o(r)):this.isQuanX()&&$notify(e,s,i,o(r))),!this.isMuteLog){let t=["","==============\ud83d\udce3\u7cfb\u7edf\u901a\u77e5\ud83d\udce3=============="];t.push(e),s&&t.push(s),i&&t.push(i),console.log(t.join("\n")),this.logs=this.logs.concat(t)}}log(...t){t.length>0&&(this.logs=[...this.logs,...t]),console.log(t.join(this.logSeparator))}logErr(t,e){const s=!this.isSurge()&&!this.isQuanX()&&!this.isLoon();s?this.log("",`\u2757\ufe0f${this.name}, \u9519\u8bef!`,t.stack):this.log("",`\u2757\ufe0f${this.name}, \u9519\u8bef!`,t)}wait(t){return new Promise(e=>setTimeout(e,t))}done(t={}){const e=(new Date).getTime(),s=(e-this.startTime)/1e3;this.log("",`\ud83d\udd14${this.name}, \u7ed3\u675f! \ud83d\udd5b ${s} \u79d2`),this.log(),(this.isSurge()||this.isQuanX()||this.isLoon())&&$done(t)}}(t,e)}
