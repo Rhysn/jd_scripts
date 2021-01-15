@@ -167,7 +167,7 @@ if ($.isNode()) {
   }
   let count = 0
   
-  if (cookiesArr.length) {
+  if ($.isNode() && cookiesArr.length) {
     console.log(`\n挂机开始，自动8s收一次金币`);
     setInterval(async () => {
       const promiseArr = cookiesArr.map(ck => getCoinForInterval(ck));
@@ -288,7 +288,7 @@ async function jdCrazyJoy() {
             return
         } else {
             //console.log(`34级合并进度：${$.coin / (joysArr[29].coins * 64 + 6493990551552000) * 100}%`);
-            //console.log(`34级合并进度：${$.coin / (joysArr[29].coins * 32) * 100}%`);
+            console.log(`34级合并进度：${$.coin / joysArr[29].coins / 32 * 100}%`);
             await $.wait(5000);
             return 
         }
@@ -520,13 +520,13 @@ function getCoinForInterval(taskCookie) {
         } else {
           if (safeGet(data)) {
             // const userName = decodeURIComponent(taskCookie.match(/pt_pin=(.+?);/) && taskCookie.match(/pt_pin=(.+?);/)[1])
-            // data = JSON.parse(data);
+             data = JSON.parse(data);
             // if (data.data && data.data.tryMoneyJoyBeans) {
             //   console.log(`【京东账号 ${userName}】分红狗生效中，预计获得 ${data.data.tryMoneyJoyBeans} 京豆奖励`)
             // }
-            // if (data.data) {
-            //   $.log(`【京东账号 ${userName}】此次在线收益：获得 ${data.data['coins']} 金币`)
-            // }
+            if (data.data) {
+              $.log(`此次在线收益：获得 ${data.data['coins']} 金币`)
+            }
           }
         }
       } catch (e) {
@@ -551,9 +551,9 @@ function openBox(eventType = 'LUCKY_BOX_DROP', boxId) {
             data = JSON.parse(data);
             buyJoyLevelArr.pop();
             if (data['success']) {
-              $.log(`点击幸运盒子成功，剩余观看视频次数：${data.data.advertViewTimes}, ${data.data.advertViewTimes > 0 ? '等待30秒' : '跳出'}`)
+              $.log(`点击幸运盒子成功，剩余观看视频次数：${data.data.advertViewTimes}, ${data.data.advertViewTimes > 0 ? '等待32秒' : '跳出'}`)
               if (data.data.advertViewTimes > 0) {
-                await $.wait(30000)
+                await $.wait(32000)
                 await rewardBox(eventType, boxId);
               }
             }
