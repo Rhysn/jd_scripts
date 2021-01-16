@@ -1,7 +1,7 @@
 /*
- * @Author: lxk0301 https://github.com/lxk0301 
+ * @Author: LXK9301 https://github.com/LXK9301
  * @Date: 2020-12-06 18:19:21
- * @Last Modified by: lxk0301
+ * @Last Modified by: LXK9301
  * @Last Modified time: 2020-12-26 22:58:02
  */
 /*
@@ -16,17 +16,17 @@
 ============Quantumultx===============
 [task_local]
 #京东工厂
-10 * * * * https://raw.githubusercontent.com/lxk0301/jd_scripts/master/jd_jdfactory.js, tag=东东工厂, enabled=true
+10 * * * * https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_jdfactory.js, tag=东东工厂, enabled=true
 
 ================Loon==============
 [Script]
-cron "10 * * * *" script-path=https://raw.githubusercontent.com/lxk0301/jd_scripts/master/jd_jdfactory.js,tag=东东工厂
+cron "10 * * * *" script-path=https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_jdfactory.js,tag=东东工厂
 
 ===============Surge=================
-东东工厂 = type=cron,cronexp="10 * * * *",wake-system=1,timeout=20,script-path=https://raw.githubusercontent.com/lxk0301/jd_scripts/master/jd_jdfactory.js
+东东工厂 = type=cron,cronexp="10 * * * *",wake-system=1,timeout=20,script-path=https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_jdfactory.js
 
 ============小火箭=========
-东东工厂 = type=cron,script-path=https://raw.githubusercontent.com/lxk0301/jd_scripts/master/jd_jdfactory.js, cronexpr="10 * * * *", timeout=200, enable=true
+东东工厂 = type=cron,script-path=https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_jdfactory.js, cronexpr="10 * * * *", timeout=200, enable=true
  */
 const $ = new Env('东东工厂');
 
@@ -53,7 +53,7 @@ if ($.isNode()) {
 }
 let wantProduct = ``;//心仪商品名称
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
-const inviteCodes = ['P04z54XCjVWnYaS5m9cZ2f-3n0YlH6HSlVabng','P04z54XCjVWnYaS5mlRVjyhg31Pkwnwlko'];
+const inviteCodes = [`T0225KkcRxga9AbWIhzykfJYcgCjVWnYaS5kRrbA`, 'T0184qQtHEdH9FHRJBn3kQCjVWnYaS5kRrbA'];
 !(async () => {
   await requireConfig();
   if (!cookiesArr[0]) {
@@ -142,7 +142,7 @@ async function algorithm() {
                 message += `当前已投入电量/所需电量：${useScore}/${totalScore}\n`;
                 message += `已选商品剩余量：${couponCount}\n`;
                 message += `当前总电量：${remainScore * 1 + useScore * 1}\n`;
-                message += `当前完成度：${((remainScore * 1 + useScore * 1)/(totalScore * 1)).toFixed(2) * 100}%\n`;
+                //message += `当前完成度：${((remainScore * 1 + useScore * 1)/(totalScore * 1)).toFixed(2) * 100}%\n`;
                 if (wantProduct) {
                   console.log(`BoxJs或环境变量提供的心仪商品：${wantProduct}\n`);
                   await jdfactory_getProductList(true);
@@ -358,7 +358,7 @@ async function doTask() {
 function jdfactory_collectScore(taskToken) {
   return new Promise(async resolve => {
     await $.wait(1000);
-    $.post(taskPostUrl("jdfactory_collectScore", { taskToken }, "jdfactory_collectScore"), async (err, resp, data) => {
+    $.post(taskPostUrl("jdfactory_collectScore", { "taskToken": `\"${taskToken}\"` }, "jdfactory_collectScore"), async (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
@@ -689,7 +689,7 @@ function taskPostUrl(function_id, body = {}, function_id2) {
   }
   return {
     url,
-    body: `functionId=${function_id}&body=${escape(JSON.stringify(body))}&client=wh5&clientVersion=9.1.0`,
+    body: `functionId=${function_id}&body=${escape(JSON.stringify(body))}&client=wh5&clientVersion=1.0.0`,
     headers: {
       "Cookie": cookie,
       "origin": "https://h5.m.jd.com",
