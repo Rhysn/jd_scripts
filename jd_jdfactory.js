@@ -358,7 +358,7 @@ async function doTask() {
 function jdfactory_collectScore(taskToken) {
   return new Promise(async resolve => {
     await $.wait(1000);
-    $.post(taskPostUrl("jdfactory_collectScore", { "taskToken": `\"${taskToken}\"` }, "jdfactory_collectScore"), async (err, resp, data) => {
+    $.post(taskPostUrl("jdfactory_collectScore", { "taskToken": `\"${taskToken}\"` }), async (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
