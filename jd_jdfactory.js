@@ -143,7 +143,7 @@ async function algorithm() {
                 message += `当前已投入电量/所需电量：${useScore}/${totalScore}\n`;
                 message += `已选商品剩余量：${couponCount}\n`;
                 message += `当前总电量：${remainScore * 1 + useScore * 1}\n`;
-                //message += `当前完成度：${((remainScore * 1 + useScore * 1)/(totalScore * 1)).toFixed(2) * 100}%\n`;
+                message += `当前完成度：${((remainScore * 1 + useScore * 1)/(totalScore * 1)).toFixed(2) * 100}%\n`;
                 if (wantProduct) {
                   console.log(`BoxJs或环境变量提供的心仪商品：${wantProduct}\n`);
                   await jdfactory_getProductList(true);
@@ -698,7 +698,7 @@ function taskPostUrl(function_id, body = {}, function_id2) {
       "origin": "https://h5.m.jd.com",
       "referer": "https://h5.m.jd.com/",
       'Content-Type': 'application/x-www-form-urlencoded',
-      "User-Agent": "jdapp;iPhone;9.3.5;14.3;7c602bde98d3afb064e4a1cf9293cccfbd88c767;network/wifi;supportApplePay/0;hasUPPay/0;hasOCPay/0;model/iPhone13,4;addressid/2821783337;supportBestPay/0;appBuild/167515;jdSupportDarkMode/0;pv/4468.148;apprpd/;ref/https%3A%2F%2Fh5.m.jd.com%2FbabelDiy%2FZeus%2F3BB1rymVZUo4XmicATEUSDUgHZND%2Findex.html%3FbabelChannel%3D5%26playname%3D%25E8%25BE%25B9%25E7%258E%25A9%25E8%25BE%25B9%25E8%25B5%259A%26collectionId%3D527%26lng%3D114.455731%26lat%3D38.016015%26sid%3D18884e9f22e1956321f99cf9649e709w%26un_area%3D5_142_42544_60039;psq/1;ads/;psn/7c602bde98d3afb064e4a1cf9293cccfbd88c767|14579;jdv/0|kong|t_1000170136|tuiguang|notset|1610758742719|1610758742;adk/;app_device/IOS;pap/JA2015_311210|9.3.5|IOS 14.3;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1",
+      "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0"),
     },
     timeout: 10000,
   }
@@ -715,7 +715,7 @@ function TotalBean() {
         "Connection": "keep-alive",
         "Cookie": cookie,
         "Referer": "https://wqs.jd.com/my/jingdou/my.shtml?sceneval=2",
-        "User-Agent": "jdapp;iPhone;9.3.5;14.3;7c602bde98d3afb064e4a1cf9293cccfbd88c767;network/wifi;supportApplePay/0;hasUPPay/0;hasOCPay/0;model/iPhone13,4;addressid/2821783337;supportBestPay/0;appBuild/167515;jdSupportDarkMode/0;pv/4468.148;apprpd/;ref/https%3A%2F%2Fh5.m.jd.com%2FbabelDiy%2FZeus%2F3BB1rymVZUo4XmicATEUSDUgHZND%2Findex.html%3FbabelChannel%3D5%26playname%3D%25E8%25BE%25B9%25E7%258E%25A9%25E8%25BE%25B9%25E8%25B5%259A%26collectionId%3D527%26lng%3D114.455731%26lat%3D38.016015%26sid%3D18884e9f22e1956321f99cf9649e709w%26un_area%3D5_142_42544_60039;psq/1;ads/;psn/7c602bde98d3afb064e4a1cf9293cccfbd88c767|14579;jdv/0|kong|t_1000170136|tuiguang|notset|1610758742719|1610758742;adk/;app_device/IOS;pap/JA2015_311210|9.3.5|IOS 14.3;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1"
+        "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0")
       },
       "timeout": 10000,
     }
