@@ -143,7 +143,8 @@ async function algorithm() {
                 message += `当前已投入电量/所需电量：${useScore}/${totalScore}\n`;
                 message += `已选商品剩余量：${couponCount}\n`;
                 message += `当前总电量：${remainScore * 1 + useScore * 1}\n`;
-                message += `当前完成度：${((remainScore * 1 + useScore * 1)/(totalScore * 1)).toFixed(2) * 100}%\n`;
+                let _ret = ((remainScore + useScore)/totalScore).toFixed(2) * 100;
+                message += `当前完成度：${_ret}%\n`;
                 if (wantProduct) {
                   console.log(`BoxJs或环境变量提供的心仪商品：${wantProduct}\n`);
                   await jdfactory_getProductList(true);
@@ -446,6 +447,7 @@ function jdfactory_getTaskDetail() {
           console.log(`${JSON.stringify(err)}`)
           console.log(`${$.name} API请求失败，请检查网路重试`)
         } else {
+          console.log(data);
           if (safeGet(data)) {
             data = JSON.parse(data);
             if (data.data.bizCode === 0) {
@@ -580,7 +582,7 @@ function jdfactory_getHomeData() {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
-          console.log(`${$.name} API请求失败，请检查网路重试`)
+          console.log(`${$.name} API请求失败，请检查网路重试(jdfactory_getHomeData)`)
         } else {
           if (safeGet(data)) {
             // console.log(data);
