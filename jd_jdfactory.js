@@ -53,7 +53,8 @@ if ($.isNode()) {
 }
 let wantProduct = ``;//心仪商品名称
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
-const inviteCodes = [`T0225KkcRxga9AbWIhzykfJYcgCjVWnYaS5kRrbA`, 'T0184qQtHEdH9FHRJBn3kQCjVWnYaS5kRrbA'];
+const inviteCodes = ['T0225KkcRxga9AbWIhzykfJYcgCjVWnYaS5kRrbA@T0184qQtHEdH9FHRJBn3kQCjVWnYaS5kRrbA',
+'T0225KkcRxga9AbWIhzykfJYcgCjVWnYaS5kRrbA@T0184qQtHEdH9FHRJBn3kQCjVWnYaS5kRrbA'];
 !(async () => {
   await requireConfig();
   if (!cookiesArr[0]) {
@@ -655,10 +656,12 @@ function shareCodesFormat() {
       const tempIndex = $.index > inviteCodes.length ? (inviteCodes.length - 1) : ($.index - 1);
       $.newShareCodes = inviteCodes[tempIndex].split('@');
     }
+    /*
     const readShareCodeRes = await readShareCode();
     if (readShareCodeRes && readShareCodeRes.code === 200) {
       $.newShareCodes = [...new Set([...$.newShareCodes, ...(readShareCodeRes.data || [])])];
     }
+    */
     console.log(`第${$.index}个京东账号将要助力的好友${JSON.stringify($.newShareCodes)}`)
     resolve();
   })
