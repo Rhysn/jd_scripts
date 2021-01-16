@@ -248,6 +248,7 @@ async function algorithm() {
 async function helpFriends() {
   for (let code of $.newShareCodes) {
     if (!code) continue
+    await $.wait(3000)
     const helpRes = await jdfactory_collectScore(code);
     if (helpRes.code === 0 && helpRes.data.bizCode === -7) {
       console.log(`助力机会已耗尽，跳出`);
@@ -438,6 +439,7 @@ function jdfactory_collectElectricity() {
 //获取任务列表
 function jdfactory_getTaskDetail() {
   return new Promise(resolve => {
+  setTimeout(() => {
     $.post(taskPostUrl("jdfactory_getTaskDetail", {}, "jdfactory_getTaskDetail"), async (err, resp, data) => {
       try {
         if (err) {
@@ -462,6 +464,7 @@ function jdfactory_getTaskDetail() {
         resolve();
       }
     })
+    }, 15000)
   })
 }
 //选择一件商品，只能在 $.newUser !== 1 && $.haveProduct === 2 并且 sellOut === 0的时候可用
