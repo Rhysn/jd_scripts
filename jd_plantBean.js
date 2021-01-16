@@ -1,6 +1,6 @@
 /*
 种豆得豆 脚本更新地址：https://raw.githubusercontent.com/lxk0301/jd_scripts/master/jd_plantBean.js
-更新时间：2020-12-31
+更新时间：2021-1-16
 已支持IOS京东双账号,云端N个京东账号
 脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
 注：会自动关注任务中的店铺跟商品，介意者勿使用。
@@ -33,7 +33,7 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
 //此此内容是IOS用户下载脚本到本地使用，填写互助码的地方，同一京东账号的好友互助码请使用@符号隔开。
 //下面给出两个账号的填写示例（iOS只支持2个京东账号）
 let shareCodes = [ // IOS本地脚本用户这个列表填入你要助力的好友的shareCode
-  //账号一的好友shareCode,不同好友的shareCode中间用@符号隔开
+                   //账号一的好友shareCode,不同好友的shareCode中间用@符号隔开
   'mxnmgswd5zuc5kwapitm2yrhqryzgy7kd77dlwi@4npkonnsy7xi2hdx54damytwifkkw4schxfwm3q',
   //账号二的好友shareCode,不同好友的shareCode中间用@符号隔开
   'mxnmgswd5zuc5kwapitm2yrhqryzgy7kd77dlwi@4npkonnsy7xi2hdx54damytwifkkw4schxfwm3q',
@@ -81,32 +81,36 @@ let randomCount = $.isNode() ? 20 : 5;
 })
 
 async function jdPlantBean() {
-  console.log(`获取任务及基本信息`)
-  await plantBeanIndex();
-  // console.log(plantBeanIndexResult.data.taskList);
-  if ($.plantBeanIndexResult.code === '0') {
-    const shareUrl = $.plantBeanIndexResult.data.jwordShareInfo.shareUrl
-    $.myPlantUuid = getParam(shareUrl, 'plantUuid')
-    console.log(`\n【京东账号${$.index}（${$.nickName || $.UserName}）的${$.name}好友互助码】${$.myPlantUuid}\n`);
-    roundList = $.plantBeanIndexResult.data.roundList;
-    currentRoundId = roundList[1].roundId;//本期的roundId
-    lastRoundId = roundList[0].roundId;//上期的roundId
-    awardState = roundList[0].awardState;
-    $.taskList = $.plantBeanIndexResult.data.taskList;
-    subTitle = `【京东昵称】${$.plantBeanIndexResult.data.plantUserInfo.plantNickName}`;
-    message += `【上期时间】${roundList[0].dateDesc.replace('上期 ', '')}\n`;
-    message += `【上期成长值】${roundList[0].growth}\n`;
-    await receiveNutrients();//定时领取营养液
-    await doHelp();//助力
-    await doTask();//做日常任务
-    await doEgg();
-    await stealFriendWater();
-    await doCultureBean();
-    await doGetReward();
-    await showTaskProcess();
-    await plantShareSupportList();
-  } else {
-    console.log(`种豆得豆-初始失败:  ${JSON.stringify($.plantBeanIndexResult)}`);
+  try {
+    console.log(`获取任务及基本信息`)
+    await plantBeanIndex();
+    // console.log(plantBeanIndexResult.data.taskList);
+    if ($.plantBeanIndexResult.code === '0') {
+      const shareUrl = $.plantBeanIndexResult.data.jwordShareInfo.shareUrl
+      $.myPlantUuid = getParam(shareUrl, 'plantUuid')
+      console.log(`\n【京东账号${$.index}（${$.nickName || $.UserName}）的${$.name}好友互助码】${$.myPlantUuid}\n`);
+      roundList = $.plantBeanIndexResult.data.roundList;
+      currentRoundId = roundList[1].roundId;//本期的roundId
+      lastRoundId = roundList[0].roundId;//上期的roundId
+      awardState = roundList[0].awardState;
+      $.taskList = $.plantBeanIndexResult.data.taskList;
+      subTitle = `【京东昵称】${$.plantBeanIndexResult.data.plantUserInfo.plantNickName}`;
+      message += `【上期时间】${roundList[0].dateDesc.replace('上期 ', '')}\n`;
+      message += `【上期成长值】${roundList[0].growth}\n`;
+      await receiveNutrients();//定时领取营养液
+      await doHelp();//助力
+      await doTask();//做日常任务
+      await doEgg();
+      await stealFriendWater();
+      await doCultureBean();
+      await doGetReward();
+      await showTaskProcess();
+      await plantShareSupportList();
+    } else {
+      console.log(`种豆得豆-初始失败:  ${JSON.stringify($.plantBeanIndexResult)}`);
+    }
+  } catch (e) {
+    $.logErr(e);
   }
 }
 async function doGetReward() {
@@ -547,10 +551,12 @@ function shareCodesFormat() {
       const tempIndex = $.index > shareCodes.length ? (shareCodes.length - 1) : ($.index - 1);
       newShareCodes = shareCodes[tempIndex].split('@');
     }
-    //const readShareCodeRes = await readShareCode();
-    //if (readShareCodeRes && readShareCodeRes.code === 200) {
-      //newShareCodes = [...new Set([...newShareCodes, ...(readShareCodeRes.data || [])])];
-    //}
+    /*
+    const readShareCodeRes = await readShareCode();
+    if (readShareCodeRes && readShareCodeRes.code === 200) {
+      newShareCodes = [...new Set([...newShareCodes, ...(readShareCodeRes.data || [])])];
+    }
+    */
     console.log(`第${$.index}个京东账号将要助力的好友${JSON.stringify(newShareCodes)}`)
     resolve();
   })
