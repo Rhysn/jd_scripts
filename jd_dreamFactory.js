@@ -107,6 +107,7 @@ if ($.isNode()) {
     })
 
 async function jdDreamFactory() {
+  console.log('WTF');
   console.log('STOP_KEY:' + DREAM_FACTORY_STOP_KEY);
   if($.isNode() && DREAM_FACTORY_STOP_KEY === 'true') return;//静止状态
   await userInfo();
