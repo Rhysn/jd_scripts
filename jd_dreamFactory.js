@@ -107,6 +107,7 @@ if ($.isNode()) {
     })
 
 async function jdDreamFactory() {
+  console.log(process.env.DREAM_FACTORY_STOP_KEY);
   if($.isNode() && process.env.DREAM_FACTORY_STOP_KEY === 'true') return;//静止状态
   await userInfo();
   await QueryFriendList();//查询今日招工情况以及剩余助力次数
