@@ -54,9 +54,6 @@ if ($.isNode()) {
   cookiesArr = cookiesArr.filter(item => item !== "" && item !== null && item !== undefined);
 }
 !(async () => {
-  console.log('WTF');
-  console.log('STOP_KEY:' + process.env.DREAM_FACTORY_STOP_KEY);
-  if($.isNode() && process.env.DREAM_FACTORY_STOP_KEY === 'true') return;//静止状态
   await requireConfig();
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
