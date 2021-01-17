@@ -1,6 +1,6 @@
 /*
 京东京喜工厂
-更新时间：2021-1-9
+更新时间：2021-1-17
 活动入口 :京东APP->游戏与互动->查看更多->京喜工厂
 或者: 京东APP首页搜索 "玩一玩" ,造物工厂即可
 
@@ -10,17 +10,17 @@
 ============Quantumultx===============
 [task_local]
 #京喜工厂
-10 * * * * https://raw.githubusercontent.com/lxk0301/jd_scripts/master/jd_dreamFactory.js, tag=京喜工厂, enabled=true
+10 * * * * https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_dreamFactory.js, tag=京喜工厂, enabled=true
 
 ================Loon==============
 [Script]
-cron "10 * * * *" script-path=https://raw.githubusercontent.com/lxk0301/jd_scripts/master/jd_dreamFactory.js,tag=京喜工厂
+cron "10 * * * *" script-path=https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_dreamFactory.js,tag=京喜工厂
 
 ===============Surge=================
-京喜工厂 = type=cron,cronexp="10 * * * *",wake-system=1,timeout=20,script-path=https://raw.githubusercontent.com/lxk0301/jd_scripts/master/jd_dreamFactory.js
+京喜工厂 = type=cron,cronexp="10 * * * *",wake-system=1,timeout=20,script-path=https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_dreamFactory.js
 
 ============小火箭=========
-京喜工厂 = type=cron,script-path=https://raw.githubusercontent.com/lxk0301/jd_scripts/master/jd_dreamFactory.js, cronexpr="10 * * * *", timeout=200, enable=true
+京喜工厂 = type=cron,script-path=https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_dreamFactory.js, cronexpr="10 * * * *", timeout=200, enable=true
 
  */
 
@@ -37,6 +37,7 @@ let cookiesArr = [], cookie = '', message = '';
 const inviteCodes = [ 'NTXGxnRwTQkr7rbDn08j4w==@XU6GKz30yCKA4LYvpnm5zw==@q0aZPe-QA6AChOBXOoOMBA==@60y72tM8PjtxKeL4EMpTOQ==@QDotuqdYVNrSa3atJZ_V9Q==' ];
 let stopHelpFriendCollect = false;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
+$.tuanIds = [];
 if ($.isNode()) {
   Object.keys(jdCookieNode).forEach((item) => {
     cookiesArr.push(jdCookieNode[item])
@@ -83,6 +84,19 @@ if ($.isNode()) {
       }
       await jdDreamFactory()
     }
+  }
+  /*
+  for (let i = 0; i < cookiesArr.length; i++) {
+    if (cookiesArr[i]) {
+      $.UserName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1])
+      console.log(`${$.UserName}去参加第一个cookie账号开的团`)
+      cookie = cookiesArr[i];
+      if ($.tuanIds.length > 0) {
+        await JoinTuan($.tuanIds[0]);
+      }
+      await joinLeaderTuan();//参团
+    }
+    */
   }
 })()
     .catch((e) => {
@@ -1346,10 +1360,12 @@ function shareCodesFormat() {
       const tempIndex = $.index > inviteCodes.length ? (inviteCodes.length - 1) : ($.index - 1);
       $.newShareCodes = inviteCodes[tempIndex].split('@');
     }
+    /*
     const readShareCodeRes = await readShareCode();
     if (readShareCodeRes && readShareCodeRes.code === 200) {
       $.newShareCodes = [...new Set([...$.newShareCodes, ...(readShareCodeRes.data || [])])];
     }
+    */
     console.log(`第${$.index}个京东账号将要助力的好友${JSON.stringify($.newShareCodes)}`)
     resolve();
   })

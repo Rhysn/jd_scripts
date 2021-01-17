@@ -249,7 +249,6 @@ async function algorithm() {
 async function helpFriends() {
   for (let code of $.newShareCodes) {
     if (!code) continue
-    await $.wait(3000)
     const helpRes = await jdfactory_collectScore(code);
     if (helpRes.code === 0 && helpRes.data.bizCode === -7) {
       console.log(`助力机会已耗尽，跳出`);
@@ -361,7 +360,7 @@ async function doTask() {
 function jdfactory_collectScore(taskToken) {
   return new Promise(async resolve => {
     await $.wait(1000);
-    $.post(taskPostUrl("jdfactory_collectScore", { "taskToken": `\"${taskToken}\"` }), async (err, resp, data) => {
+    $.post(taskPostUrl("jdfactory_collectScore", { taskToken }, "jdfactory_collectScore"), async (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
@@ -440,14 +439,12 @@ function jdfactory_collectElectricity() {
 //获取任务列表
 function jdfactory_getTaskDetail() {
   return new Promise(resolve => {
-  setTimeout(() => {
     $.post(taskPostUrl("jdfactory_getTaskDetail", {}, "jdfactory_getTaskDetail"), async (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
           console.log(`${$.name} API请求失败，请检查网路重试`)
         } else {
-          console.log(data);
           if (safeGet(data)) {
             data = JSON.parse(data);
             if (data.data.bizCode === 0) {
@@ -466,7 +463,6 @@ function jdfactory_getTaskDetail() {
         resolve();
       }
     })
-    }, 15000)
   })
 }
 //选择一件商品，只能在 $.newUser !== 1 && $.haveProduct === 2 并且 sellOut === 0的时候可用
@@ -582,7 +578,7 @@ function jdfactory_getHomeData() {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
-          console.log(`${$.name} API请求失败，请检查网路重试(jdfactory_getHomeData)`)
+          console.log(`${$.name} API请求失败，请检查网路重试`)
         } else {
           if (safeGet(data)) {
             // console.log(data);
@@ -628,7 +624,7 @@ function jdfactory_getHomeData() {
 function readShareCode() {
   console.log(`开始`)
   return new Promise(async resolve => {
-    $.get({url: `http://api.turinglabs.net/api/v1/jd/ddfactory/read/${randomCount}/`, timeout: 10000}, (err, resp, data) => {
+    $.get({url: `http://jd.turinglabs.net/api/v2/jd/ddfactory/read/${randomCount}/`, timeout: 10000}, (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
@@ -697,7 +693,7 @@ function taskPostUrl(function_id, body = {}, function_id2) {
   }
   return {
     url,
-    body: `functionId=${function_id}&body=${escape(JSON.stringify(body))}&client=wh5&clientVersion=1.0.0`,
+    body: `functionId=${function_id}&body=${escape(JSON.stringify(body))}&client=wh5&clientVersion=9.1.0`,
     headers: {
       "Cookie": cookie,
       "origin": "https://h5.m.jd.com",
