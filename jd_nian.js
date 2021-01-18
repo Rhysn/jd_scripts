@@ -46,8 +46,8 @@ if ($.isNode()) {
 }
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
 const inviteCodes = [
-  `cgxZdTXtI7zZ61zICgOv6iMbYfkDiRFHztoG2CQXHh5tOAOKhMlfJRuFiSI@cgxZczjceOOE6wvPDAaq6jdit8e0DLUMEMMjX-kEmQY4yMTXsg`,
-  `cgxZdTXtI7zZ61zICgOv6iMbYfkDiRFHztoG2CQXHh5tOAOKhMlfJRuFiSI@cgxZczjceOOE6wvPDAaq6jdit8e0DLUMEMMjX-kEmQY4yMTXsg`
+  `cgxZdTXtI7zZ61zICgOv6iMbYfkDiRFHztoG2CQXHh5tOAOKhMlfJRuFiSI@cgxZczjceOOE6wvPDAaq6jdit8e0DLUMEMMjX-kEmQY4yMTXsg@cgxZLmSKJ7je7QnNDAPGr5OcLIfhMy9j4pvCsSFmZF0UhZZpRg@cgxZdTXtIrvduF_LXgav7rhEvGrL_ivnRJGruWXQyNlb94czfKTeVUOeK-Q`,
+  `cgxZdTXtI7zZ61zICgOv6iMbYfkDiRFHztoG2CQXHh5tOAOKhMlfJRuFiSI@cgxZczjceOOE6wvPDAaq6jdit8e0DLUMEMMjX-kEmQY4yMTXsg@cgxZLmSKJ7je7QnNDAPGr5OcLIfhMy9j4pvCsSFmZF0UhZZpRg@cgxZdTXtIrvduF_LXgav7rhEvGrL_ivnRJGruWXQyNlb94czfKTeVUOeK-Q`
 ];
 !(async () => {
   await requireConfig();
@@ -107,6 +107,7 @@ function getRnd() {
 }
 function showMsg() {
   return new Promise(resolve => {
+    console.log('任务已做完！\n如有未完成的任务，请多执行几次。注：目前入会任务不会做')
     if (!jdNotify) {
       $.msg($.name, '', `${message}`);
     } else {
