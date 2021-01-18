@@ -664,7 +664,7 @@ function taskUrl(functionId, body = {}, decrypt = false) {
 
 function jdUrl(functionId, body = '') {
   return {
-    url: `https://draw.jdfcloud.com/saas/framework${functionId}`,
+    url: `https://draw.jdfcloud.com/saas/framework/${functionId}`,
     body: body,
     headers: {
       'Host': 'jdjoy.jd.com',
