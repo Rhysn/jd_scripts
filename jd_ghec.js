@@ -175,12 +175,11 @@ function getActInfo(inviter = null) {
   let body = {
     "inviter": inviter,
     "activeId": "A_112790_R_3_D_20201102",
-    "refid": "2",
+    "refid": "1",
     "lkEPin": $.lkEPin,
     "token": $.token,
-    "un_area": "12_904_908_57903",
-    "source": "2",
-    "scene": "3"
+    "un_area": "5_142_42544_60039",
+    "source": "1"
   }
   return new Promise(resolve => {
     $.post(taskUrl("platform/active/role/login", body), async (err, resp, data) => {
