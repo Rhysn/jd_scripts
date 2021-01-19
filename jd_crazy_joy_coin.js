@@ -166,7 +166,7 @@ if ($.isNode()) {
     return;
   }
   let count = 0
-  
+  /*
   if ($.isNode() && cookiesArr.length) {
     console.log(`\n挂机开始，自动8s收一次金币`);
     setInterval(async () => {
@@ -174,7 +174,7 @@ if ($.isNode()) {
       await Promise.all(promiseArr);
     }, 8000);
   }
-  
+  */
   while (true) {
     if(getStopKey()) break;
     count++
