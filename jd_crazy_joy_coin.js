@@ -524,9 +524,9 @@ function getCoinForInterval(taskCookie) {
             // if (data.data && data.data.tryMoneyJoyBeans) {
             //   console.log(`【京东账号 ${userName}】分红狗生效中，预计获得 ${data.data.tryMoneyJoyBeans} 京豆奖励`)
             // }
-            if (data.data) {
-              $.log(`此次在线收益：获得 ${data.data['coins']} 金币`)
-            }
+            // if (data.data) {
+            //  $.log(`此次在线收益：获得 ${data.data['coins']} 金币`)
+            // }
           }
         }
       } catch (e) {
