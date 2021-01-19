@@ -60,7 +60,7 @@ if ($.isNode()) {
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
     return;
-  }  
+  }
   for (let i = 0; i < cookiesArr.length; i++) {
     if (cookiesArr[i]) {
       cookie = cookiesArr[i];
@@ -97,7 +97,7 @@ if ($.isNode()) {
         await JoinTuan($.tuanIds[0]);
       }
       await joinLeaderTuan();//参团
-    }   
+    }
   }
   */
 })()
@@ -802,10 +802,12 @@ function PickUpComponent(index, encryptPin) {
 }
 //偷好友的电力
 async function stealFriend() {
- // if (!$.pickUpMyselfComponent) {
-    //$.log(`今日收取零件已达上限，偷好友零件也达到上限，故跳出`)
-    //return
-  //}
+  /*
+  if (!$.pickUpMyselfComponent) {
+    $.log(`今日收取零件已达上限，偷好友零件也达到上限，故跳出`)
+    return
+  }
+  */
   await getFriendList();
   $.friendList = [...new Set($.friendList)];
   for (let i = 0; i < $.friendList.length; i++) {
@@ -905,8 +907,12 @@ async function tuanActivity() {
       const QueryTuanRes = await QueryTuan(activeId, tuanId);
       if (QueryTuanRes && QueryTuanRes.ret === 0) {
         const { tuanInfo } = QueryTuanRes.data;
+        if ((tuanInfo && tuanInfo[0]['endTime']) <= QueryTuanRes['nowTime']) {
+          $.log(`之前的团已过期，准备重新开团\n`)
+          await CreateTuan();
+        }
         for (let item of tuanInfo) {
-          const { realTuanNum, tuanNum, userInfo, endTime } = item;
+          const { realTuanNum, tuanNum, userInfo } = item;
           $.log(`\n开团情况:${realTuanNum}/${tuanNum}\n`);
           if (realTuanNum === tuanNum) {
             for (let user of userInfo) {
@@ -921,8 +927,8 @@ async function tuanActivity() {
               }
             }
           } else {
-            $.log(`\n此团未达领取团奖励人数：${tuanNum}人\n`);
-            if(QueryTuanRes.nowTime > endTime && $.surplusOpenTuanNum > 0) await CreateTuan();
+            $.tuanIds.push(tuanId);
+            $.log(`\n此团未达领取团奖励人数：${tuanNum}人\n`)
           }
         }
       }
@@ -1035,6 +1041,7 @@ function CreateTuan() {
             data = JSON.parse(data);
             if (data['ret'] === 0) {
               console.log(`开团成功tuanId为\n${data.data['tuanId']}`);
+              $.tuanIds.push(data.data['tuanId']);
             } else {
               console.log(`异常：${JSON.stringify(data)}`);
             }
