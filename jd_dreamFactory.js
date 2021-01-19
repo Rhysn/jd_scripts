@@ -95,9 +95,9 @@ if ($.isNode()) {
         await JoinTuan($.tuanIds[0]);
       }
       await joinLeaderTuan();//参团
-    }
-    */
+    }   
   }
+  */
 })()
     .catch((e) => {
       $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
