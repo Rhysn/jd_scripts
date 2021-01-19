@@ -36,6 +36,7 @@ let inviteCodes = [
   '687160@899608@2610551@941638',
   '687160@899608@2610551@941638',
 ]
+let maxLevel = 320;
 if ($.isNode()) {
   Object.keys(jdCookieNode).forEach((item) => {
     cookiesArr.push(jdCookieNode[item])
@@ -175,7 +176,7 @@ function getActInfo(inviter=null) {
     "refid": "wojing",
     "lkEPin": $.lkEPin,
     "token": $.token,
-    "un_area": "12_904_908_57903",
+    "un_area": "5_142_42544_60039",
     "source": "wojing",
     "scene": "3"
   }
@@ -269,7 +270,7 @@ function getTaskList() {
                 if (task.res.sName === "闯关集星") {
                   $.level = task.state.value + 1
                   console.log(`当前关卡：${$.level}`)
-                  while ($.strength >= 5 && $.level <= 240) {
+                  while ($.strength >= 5 && $.level <= maxLevel) {
                     await beginLevel()
                   }
                   if($.not3Star.length && $.strength >= 5){
