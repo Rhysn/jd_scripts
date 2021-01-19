@@ -175,11 +175,12 @@ function getActInfo(inviter = null) {
   let body = {
     "inviter": inviter,
     "activeId": "A_112790_R_3_D_20201102",
-    "refid": "1",
+    "refid": "wojing",
     "lkEPin": $.lkEPin,
     "token": $.token,
     "un_area": "5_142_42544_60039",
-    "source": "1"
+    "source": "wojing",
+    "scene": "3"
   }
   return new Promise(resolve => {
     $.post(taskUrl("platform/active/role/login", body), async (err, resp, data) => {
@@ -214,7 +215,7 @@ function getActInfo(inviter = null) {
 
 function checkLogin() {
   return new Promise(resolve => {
-    $.post(taskUrl("eliminate_jdmy/game/local/logincheck", {
+    $.post(taskUrl("eliminate_jdhl/game/local/logincheck", {
       info: JSON.stringify($.info),
       "reqsId": $.reqId++
     }), async (err, resp, data) => {
@@ -261,7 +262,7 @@ function getTaskList() {
                 if (task.res.sName === "闯关集星") {
                   $.level = task.state.value + 1
                   console.log(`当前关卡：${$.level}`)
-                  while ($.strength >= 5 && $.level <= 240) {
+                  while ($.strength >= 5 && $.level <= 200) {
                     await beginLevel()
                   }
                 } else if (task.res.sName === "逛逛店铺" || task.res.sName === "浏览会场") {
@@ -390,7 +391,7 @@ async function beginLevel() {
     'reqsId': $.reqId++
   }
   return new Promise(resolve => {
-    $.post(taskUrl("eliminate_jdmy/game/local/beginLevel", obj2param(body), true),
+    $.post(taskUrl("eliminate_jdhl/game/local/beginLevel", obj2param(body), true),
       async (err, resp, data) => {
         try {
           if (err) {
@@ -431,7 +432,7 @@ function endLevel() {
     'reqsId': $.reqId++
   }
   return new Promise(resolve => {
-    $.post(taskUrl("eliminate_jdmy/game/local/endLevel", obj2param(body), true),
+    $.post(taskUrl("eliminate_jdhl/game/local/endLevel", obj2param(body), true),
       async (err, resp, data) => {
         try {
           if (err) {
@@ -663,7 +664,7 @@ function taskUrl(functionId, body = {}, decrypt = false) {
 
 function jdUrl(functionId, body = '') {
   return {
-    url: `https://draw.jdfcloud.com/saas/framework/${functionId}`,
+    url: `https://jdjoy.jd.com/saas/framework/${functionId}`,
     body: body,
     headers: {
       'Host': 'jdjoy.jd.com',
