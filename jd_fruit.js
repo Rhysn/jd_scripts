@@ -24,6 +24,7 @@ jd免费水果 搬的https://github.com/liuxiaoyucc/jd-helper/blob/a6f275d978574
 */
 const $ = new Env('东东农场');
 let cookiesArr = [], cookie = '', jdFruitShareArr = [], isBox = false, notify, newShareCodes;
+let theShareCodes = [];
 //助力好友分享码(最多4个,否则后面的助力失败),原因:京东农场每人每天只有四次助力机会
 //此此内容是IOS用户下载脚本到本地使用，填写互助码的地方，同一京东账号的好友互助码请使用@符号隔开。
 //下面给出两个账号的填写示例（iOS只支持2个京东账号）
@@ -819,7 +820,7 @@ async function doFriendsWater() {
       $.friendList.friends.map((item, index) => {
         if (item.friendState === 1) {
           if (needWaterFriends.length < (waterFriendMax - waterFriendCountKey)) {
-            if(newShareCodes.includes(item.shareCode)) needWaterFriends.push(item.shareCode);
+            if(theShareCodes.includes(item.shareCode)) needWaterFriends.push(item.shareCode);
           }
         }
       });
@@ -1280,6 +1281,7 @@ function shareCodesFormat() {
       const tempIndex = $.index > shareCodes.length ? (shareCodes.length - 1) : ($.index - 1);
       newShareCodes = shareCodes[tempIndex].split('@');
     }
+    theShareCodes = newShareCodes.concat();
     const readShareCodeRes = await readShareCode();
     if (readShareCodeRes && readShareCodeRes.code === 200) {
       // newShareCodes = newShareCodes.concat(readShareCodeRes.data || []);
@@ -1458,7 +1460,7 @@ async function cleanFriendList(){
     await friendListInitForFarm();//查询好友列表
     while ($.friendList.friends && $.friendList.friends.length > 30) {
       for (let friend of $.friendList.friends) {
-        if(newShareCodes.includes(friend.shareCode)) continue;
+        if(theShareCodes.includes(friend.shareCode)) continue;
         console.log(`\n开始删除好友 [${friend.shareCode}]`);
         const deleteFriendForFarm = await request('deleteFriendForFarm', { "shareCode": `${friend.shareCode}`,"version":8,"channel":1 });
         if (deleteFriendForFarm && deleteFriendForFarm.code === '0') {
