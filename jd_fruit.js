@@ -1458,7 +1458,7 @@ function jsonParse(str) {
 }
 async function cleanFriendList(){
     await friendListInitForFarm();//查询好友列表
-    while ($.friendList.friends && $.friendList.friends.length > 30) {
+    while ($.friendList.friends && $.friendList.friends.length > 10) {
       for (let friend of $.friendList.friends) {
         if(theShareCodes.includes(friend.shareCode)) continue;
         console.log(`\n开始删除好友 [${friend.shareCode}]`);
