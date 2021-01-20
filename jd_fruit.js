@@ -1458,7 +1458,7 @@ async function cleanFriendList(){
     await friendListInitForFarm();//查询好友列表
     while ($.friendList.friends && $.friendList.friends.length > 10) {
       for (let friend of $.friendList.friends) {
-        if(shareCodes.includes(friend.shareCode)) continue;
+        if(newShareCodes.includes(friend.shareCode)) continue;
         console.log(`\n开始删除好友 [${friend.shareCode}]`);
         const deleteFriendForFarm = await request('deleteFriendForFarm', { "shareCode": `${friend.shareCode}`,"version":8,"channel":1 });
         if (deleteFriendForFarm && deleteFriendForFarm.code === '0') {
