@@ -950,7 +950,7 @@ function jsonParse(str) {
     }
   }
 }
-function not3(){
+async function not3(){
   while($.not3Star.length && $.strength >= 5){
     console.log(`去完成尚未三星的关卡`)
     for(let level of $.not3Star){
