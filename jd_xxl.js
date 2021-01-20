@@ -956,6 +956,7 @@ async function not3(){
     for(let level of $.not3Star){
       $.level = parseInt(level)
       await beginLevel()
+      if($.strength < 5) break;
     }
   }
 }
