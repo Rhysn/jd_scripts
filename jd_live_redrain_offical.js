@@ -7,7 +7,7 @@
 ============Quantumultx===============
 [task_local]
 #官方号直播红包雨
-0 0,9,11,13,15,17,19,20,21,23 * * * https://raw.githubusercontent.com/shylocks/Loon/main/jd_live_redrain_offical.js, tag=官方号直播红包雨, img-url=https://raw.githubusercontent.com/shylocks/Loon/main/icons/jd_live_redrain_offical.jpg, enabled=true
+0 0,9,11,13,15,17,19,20,21,23 * * * https://raw.githubusercontent.com/shylocks/Loon/main/jd_live_redrain_offical.js, tag=官方号直播红包雨, img-url=https://raw.githubusercontent.com/yogayyy/Scripts/master/Icon/shylocks/jd_live_redrain_offical.jpg, enabled=true
 
 ================Loon==============
 [Script]
@@ -157,11 +157,11 @@ function receiveRedRain() {
             if (data.subCode === '0') {
               console.log(`领取成功，获得${JSON.stringify(data.lotteryResult)}`)
               // message+= `领取成功，获得${JSON.stringify(data.lotteryResult)}\n`
-              message += `${data.lotteryResult.jPeasList[0].ext}:${(data.lotteryResult.jPeasList[0].quantity)}京豆\n`
+              message += `领取成功，获得 ${(data.lotteryResult.jPeasList[0].quantity)}京豆`
 
             } else if (data.subCode === '8') {
               console.log(`今日次数已满`)
-              message += `领取失败，今日已签到\n`;
+              message += `领取失败，本场已领过`;
             } else {
               console.log(`异常：${JSON.stringify(data)}`)
             }
