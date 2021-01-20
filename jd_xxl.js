@@ -115,6 +115,7 @@ async function jdBeauty(help = true) {
   await getDailyMatch()
   // await marketGoods()
   if(help)await helpFriends()
+  await not3()
 }
 async function helpFriends() {
   for (let code of $.newShareCodes) {
@@ -946,6 +947,15 @@ function jsonParse(str) {
       console.log(e);
       $.msg($.name, '', '不要在BoxJS手动复制粘贴修改cookie')
       return [];
+    }
+  }
+}
+function not3(){
+  while($.not3Star.length && $.strength >= 5){
+    console.log(`去完成尚未三星的关卡`)
+    for(let level of $.not3Star){
+      $.level = parseInt(level)
+      await beginLevel()
     }
   }
 }
