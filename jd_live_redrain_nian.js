@@ -11,13 +11,13 @@
 
 ================Loon==============
 [Script]
-cron "0 0,9,11,13,15,17,19,20,21,23 3,5,20-30/1 1,2 * " script-path=https://raw.githubusercontent.com/shylocks/Loon/main/jd_live_redrain_nian.js, tag=年货直播红包雨
+cron "0 0,9,11,13,15,17,19,20,21,23 3,5,20-30/1 1,2 *" script-path=https://raw.githubusercontent.com/shylocks/Loon/main/jd_live_redrain_nian.js, tag=年货直播红包雨
 
 ===============Surge=================
-年货直播红包雨 = type=cron,cronexp="0 0,9,11,13,15,17,19,20,21,23 3,5,20-30/1 1,2 * ",wake-system=1,timeout=200,script-path=https://raw.githubusercontent.com/shylocks/Loon/main/jd_live_redrain_nian.js
+年货直播红包雨 = type=cron,cronexp="0 0,9,11,13,15,17,19,20,21,23 3,5,20-30/1 1,2 *",wake-system=1,timeout=200,script-path=https://raw.githubusercontent.com/shylocks/Loon/main/jd_live_redrain_nian.js
 
 ============小火箭=========
-年货直播红包雨 = type=cron,script-path=https://raw.githubusercontent.com/shylocks/Loon/main/jd_live_redrain_nian.js, cronexpr="0 0,9,11,13,15,17,19,20,21,23 3,5,20-30/1 1,2 * ", timeout=200, enable=true
+年货直播红包雨 = type=cron,script-path=https://raw.githubusercontent.com/shylocks/Loon/main/jd_live_redrain_nian.js, cronexpr="0 0,9,11,13,15,17,19,20,21,23 3,5,20-30/1 1,2 *", timeout=200, enable=true
  */
 const $ = new Env('年货直播红包雨');
 
@@ -44,6 +44,7 @@ if ($.isNode()) {
 }
 const JD_API_HOST = 'https://api.m.jd.com/api';
 let ids = {
+  '11': 'RRA2ZMK66tw36bRAZTpb8k9zv8rwaxb',
   '20': 'RRA3q6FQPT9BKg4C6EyhA99TcA9K7SL',
   '21': 'RRA42SucXFqAPggaoYP4c3JYZLHGbkG',
   '22': 'RRAPZRA9mVCzpjH38RUBPseJiZ6oj8',
@@ -113,7 +114,7 @@ function showMsg() {
 }
 
 function getRedRain() {
-  let body = 'body=%7B%22liveId%22%3A%223362433%22%7D&build=167515&client=apple&clientVersion=9.3.5&openudid=53f4d9c70c1c81f1c8769d2fe2fef0190a3f60d2&sign=8eeb6f993364562a42154ada99b1339e&st=1611072313017&sv=111'
+  let body = 'body=%7B%22liveId%22%3A%223354273%22%7D&build=167515&client=apple&clientVersion=9.3.5&openudid=53f4d9c70c1c81f1c8769d2fe2fef0190a3f60d2&sign=0476c120ea2827a5932298ce35ba9657&st=1611110165473&sv=102'
   return new Promise(resolve => {
     $.post(taskPostUrl('liveActivityV842', body), (err, resp, data) => {
       try {
