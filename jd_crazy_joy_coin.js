@@ -744,6 +744,7 @@ function getStopKey(){
 }
 function getBuyJoyLevel(num) {
   if (zero < 2) {
+    //空格数量少于2时，购买可以合并的等级
     var myJoyArr = $.joyIds;
     if (joysArr.length < 30) num = joysArr.length - 1;
     else {
@@ -762,11 +763,17 @@ function getBuyJoyLevel(num) {
     buyJoyLevelArr.push(joysArr[num].joyId);
     return
   }
+  /*
+  //最节省金币方式购买
   var next = num - 1;
   if (next !== -1 && joysArr[num].coins > (joysArr[next].coins * 2)) {
     getBuyJoyLevel(next);
     return
   }
+  buyJoyLevelArr.push(joysArr[num].joyId);
+  */
+  
+  //购买商店最大等级
   buyJoyLevelArr.push(joysArr[num].joyId);
 }
 function getNeedJoyLevel(){
