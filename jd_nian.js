@@ -53,6 +53,7 @@ const pkInviteCodes = [
   'IgNWdiLGaPaAvmHODgaovara9EDq4S8nOHClXh8rgLf9rLgdgYe7GNr9azv_FqG7@IgNWdiLGaPaAvmHODgaovara9EDq4S8nOHClXhkmsewTyU42egwjDqCKKSqe',
   'IgNWdiLGaPaAvmHODgaovara9EDq4S8nOHClXh8rgLf9rLgdgYe7GNr9azv_FqG7@IgNWdiLGaPaAvmHODgaovara9EDq4S8nOHClXhkmsewTyU42egwjDqCKKSqe'
 ]
+const inviteTempCodes = [];
 !(async () => {
   await requireConfig();
   if (!cookiesArr[0]) {
@@ -78,7 +79,8 @@ const pkInviteCodes = [
         continue
       }
       await shareCodesFormat();
-      await shareCodesFormatPk()
+      await shareCodesFormatPk();
+      await tempShareCodesFormat();
       await jdNian()
     }
   }
@@ -119,6 +121,8 @@ async function jdNian() {
     await doTask()
     await $.wait(2000)
     await helpFriends()
+    await $.wait(2000)
+    await helpFriendsTemp()
     await $.wait(2000)
     await getHomeData(true)
     await showMsg()
@@ -169,6 +173,14 @@ async function helpFriendsPK() {
     if (!code) continue
     console.log(`去助力PK好友${code}`)
     await pkAssignGroup(code)
+    await $.wait(1000)
+  }
+}
+
+async function helpFriendsTemp() {
+  for (let code of $.newTempShareCodes) {
+    if (!code) continue
+    await getFriendTempData(code)
     await $.wait(1000)
   }
 }
@@ -612,6 +624,29 @@ function getFriendData(inviteId) {
           if (data.data && data.data['bizCode'] === 0) {
             $.itemId = data.data.result.homeMainInfo.guestInfo.itemId
             await collectScore('2', $.itemId, null, inviteId)
+          }
+        }
+      } catch (e) {
+        $.logErr(e, resp);
+      } finally {
+        resolve();
+      }
+    })
+  })
+}
+
+function getFriendTempData(inviteId) {
+  return new Promise((resolve) => {
+    $.post(taskPostUrl('nian_getHomeData', {"inviteId": inviteId}, 'nian_getHomeData'), async (err, resp, data) => {
+      try {
+        if (err) {
+          console.log(`${JSON.stringify(err)}`)
+          console.log(`${$.name} API请求失败，请检查网路重试`)
+        } else {
+          data = JSON.parse(data);
+          if (data.data && data.data['bizCode'] === 0) {
+            $.itemId = data.data.result.homeMainInfo.guestInfo.itemId
+            //await collectScore('2', $.itemId, null, inviteId)
           }
         }
       } catch (e) {
@@ -1142,10 +1177,12 @@ function shareCodesFormat() {
       const tempIndex = $.index > inviteCodes.length ? (inviteCodes.length - 1) : ($.index - 1);
       $.newShareCodes = inviteCodes[tempIndex].split('@');
     }
-    const readShareCodeRes = await readTempShareCode();
+    /*
+    const readShareCodeRes = await readShareCode();
     if (readShareCodeRes && readShareCodeRes.code === 200) {
       $.newShareCodes = [...new Set([...$.newShareCodes, ...(readShareCodeRes.data || [])])];
     }
+    */
     console.log(`第${$.index}个京东账号将要助力的好友${JSON.stringify($.newShareCodes)}`)
     resolve();
   })
@@ -1169,6 +1206,26 @@ function shareCodesFormatPk() {
     }
     */
     console.log(`第${$.index}个京东账号将要助力的PK好友${JSON.stringify($.newShareCodesPk)}`)
+    resolve();
+  })
+}
+
+function tempShareCodesFormat() {
+  return new Promise(async resolve => {
+    // console.log(`第${$.index}个京东账号的助力码:::${$.shareCodesArr[$.index - 1]}`)
+    $.newTempShareCodes = [];
+    if ($.shareCodesArr[$.index - 1]) {
+      $.newTempShareCodes = $.shareCodesArr[$.index - 1].split('@');
+    } else {
+      console.log(`由于您第${$.index}个京东账号未提供shareCode,将采纳本脚本自带的助力码\n`)
+      const tempIndex = $.index > inviteTempCodes.length ? (inviteTempCodes.length - 1) : ($.index - 1);
+      $.newTempShareCodes = inviteTempCodes[tempIndex].split('@');
+    }
+    const readShareCodeRes = await readTempShareCode();
+    if (readShareCodeRes && readShareCodeRes.code === 200) {
+      $.newTempShareCodes = [...new Set([...$.newTempShareCodes, ...(readShareCodeRes.data || [])])];
+    }
+    console.log(`第${$.index}个京东账号将要助力的好友${JSON.stringify($.newTempShareCodes)}`)
     resolve();
   })
 }
