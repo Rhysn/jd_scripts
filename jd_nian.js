@@ -1214,8 +1214,8 @@ function tempShareCodesFormat() {
   return new Promise(async resolve => {
     // console.log(`第${$.index}个京东账号的助力码:::${$.shareCodesArr[$.index - 1]}`)
     $.newTempShareCodes = [];
-    if ($.shareCodesArr[$.index - 1]) {
-      $.newTempShareCodes = $.shareCodesArr[$.index - 1].split('@');
+    if ($.tempShareCodesArr[$.index - 1]) {
+      $.newTempShareCodes = $.tempShareCodesArr[$.index - 1].split('@');
     } else {
       console.log(`由于您第${$.index}个京东账号未提供shareCode,将采纳本脚本自带的助力码\n`)
       const tempIndex = $.index > inviteTempCodes.length ? (inviteTempCodes.length - 1) : ($.index - 1);
@@ -1269,6 +1269,25 @@ function requireConfig() {
       })
     }
     console.log(`您提供了${$.shareCodesPkArr.length}个账号的${$.name}PK助力码\n`);
+    
+    let tempShareCodes = []
+    console.log(`共${cookiesArr.length}个京东账号\n`);
+    if ($.isNode() && process.env.JDNIANTEMP_SHARECODES) {
+      if (process.env.JDNIANTEMP_SHARECODES.indexOf('\n') > -1) {
+        tempShareCodes = process.env.JDNIANTEMP_SHARECODES.split('\n');
+      } else {
+        tempShareCodes = process.env.JDNIANTEMP_SHARECODES.split('&');
+      }
+    }
+    $.tempShareCodesArr = [];
+    if ($.isNode()) {
+      Object.keys(tempShareCodes).forEach((item) => {
+        if (tempShareCodes[item]) {
+          $.tempShareCodesArr.push(tempShareCodes[item])
+        }
+      })
+    }
+    
     resolve()
   })
 }
