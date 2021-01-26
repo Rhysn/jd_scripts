@@ -544,12 +544,13 @@ function collectTempScore(taskId, itemId, inviteId = null, secretp = null) {
         } else {
           if (safeGet(data)) {
             data = JSON.parse(data);
+            console.log(data);
             if (data.code === 0) {
               if (data.data && data.data.bizCode === 0) {
                 if (data.data.result.score)
                   console.log(`任务完成，获得${data.data.result.score}爆竹🧨`)
                 else if (data.data.result.maxAssistTimes) {
-                  console.log(`助力好友成功`)
+                  console.log(`三人助力成功`)
                 } else {
                   console.log(`任务上报成功`)
                   await $.wait(10 * 1000)
