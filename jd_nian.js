@@ -544,7 +544,6 @@ function collectTempScore(taskId, itemId, inviteId = null, secretp = null) {
         } else {
           if (safeGet(data)) {
             data = JSON.parse(data);
-            console.log(data);
             if (data.code === 0) {
               if (data.data && data.data.bizCode === 0) {
                 if (data.data.result.score)
