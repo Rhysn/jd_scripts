@@ -516,6 +516,63 @@ function pkCollectScore(taskId, itemId, actionType = null, inviteId = null, shop
   })
 }
 
+function collectTempScore(taskId, itemId, inviteId = null, secretp = null) {
+  let body = {
+    "taskId": taskId,
+    "itemId": itemId,
+    "inviteId": inviteId,
+    "ss":{
+      "extraData": {
+        "jj": "",
+        "buttonid": "homePopupHelpButtonId",
+        "sceneid": "mainTaskh5",
+        "time": Date.now(),
+        "is_trust": true,
+        "cf_v":"1.0.1",
+        "client_version":"2.2.1"
+      },
+      "secretp": secretp,
+      "random": getRnd()
+    }
+  }
+  return new Promise(resolve => {
+    $.post(taskPostUrl("nian_collectSpecialGift", body, "nian_collectSpecialGift"), async (err, resp, data) => {
+      try {
+        if (err) {
+          console.log(`${JSON.stringify(err)}`)
+          console.log(`${$.name} API请求失败，请检查网路重试`)
+        } else {
+          if (safeGet(data)) {
+            data = JSON.parse(data);
+            if (data.code === 0) {
+              if (data.data && data.data.bizCode === 0) {
+                if (data.data.result.score)
+                  console.log(`任务完成，获得${data.data.result.score}爆竹🧨`)
+                else if (data.data.result.maxAssistTimes) {
+                  console.log(`助力好友成功`)
+                } else {
+                  console.log(`任务上报成功`)
+                  await $.wait(10 * 1000)
+                  if (data.data.result.taskToken) {
+                    await doTask2(data.data.result.taskToken)
+                  }
+                }
+                // $.userInfo = data.data.result.userInfo;
+              } else {
+                console.log(data.data.bizMsg)
+              }
+            }
+          }
+        }
+      } catch (e) {
+        $.logErr(e, resp)
+      } finally {
+        resolve();
+      }
+    })
+  })
+}
+
 function doTask2(taskToken) {
   let body = {
     "dataSource": "newshortAward",
@@ -645,8 +702,10 @@ function getFriendTempData(inviteId) {
         } else {
           data = JSON.parse(data);
           if (data.data && data.data['bizCode'] === 0) {
-            $.itemId = data.data.result.homeMainInfo.guestInfo.itemId
-            //await collectScore('2', $.itemId, null, inviteId)
+            $.tempitemId = data.data.result.homeMainInfo.guestInfo.itemId
+            $.tempTaskId = data.data.result.homeMainInfo.guestInfo.taskId
+            $.tempsecretp = data.data.result.homeMainInfo.secretp
+            await collectTempScore($.tempTaskId, $.tempitemId, inviteId, $.tempsecretp)
           }
         }
       } catch (e) {
