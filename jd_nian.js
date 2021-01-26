@@ -1285,7 +1285,7 @@ function tempShareCodesFormat() {
     if (readShareCodeRes && readShareCodeRes.code === 200) {
       $.newTempShareCodes = [...new Set([...$.newTempShareCodes, ...(readShareCodeRes.data || [])])];
     }
-    console.log(`第${$.index}个京东账号将要助力的好友${JSON.stringify($.newTempShareCodes)}`)
+    console.log(`第${$.index}个京东账号将要助力的好友(3人助力)${JSON.stringify($.newTempShareCodes)}`)
     resolve();
   })
 }
