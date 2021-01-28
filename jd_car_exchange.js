@@ -197,7 +197,7 @@ function runExchangeKey(){
     var theMinutes = theDate.getMinutes();
     var theSeconds = theDate.getSeconds();
     if(theMinutes == 59 && theSeconds < 55) {
-      $.wait(57 - theSeconds);
+      $.wait((57 - theSeconds) * 1000);
       runExchangeKey();
     }
     else return true;
