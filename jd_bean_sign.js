@@ -210,7 +210,7 @@ function TotalBean() {
     })
   })
 }
-function downloadUrl(url = 'https://raw.githubusercontent.com/NobyDa/Script/master/JD-DailyBonus/JD_DailyBonus.js') {
+function downloadUrl(url = 'https://allgreat.xyz/Scripts/JD/JD_DailyBonus.js') {
   return new Promise(resolve => {
     const options = { url };
     if (process.env.TG_PROXY_HOST && process.env.TG_PROXY_PORT) {
