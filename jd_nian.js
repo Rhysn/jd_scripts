@@ -96,6 +96,8 @@ async function jdNian() {
   try {
     await getHomeData()
     if (!$.secretp) return
+    await helpFriendsTemp()
+    await $.wait(2000)
     let hour = new Date().getUTCHours()
     if (1 <= hour && hour < 12) {
       // 北京时间9点-20点
@@ -122,8 +124,6 @@ async function jdNian() {
     await doTask()
     await $.wait(2000)
     await helpFriends()
-    await $.wait(2000)
-    await helpFriendsTemp()
     await $.wait(2000)
     await getHomeData(true)
     await showMsg()
@@ -541,18 +541,18 @@ function collectTempScore(taskId, itemId, inviteId = null, secretp = null) {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
-          console.log(`${$.name} API请求失败，请检查网路重试`)
+          console.log(`${$.name} 三人助力collect_API请求失败，请检查网路重试`)
         } else {
           if (safeGet(data)) {
             data = JSON.parse(data);
             if (data.code === 0) {
               if (data.data && data.data.bizCode === 0) {
                 if (data.data.result.score)
-                  console.log(`任务完成，获得${data.data.result.score}爆竹🧨`)
+                  console.log(`三人助力任务完成，获得${data.data.result.score}爆竹🧨`)
                 else if (data.data.result.maxAssistTimes) {
                   console.log(`三人助力成功`)
                 } else {
-                  console.log(`任务上报成功`)
+                  console.log(`三人助力任务上报成功`)
                   await $.wait(10 * 1000)
                   if (data.data.result.taskToken) {
                     await doTask2(data.data.result.taskToken)
@@ -699,7 +699,7 @@ function getFriendTempData(inviteId) {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
-          console.log(`${$.name} API请求失败，请检查网路重试`)
+          console.log(`${$.name} 三人助力API请求失败，请检查网路重试`)
         } else {
           data = JSON.parse(data);
           if (data.data && data.data['bizCode'] === 0) {
