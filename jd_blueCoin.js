@@ -433,12 +433,12 @@ function jsonParse(str) {
     }
   }
 }
-function runExchangeKey(){
+async function runExchangeKey(){
     var theDate = new Date();
     var theMinutes = theDate.getMinutes();
     var theSeconds = theDate.getSeconds();
     if(theMinutes == 59 && theSeconds < 55) {
-      $.wait((55 - theSeconds) * 1000);
+      await $.wait((55 - theSeconds) * 1000);
       runExchangeKey();
     }
     else return true;
