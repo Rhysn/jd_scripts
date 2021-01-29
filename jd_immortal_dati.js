@@ -86,12 +86,13 @@ async function jdImmortalAnswer() {
         $.earn = 0
         await getHomeData()
         if ($.risk) return
-        for (let i = 0; i < 1; i++) {
+        for (let i = 0; i < 15; i++) {
             if ($.coin > 100) {
                 await getQuestions()
                 await $.wait(2 * 1000)
             }
         }
+await exchange();
         await showMsg()
     } catch (e) {
         $.logErr(e)
