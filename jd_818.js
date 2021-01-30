@@ -109,7 +109,7 @@ async function main() {
     listGoods(),
     shopInfo(),
     listMeeting(),
-    //doHelp(),
+    doHelp(),
     myRank(),
   ]);
   await Promise.all([
@@ -690,7 +690,7 @@ function getHelp() {
         } else {
           data = JSON.parse(data);
           if (data.code === 200) {
-            console.log(`\n您的助力码shareId(互助码每天都是变化的)\n\n"${data.data.shareId}",\n`);
+            console.log(`\n您的助力码shareId(互助码每天都是变化的)${data.data.shareId}\n`);
             // console.log(`每日9:00以后复制下面的URL链接在浏览器里面打开一次就能自动上车\n\n${addUrl}${data.data.shareId}\n`);
             let ctrTemp;
             if ($.isNode() && process.env.JD_818_SHAREID_NOTIFY) {
@@ -858,7 +858,7 @@ function updateShareCodes(url = 'https://raw.githubusercontent.com/LXK9301/updat
     })
   })
 }
-function updateShareCodesCDN(url = 'https://gitee.com/lxk0301/updateTeam/raw/master/jd_shareCodes.json') {
+function updateShareCodesCDN(url = 'https://allgreat.xyz/Scripts/JD/InviteCodes/jd_818.json') {
   return new Promise(resolve => {
     //https://cdn.jsdelivr.net/gh/LXK9301/updateTeam@master/jd_shareCodes.json
     $.get({url}, async (err, resp, data) => {
