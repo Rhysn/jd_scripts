@@ -196,8 +196,8 @@ async function runExchangeKey(){
     var theDate = new Date();
     var theMinutes = theDate.getMinutes();
     var theSeconds = theDate.getSeconds();
-    if(theMinutes == 59 && theSeconds < 55) {
-      await $.wait((57 - theSeconds) * 1000);
+    if(theMinutes == 59 && theSeconds < 59) {
+      await $.wait((59 - theSeconds) * 1000);
       runExchangeKey();
     }
     else return true;
