@@ -205,7 +205,7 @@ function getHomeData(info = false) {
             } else {
               console.log(`当前用户金币${userCoinNum}，积分${userRemainScore}`)
               if (userRemainScore) {
-                //await getExchangeInfo()
+                await getExchangeInfo()
               }
             }
             $.coin = userCoinNum
