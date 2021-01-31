@@ -558,7 +558,7 @@ function readShareCode() {
   console.log(`开始`)
   return new Promise(async resolve => {
     $.get({
-      url: `https://allgreat.xyz/Scripts/JD/InviteCodes/jd_5g.json`,
+      url: `https://allgreat.xyz/Scripts/JD/InviteCodes/jd_818.json`,
       'timeout': 10000
     }, (err, resp, data) => {
       try {
