@@ -57,7 +57,7 @@ if ($.isNode()) {
 const JD_API_HOST = 'https://rdcseason.m.jd.com/api/';
 const activeEndTime = '2021/2/4 23:59:59+08:00';
 const addUrl = 'http://jd.turinglabs.net/helpcode/create/';
-const printUrl = `http://jd.turinglabs.net/api/v2/jd/5g/read/0/`;
+const printUrl = `http://jd.turinglabs.net/api/v2/jd/5g/read/30/`;
 let helpCode = []
 !(async () => {
   if (!cookiesArr[0]) {
@@ -594,7 +594,7 @@ async function doHelp() {
   console.log(`是否大于当天九点🕘:${nowTime > new Date(nowTime).setHours(9, 0, 0, 0)}`)
   //当天大于9:00才从API里面取收集的助力码
   //if (nowTime > new Date(nowTime).setHours(9, 0, 0, 0)) body = await printAPI();//访问收集的互助码
-  body = await printAPI();//访问收集的互助码
+  body = null //await printAPI();//访问收集的互助码
   if (body && body['data']) {
     // console.log(`printAPI返回助力码数量:${body.replace(/"/g, '').split(',').length}`)
     // tempCode = tempCode.concat(body.replace(/"/g, '').split(','))
@@ -920,7 +920,7 @@ function TotalBean() {
 async function showMsg() {
   let nowTime = new Date().getTime() + new Date().getTimezoneOffset()*60*1000 + 8*60*60*1000;
   if (nowTime > new Date(activeEndTime).getTime()) {
-    $.msg($.name, '活动已结束', `该活动累计获得京豆：${$.jbeanCount}个\n请删除此脚本\n咱江湖再见);
+    $.msg($.name, '活动已结束', `该活动累计获得京豆：${$.jbeanCount}个\n请删除此脚本\n咱江湖再见`);
     if ($.isNode()) await notify.sendNotify($.name + '活动已结束', `请删除此脚本\n咱江湖再见`)
   } else {
     $.msg($.name, `京东账号${$.index} ${$.nickName || $.UserName}`, `${$.jbeanCount ? `${$.integer ? `当前获得积分：${$.integer}个\n` : ''}${$.num ? `当前排名：${$.num}\n` : ''}当前参赛人数：${$.lasNum}人\n累计获得京豆：${$.jbeanCount}个🐶\n` : ''}${$.jbeanCount ? `累计获得积分：${$.integralCount}个\n` : ''}${$.jbeanNum ? `${$.date}日奖品：${$.jbeanNum}\n` : ''}具体详情点击弹窗跳转后即可查看`, {"open-url": "https://rdcseason.m.jd.com/#/hame"});
