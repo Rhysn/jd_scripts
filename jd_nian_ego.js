@@ -29,7 +29,7 @@ const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 let jdNotify = true;//是否关闭通知，false打开通知推送，true关闭通知推送
 const randomCount = $.isNode() ? 20 : 5;
 //IOS等用户直接用NobyDa的jd cookie
-let cookiesArr = [], cookie = '', message, superAssist = [];
+let cookiesArr = [], cookie = '', message;
 if ($.isNode()) {
   Object.keys(jdCookieNode).forEach((item) => {
     cookiesArr.push(jdCookieNode[item])
@@ -50,9 +50,10 @@ const inviteCodes = [
   `cgxZdTXtI7vfvgyYClf668mUBT6Uff61zMLiYFENf4UfSOuldu2FVqpmiVU@cgxZ-vMa8z5BP7ZkREnKvgu1sNGEb81ajms3@cgxZLmSKJ7je7QnNDAPGr5OcLIfhMy9j4pvCsSFmZF0UhZZpRg@cgxZdTXtIrvduF_LXgav7rhEvGrL_ivnRJGruWXQyNlb94czfKTeVUOeK-Q`
 ];
 const pkInviteCodes = [
-  'IgNWdiLGaPadvlqJQnnKp27gg-YpAvKvSYNTSkTGvZylf_0wcvqD9EMkohENk@IgNWdiLGaPaZskfACQyhgLSpZggWps-WtQEW3McibT@IgNWdiLGaPaAvmHggPAQf769XqjJjMyRirPzN9-AS-WHY9Y_G7t9Cwe5gdiI2qEvDf',
-  'IgNWdiLGaPadvlqJQnnKp27gg-YpAvKvSYNTSkTGvZylf_0wcvqD9EMkohENk@IgNWdiLGaPaZskfACQyhgLSpZggWps-WtQEW3McibT@IgNWdiLGaPaAvmHggPAQf769XqjJjMyRirPzN9-AS-WHY9Y_G7t9Cwe5gdiI2qEvDf'
+  'IgNWdiLGaPaAvmHODgaovara9EDq4S8nOHClXh8rgLf9rLgdgYe7GNr9azv_FqG7@IgNWdiLGaPaAvmHODgaovara9EDq4S8nOHClXhkmsewTyU42egwjDqCKKSqe',
+  'IgNWdiLGaPaAvmHODgaovara9EDq4S8nOHClXh8rgLf9rLgdgYe7GNr9azv_FqG7@IgNWdiLGaPaAvmHODgaovara9EDq4S8nOHClXhkmsewTyU42egwjDqCKKSqe'
 ]
+const specialInviteCodes = ['cQxZdTXtI7zZ61zICgOv6vb2hwzhLLd34Fa6cCLJAAENsp-uolgsl_dwXFM@cQxZdTXtI7zZ61zICgOv6vb2hwzhLLd34Fa6cCLJAAENsp-uolgsl_dwXFM'];
 !(async () => {
   await requireConfig();
   if (!cookiesArr[0]) {
@@ -78,30 +79,9 @@ const pkInviteCodes = [
         continue
       }
       await shareCodesFormat();
-      await shareCodesFormatPk()
+      await shareCodesFormatPk();
+      await specialShareCodesFormat();
       await jdNian()
-    }
-  }
-  if(superAssist.length)
-  for (let i = 0; i < cookiesArr.length; i++) {
-    if (cookiesArr[i]) {
-      cookie = cookiesArr[i];
-      $.UserName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1])
-      $.index = i + 1;
-      $.isLogin = true;
-      $.nickName = '';
-      message = '';
-      await TotalBean();
-      console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
-      if (!$.isLogin) {
-        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
-
-        if ($.isNode()) {
-          await notify.sendNotify(`${$.name}cookie已失效 - ${$.UserName}`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
-        }
-        continue
-      }
-      await helpSuper()
     }
   }
 })()
@@ -116,6 +96,8 @@ async function jdNian() {
   try {
     await getHomeData()
     if (!$.secretp) return
+    await specialHelpFriends()
+    await $.wait(2000)
     let hour = new Date().getUTCHours()
     if (1 <= hour && hour < 12) {
       // 北京时间9点-20点
@@ -142,8 +124,6 @@ async function jdNian() {
     await doTask()
     await $.wait(2000)
     await helpFriends()
-    await $.wait(2000)
-    await getSpecialGiftDetail()
     await $.wait(2000)
     await getHomeData(true)
     await showMsg()
@@ -189,20 +169,19 @@ async function helpFriends() {
   }
 }
 
-async function helpSuper(){
-  $.secretp = null
-  await getHomeData(true)
-  if (!$.secretp) return
-  for(let item of superAssist){
-    await collectSpecialScore(item.taskId, item.itemId, null, item.inviteId)
-  }
-}
-
 async function helpFriendsPK() {
   for (let code of $.newShareCodesPk) {
     if (!code) continue
     console.log(`去助力PK好友${code}`)
     await pkAssignGroup(code)
+    await $.wait(1000)
+  }
+}
+
+async function specialHelpFriends() {
+  for (let code of $.newSpecialShareCodes) {
+    if (!code) continue
+    await getFriendSpecialData(code)
     await $.wait(1000)
   }
 }
@@ -538,6 +517,63 @@ function pkCollectScore(taskId, itemId, actionType = null, inviteId = null, shop
   })
 }
 
+function collectSpecialScore(taskId, itemId, inviteId = null, secretp = null) {
+  let body = {
+    "taskId": taskId,
+    "itemId": itemId,
+    "inviteId": inviteId,
+    "ss":{
+      "extraData": {
+        "jj": "",
+        "buttonid": "homePopupHelpButtonId",
+        "sceneid": "mainTaskh5",
+        "time": Date.now(),
+        "is_trust": true,
+        "cf_v":"1.0.1",
+        "client_version":"2.2.1"
+      },
+      "secretp": secretp,
+      "random": getRnd()
+    }
+  }
+  return new Promise(resolve => {
+    $.post(taskPostUrl("nian_collectSpecialGift", body, "nian_collectSpecialGift"), async (err, resp, data) => {
+      try {
+        if (err) {
+          console.log(`${JSON.stringify(err)}`)
+          console.log(`${$.name} 三人助力collect_API请求失败，请检查网路重试`)
+        } else {
+          if (safeGet(data)) {
+            data = JSON.parse(data);
+            if (data.code === 0) {
+              if (data.data && data.data.bizCode === 0) {
+                if (data.data.result.score)
+                  console.log(`三人助力任务完成，获得${data.data.result.score}爆竹🧨`)
+                else if (data.data.result.maxAssistTimes) {
+                  console.log(`三人助力成功`)
+                } else {
+                  console.log(`三人助力任务上报成功`)
+                  await $.wait(10 * 1000)
+                  if (data.data.result.taskToken) {
+                    await doTask2(data.data.result.taskToken)
+                  }
+                }
+                // $.userInfo = data.data.result.userInfo;
+              } else {
+                console.log(data.data.bizMsg)
+              }
+            }
+          }
+        }
+      } catch (e) {
+        $.logErr(e, resp)
+      } finally {
+        resolve();
+      }
+    })
+  })
+}
+
 function doTask2(taskToken) {
   let body = {
     "dataSource": "newshortAward",
@@ -646,6 +682,31 @@ function getFriendData(inviteId) {
           if (data.data && data.data['bizCode'] === 0) {
             $.itemId = data.data.result.homeMainInfo.guestInfo.itemId
             await collectScore('2', $.itemId, null, inviteId)
+          }
+        }
+      } catch (e) {
+        $.logErr(e, resp);
+      } finally {
+        resolve();
+      }
+    })
+  })
+}
+
+function getFriendSpecialData(inviteId) {
+  return new Promise((resolve) => {
+    $.post(taskPostUrl('nian_getHomeData', {"inviteId": inviteId}, 'nian_getHomeData'), async (err, resp, data) => {
+      try {
+        if (err) {
+          console.log(`${JSON.stringify(err)}`)
+          console.log(`${$.name} 三人助力API请求失败，请检查网路重试`)
+        } else {
+          data = JSON.parse(data);
+          if (data.data && data.data['bizCode'] === 0) {
+            $.specialItemId = data.data.result.homeMainInfo.guestInfo.itemId
+            $.specialTaskId = data.data.result.homeMainInfo.guestInfo.taskId
+            $.specialSecretp = data.data.result.homeMainInfo.secretp
+            await collectSpecialScore($.specialTaskId, $.specialItemId, inviteId, $.specialSecretp)
           }
         }
       } catch (e) {
@@ -1098,151 +1159,6 @@ function killCoupon(skuId) {
   })
 }
 
-function getSpecialGiftDetail() {
-  return new Promise((resolve) => {
-    $.post(taskPostUrl('nian_getSpecialGiftDetail'), async (err, resp, data) => {
-      try {
-        if (err) {
-          console.log(`${JSON.stringify(err)}`)
-          console.log(`${$.name} API请求失败，请检查网路重试`)
-        } else {
-          data = JSON.parse(data);
-          if (data && data.data['bizCode'] === 0) {
-            let flag = true
-            for(let item of data.data.result.taskVos){
-              if (item.taskType === 3 || item.taskType === 26) {
-                if (item.shoppingActivityVos) {
-                  if (item.status === 1) {
-                    flag = false
-                    console.log(`准备做此任务：${item.taskName}`)
-                    for (let task of item.shoppingActivityVos) {
-                      if (task.status === 1) {
-                        await collectSpecialScore(item.taskId, task.itemId);
-                      }
-                      await $.wait(3000)
-                    }
-                  } else if (item.status === 2) {
-                    console.log(`${item.taskName}已做完`)
-                  }
-                }
-              }
-              else if (item.taskType === 0) {
-                if (item.status === 1) {
-                  flag = false
-                  console.log(`准备做此任务：${item.taskName}`)
-                  await collectSpecialScore(item.taskId, item.simpleRecordInfoVo.itemId);
-                } else if (item.status === 2) {
-                  console.log(`${item.taskName}已做完`)
-                }
-              } else{
-                if (item.status === 1) {
-                  flag = false
-                  superAssist.push({
-                    "inviteId": data.data.result.inviteId,
-                    "itemId": item.assistTaskDetailVo.itemId,
-                    "taskId": item.taskId
-                  })
-                } else if (item.status === 2) {
-                  console.log(`${item.taskName}已做完`)
-                }
-              }
-            }
-            if(flag){
-              await getSpecialGiftInfo()
-            }
-          }
-        }
-      } catch (e) {
-        $.logErr(e, resp);
-      } finally {
-        resolve();
-      }
-    })
-  })
-}
-function getSpecialGiftInfo() {
-  return new Promise((resolve) => {
-    $.post(taskPostUrl('nian_getSpecialGiftInfo',"nian_getSpecialGiftInfo"), async (err, resp, data) => {
-      try {
-        if (err) {
-          console.log(`${JSON.stringify(err)}`)
-          console.log(`${$.name} API请求失败，请检查网路重试`)
-        } else {
-          data = JSON.parse(data);
-          if (data && data.data['bizCode'] === 0) {
-            console.log(`领奖成功，获得${data.data.result.score}爆竹🧨`)
-          }else{
-            console.log(data.data.bizMsg)
-          }
-        }
-      } catch (e) {
-        $.logErr(e, resp);
-      } finally {
-        resolve();
-      }
-    })
-  })
-}
-
-function collectSpecialScore(taskId, itemId, actionType = null, inviteId = null, shopSign = null) {
-  let temp = {
-    "taskId": taskId,
-    "rnd": getRnd(),
-    "inviteId": "-1",
-    "stealId": "-1"
-  }
-  if (itemId) temp['itemId'] = itemId
-  if (actionType) temp['actionType'] = actionType
-  if (inviteId) temp['inviteId'] = inviteId
-  if (shopSign) temp['shopSign'] = shopSign
-  const extraData = {
-    "jj": 6,
-    "buttonid": "jmdd-react-smash_0",
-    "sceneid": "homePageh5",
-    "appid": '50073'
-  }
-  let body = {
-    ...encode(temp, $.secretp, extraData),
-    taskId: taskId,
-    itemId: itemId
-  }
-  if (actionType) body['actionType'] = actionType
-  if (inviteId) body['inviteId'] = inviteId
-  if (shopSign) body['shopSign'] = shopSign
-  return new Promise(resolve => {
-    $.post(taskPostUrl("nian_collectSpecialGift", body, "nian_collectSpecialGift"), async (err, resp, data) => {
-      try {
-        if (err) {
-          console.log(`${JSON.stringify(err)}`)
-          console.log(`${$.name} API请求失败，请检查网路重试`)
-        } else {
-          if (safeGet(data)) {
-            data = JSON.parse(data);
-            if (data.code === 0) {
-              if (data.data && data.data.bizCode === 0) {
-                if (data.data.result.score)
-                  console.log(`任务完成，获得${data.data.result.score}爆竹🧨`)
-                else if (data.data.result.maxAssistTimes) {
-                  console.log(`助力好友成功`)
-                } else {
-                  console.log(`任务上报成功`)
-                }
-                // $.userInfo = data.data.result.userInfo;
-              } else {
-                console.log(data.data.bizMsg)
-              }
-            }
-          }
-        }
-      } catch (e) {
-        $.logErr(e, resp)
-      } finally {
-        resolve();
-      }
-    })
-  })
-}
-
 function readShareCode() {
   console.log(`开始`)
   return new Promise(async resolve => {
@@ -1285,6 +1201,33 @@ function readShareCodePk() {
         } else {
           if (data) {
             console.log(`随机取${randomCount}个PK助力码放到您固定的互助码后面(不影响已有固定互助)`)
+            data = JSON.parse(data);
+          }
+        }
+      } catch (e) {
+        $.logErr(e, resp)
+      } finally {
+        resolve(data);
+      }
+    })
+    await $.wait(10000);
+    resolve()
+  })
+}
+
+function readSpecialShareCode() {
+  console.log(`开始`)
+  return new Promise(async resolve => {
+    $.get({
+      url: `https://allgreat.xyz/Scripts/JD/InviteCodes/jd_nianTempShareCode.json`,
+      'timeout': 10000
+    }, (err, resp, data) => {
+      try {
+        if (err) {
+          console.log(`${JSON.stringify(err)}`)
+          console.log(`${$.name} API请求失败，请检查网路重试`)
+        } else {
+          if (data) {
             data = JSON.parse(data);
           }
         }
@@ -1346,6 +1289,26 @@ function shareCodesFormatPk() {
   })
 }
 
+function specialShareCodesFormat() {
+  return new Promise(async resolve => {
+    // console.log(`第${$.index}个京东账号的助力码:::${$.shareCodesArr[$.index - 1]}`)
+    $.newSpecialShareCodes = [];
+    if ($.sepcialShareCodesArr[$.index - 1]) {
+      $.newSpecialShareCodes = $.sepcialShareCodesArr[$.index - 1].split('@');
+    } else {
+      console.log(`由于您第${$.index}个京东账号未提供shareCode,将采纳本脚本自带的助力码\n`)
+      const tempIndex = $.index > specialInviteCodes.length ? (specialInviteCodes.length - 1) : ($.index - 1);
+      $.newSpecialShareCodes = specialInviteCodes[tempIndex].split('@');
+    }
+    const readShareCodeRes = await readSpecialShareCode();
+    if (readShareCodeRes && readShareCodeRes.code === 200) {
+      $.newSpecialShareCodes = [...new Set([...$.newSpecialShareCodes, ...(readShareCodeRes.data || [])])];
+    }
+    console.log(`第${$.index}个京东账号将要助力的好友(3人助力)${JSON.stringify($.newSpecialShareCodes)}`)
+    resolve();
+  })
+}
+
 function requireConfig() {
   return new Promise(resolve => {
     console.log(`开始获取${$.name}配置文件\n`);
@@ -1385,6 +1348,25 @@ function requireConfig() {
       })
     }
     console.log(`您提供了${$.shareCodesPkArr.length}个账号的${$.name}PK助力码\n`);
+    
+    let sepcialShareCodes = []
+    console.log(`共${cookiesArr.length}个京东账号\n`);
+    if ($.isNode() && process.env.JDNIANTEMP_SHARECODES) {
+      if (process.env.JDNIANTEMP_SHARECODES.indexOf('\n') > -1) {
+        sepcialShareCodes = process.env.JDNIANTEMP_SHARECODES.split('\n');
+      } else {
+        sepcialShareCodes = process.env.JDNIANTEMP_SHARECODES.split('&');
+      }
+    }
+    $.sepcialShareCodesArr = [];
+    if ($.isNode()) {
+      Object.keys(sepcialShareCodes).forEach((item) => {
+        if (sepcialShareCodes[item]) {
+          $.sepcialShareCodesArr.push(sepcialShareCodes[item])
+        }
+      })
+    }
+    
     resolve()
   })
 }
