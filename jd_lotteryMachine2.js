@@ -16,6 +16,7 @@ cron "11 1 * * *" script-path=https://raw.githubusercontent.com/yangtingxiao/Qua
 const $ = new Env('京东抽奖机');
 //Node.js用户请在jdCookie.js处填写京东ck;
 const notify = $.isNode() ? require('./sendNotify') : '';
+const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const STRSPLIT = "|";
 const needSum = false;            //是否需要显示汇总
 const printDetail = false;        //是否显示出参详情
@@ -32,10 +33,17 @@ let merge = {}
 let gameOverMessage = ""
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '';
+if ($.isNode()) {
+    Object.keys(jdCookieNode).forEach((item) => {
+        cookiesArr.push(jdCookieNode[item])
+    })
+} else {
+    cookiesArr.push($.getdata('CookieJD'));
+    cookiesArr.push($.getdata('CookieJD2'));
+}
 
 const JD_API_HOST = `https://api.m.jd.com/client.action`;
 !(async () => {
-    await requireConfig()
     if (!cookiesArr[0]) {
         $.msg($.name, '【提示】请先获取cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', { "open-url": "https://bean.m.jd.com/" });
         return;
@@ -185,9 +193,6 @@ function interact_template_getHomeData(timeout = 0) {
                             continue
                         }
                         let list = data.data.result.taskVos[i].productInfoVos || data.data.result.taskVos[i].followShopVo || data.data.result.taskVos[i].shoppingActivityVos || data.data.result.taskVos[i].browseShopVo
-                        if (data.data.result.taskVos[i].subTitleName.match(/(\d+)(s)/)) {
-                            browseTime = parseInt(data.data.result.taskVos[i].subTitleName.match(/(\d+)(s)/)[0])
-                        }
                         for (let k = data.data.result.taskVos[i].times; k < data.data.result.taskVos[i].maxTimes; k++) {
                             for (let j in list) {
                                 if (list[j].status === 1) {
@@ -313,41 +318,6 @@ function interact_template_getLotteryResult(taskId, timeout = 0) {
             })
         }, timeout)
     })
-}
-function requireConfig() {
-  return new Promise(resolve => {
-    //Node.js用户请在jdCookie.js处填写京东ck;
-    const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
-    //IOS等用户直接用NobyDa的jd cookie
-    if ($.isNode()) {
-      Object.keys(jdCookieNode).forEach((item) => {
-        if (jdCookieNode[item]) {
-          cookiesArr.push(jdCookieNode[item])
-        }
-      })
-    } else {
-      let cookiesData = $.getdata('CookiesJD') || "[]";
-      cookiesData = jsonParse(cookiesData);
-      cookiesArr = cookiesData.map(item => item.cookie);
-      cookiesArr.reverse();
-      cookiesArr.push(...[$.getdata('CookieJD2'), $.getdata('CookieJD')]);
-      cookiesArr.reverse();
-      cookiesArr = cookiesArr.filter(item => item !== "" && item !== null && item !== undefined);
-    }
-    console.log(`共${cookiesArr.length}个京东账号\n`);
-    resolve()
-  })
-}
-function jsonParse(str) {
-  if (typeof str == "string") {
-    try {
-      return JSON.parse(str);
-    } catch (e) {
-      console.log(e);
-      $.msg($.name, '', '请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie')
-      return [];
-    }
-  }
 }
 //获取积分
 function ts_smashGoldenEggs(taskId, timeout = 0) {

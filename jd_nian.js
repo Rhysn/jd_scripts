@@ -53,7 +53,7 @@ const pkInviteCodes = [
   'IgNWdiLGaPaAvmHODgaovara9EDq4S8nOHClXh8rgLf9rLgdgYe7GNr9azv_FqG7@IgNWdiLGaPaAvmHODgaovara9EDq4S8nOHClXhkmsewTyU42egwjDqCKKSqe',
   'IgNWdiLGaPaAvmHODgaovara9EDq4S8nOHClXh8rgLf9rLgdgYe7GNr9azv_FqG7@IgNWdiLGaPaAvmHODgaovara9EDq4S8nOHClXhkmsewTyU42egwjDqCKKSqe'
 ]
-const inviteTempCodes = ['cQxZdTXtI7zZ61zICgOv6vb2hwzhLLd34Fa6cCLJAAENsp-uolgsl_dwXFM@cQxZdTXtI7zZ61zICgOv6vb2hwzhLLd34Fa6cCLJAAENsp-uolgsl_dwXFM'];
+const specialInviteCodes = ['cQxZdTXtI7zZ61zICgOv6vb2hwzhLLd34Fa6cCLJAAENsp-uolgsl_dwXFM@cQxZdTXtI7zZ61zICgOv6vb2hwzhLLd34Fa6cCLJAAENsp-uolgsl_dwXFM'];
 !(async () => {
   await requireConfig();
   if (!cookiesArr[0]) {
@@ -80,7 +80,7 @@ const inviteTempCodes = ['cQxZdTXtI7zZ61zICgOv6vb2hwzhLLd34Fa6cCLJAAENsp-uolgsl_
       }
       await shareCodesFormat();
       await shareCodesFormatPk();
-      await tempShareCodesFormat();
+      await specialShareCodesFormat();
       await jdNian()
     }
   }
@@ -96,7 +96,7 @@ async function jdNian() {
   try {
     await getHomeData()
     if (!$.secretp) return
-    await helpFriendsTemp()
+    await specialHelpFriends()
     await $.wait(2000)
     let hour = new Date().getUTCHours()
     if (1 <= hour && hour < 12) {
@@ -178,10 +178,10 @@ async function helpFriendsPK() {
   }
 }
 
-async function helpFriendsTemp() {
-  for (let code of $.newTempShareCodes) {
+async function specialHelpFriends() {
+  for (let code of $.newSpecialShareCodes) {
     if (!code) continue
-    await getFriendTempData(code)
+    await getFriendSpecialData(code)
     await $.wait(1000)
   }
 }
@@ -517,7 +517,7 @@ function pkCollectScore(taskId, itemId, actionType = null, inviteId = null, shop
   })
 }
 
-function collectTempScore(taskId, itemId, inviteId = null, secretp = null) {
+function collectSpecialScore(taskId, itemId, inviteId = null, secretp = null) {
   let body = {
     "taskId": taskId,
     "itemId": itemId,
@@ -693,7 +693,7 @@ function getFriendData(inviteId) {
   })
 }
 
-function getFriendTempData(inviteId) {
+function getFriendSpecialData(inviteId) {
   return new Promise((resolve) => {
     $.post(taskPostUrl('nian_getHomeData', {"inviteId": inviteId}, 'nian_getHomeData'), async (err, resp, data) => {
       try {
@@ -703,10 +703,10 @@ function getFriendTempData(inviteId) {
         } else {
           data = JSON.parse(data);
           if (data.data && data.data['bizCode'] === 0) {
-            $.tempitemId = data.data.result.homeMainInfo.guestInfo.itemId
-            $.tempTaskId = data.data.result.homeMainInfo.guestInfo.taskId
-            $.tempsecretp = data.data.result.homeMainInfo.secretp
-            await collectTempScore($.tempTaskId, $.tempitemId, inviteId, $.tempsecretp)
+            $.specialItemId = data.data.result.homeMainInfo.guestInfo.itemId
+            $.specialTaskId = data.data.result.homeMainInfo.guestInfo.taskId
+            $.specialSecretp = data.data.result.homeMainInfo.secretp
+            await collectSpecialScore($.specialTaskId, $.specialItemId, inviteId, $.specialSecretp)
           }
         }
       } catch (e) {
@@ -1215,7 +1215,7 @@ function readShareCodePk() {
   })
 }
 
-function readTempShareCode() {
+function readSpecialShareCode() {
   console.log(`开始`)
   return new Promise(async resolve => {
     $.get({
@@ -1289,22 +1289,22 @@ function shareCodesFormatPk() {
   })
 }
 
-function tempShareCodesFormat() {
+function specialShareCodesFormat() {
   return new Promise(async resolve => {
     // console.log(`第${$.index}个京东账号的助力码:::${$.shareCodesArr[$.index - 1]}`)
-    $.newTempShareCodes = [];
-    if ($.tempShareCodesArr[$.index - 1]) {
-      $.newTempShareCodes = $.tempShareCodesArr[$.index - 1].split('@');
+    $.newSpecialShareCodes = [];
+    if ($.sepcialShareCodesArr[$.index - 1]) {
+      $.newSpecialShareCodes = $.sepcialShareCodesArr[$.index - 1].split('@');
     } else {
       console.log(`由于您第${$.index}个京东账号未提供shareCode,将采纳本脚本自带的助力码\n`)
-      const tempIndex = $.index > inviteTempCodes.length ? (inviteTempCodes.length - 1) : ($.index - 1);
-      $.newTempShareCodes = inviteTempCodes[tempIndex].split('@');
+      const tempIndex = $.index > specialInviteCodes.length ? (specialInviteCodes.length - 1) : ($.index - 1);
+      $.newSpecialShareCodes = specialInviteCodes[tempIndex].split('@');
     }
-    const readShareCodeRes = await readTempShareCode();
+    const readShareCodeRes = await readSpecialShareCode();
     if (readShareCodeRes && readShareCodeRes.code === 200) {
-      $.newTempShareCodes = [...new Set([...$.newTempShareCodes, ...(readShareCodeRes.data || [])])];
+      $.newSpecialShareCodes = [...new Set([...$.newSpecialShareCodes, ...(readShareCodeRes.data || [])])];
     }
-    console.log(`第${$.index}个京东账号将要助力的好友(3人助力)${JSON.stringify($.newTempShareCodes)}`)
+    console.log(`第${$.index}个京东账号将要助力的好友(3人助力)${JSON.stringify($.newSpecialShareCodes)}`)
     resolve();
   })
 }
@@ -1349,20 +1349,20 @@ function requireConfig() {
     }
     console.log(`您提供了${$.shareCodesPkArr.length}个账号的${$.name}PK助力码\n`);
     
-    let tempShareCodes = []
+    let sepcialShareCodes = []
     console.log(`共${cookiesArr.length}个京东账号\n`);
     if ($.isNode() && process.env.JDNIANTEMP_SHARECODES) {
       if (process.env.JDNIANTEMP_SHARECODES.indexOf('\n') > -1) {
-        tempShareCodes = process.env.JDNIANTEMP_SHARECODES.split('\n');
+        sepcialShareCodes = process.env.JDNIANTEMP_SHARECODES.split('\n');
       } else {
-        tempShareCodes = process.env.JDNIANTEMP_SHARECODES.split('&');
+        sepcialShareCodes = process.env.JDNIANTEMP_SHARECODES.split('&');
       }
     }
-    $.tempShareCodesArr = [];
+    $.sepcialShareCodesArr = [];
     if ($.isNode()) {
-      Object.keys(tempShareCodes).forEach((item) => {
-        if (tempShareCodes[item]) {
-          $.tempShareCodesArr.push(tempShareCodes[item])
+      Object.keys(sepcialShareCodes).forEach((item) => {
+        if (sepcialShareCodes[item]) {
+          $.sepcialShareCodesArr.push(sepcialShareCodes[item])
         }
       })
     }
