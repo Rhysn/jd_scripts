@@ -113,7 +113,7 @@ function showMsg() {
 }
 
 function getRedRain() {
-  let body = 'body=%7B%22liveId%22%3A%223384829%22%7D&build=167515&client=apple&clientVersion=9.3.5&openudid=53f4d9c70c1c81f1c8769d2fe2fef0190a3f60d2&screen=1242*2208&sign=0f4e529155e027f3367382cf86726253&st=1611576880286&sv=102'
+  let body = 'body=%7B%22liveId%22%3A%223384829%22%7D&build=167515&client=apple&clientVersion=9.3.5&openudid=53f4d9c70c1c81f1c8769d2fe2fef0190a3f60d2&screen=1242*2208&sign=0f4e529155e027f3367382cf86726253&sv=102&st=' + Date.now();
   return new Promise(resolve => {
     $.post(taskPostUrl('liveActivityV842', body), (err, resp, data) => {
       try {
