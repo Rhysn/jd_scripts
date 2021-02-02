@@ -375,7 +375,8 @@ function sendCard(cardNo) {
           data = JSON.parse(data);
           if (data && data.data['bizCode'] === 0) {
             receiveCardList.push(data.data.result.token)
-            console.log(`送卡成功`)
+            console.log(data.data.result.token)
+            console.log(`\n送卡成功`)
           } else {
             console.log(`送卡失败，${data.data.bizMsg}`)
           }
