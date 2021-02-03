@@ -79,7 +79,7 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
 async function jdNian() {
   try {
     await getHomeData()
-    if(!$.secretp) return
+    if(!$.secretp || $.full) return
     await $.wait(2000)
     await getTaskList()
     await $.wait(1000)
@@ -147,6 +147,11 @@ function getHomeData(info=false) {
         } else {
           data = JSON.parse(data);
           if (data && data.data['bizCode'] === 0) {
+            if ($.userInfo.raiseInfo.fullFlag) {
+              console.log(`当前等级已满，不再做日常任务！\n`)
+              $.full = true
+              return
+            }
             $.userInfo = data.data.result.homeMainInfo
             $.secretp = $.userInfo.secretp;
             if(!$.secretp){
