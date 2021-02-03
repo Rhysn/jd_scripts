@@ -50,9 +50,11 @@ const inviteCodes = [
   `cgxZdTXtI7vfvgyYClf668mUBT6Uff61zMLiYFENf4UfSOuldu2FVqpmiVU@cgxZ-vMa8z5BP7ZkREnKvgu1sNGEb81ajms3@cgxZLmSKJ7je7QnNDAPGr5OcLIfhMy9j4pvCsSFmZF0UhZZpRg@cgxZdTXtIrvduF_LXgav7rhEvGrL_ivnRJGruWXQyNlb94czfKTeVUOeK-Q`
 ];
 const pkInviteCodes = [
-  'IgNWdiLGaPadvlqJQnnKp27gg-YpAvKvSYNTSkTGvZylf_0wcvqD9EMkohENk@IgNWdiLGaPaZskfACQyhgLSpZggWps-WtQEW3McibT@IgNWdiLGaPaAvmHggPAQf769XqjJjMyRirPzN9-AS-WHY9Y_G7t9Cwe5gdiI2qEvDf',
-  'IgNWdiLGaPadvlqJQnnKp27gg-YpAvKvSYNTSkTGvZylf_0wcvqD9EMkohENk@IgNWdiLGaPaZskfACQyhgLSpZggWps-WtQEW3McibT@IgNWdiLGaPaAvmHggPAQf769XqjJjMyRirPzN9-AS-WHY9Y_G7t9Cwe5gdiI2qEvDf'
+  'IgNWdiLGaPaAvmHODgaovara9EDq4S8nOHClXh8rgLf9rLgdgYe7GNr9azv_FqC6@IgNWdiLGaPaAvmHPCQL7vkw8IBxcI5HNmKxJET3Xd_KrnaCTbETP4ihAUtdqu0Wy',
+  'IgNWdiLGaPaAvmHODgaovara9EDq4S8nOHClXh8rgLf9rLgdgYe7GNr9azv_FqC6@IgNWdiLGaPaAvmHPCQL7vkw8IBxcI5HNmKxJET3Xd_KrnaCTbETP4ihAUtdqu0Wy'
 ]
+let nowTimes = new Date(new Date().getTime() + new Date().getTimezoneOffset()*60*1000 + 8*60*60*1000);
+const openUrl = `openjd://virtual?params=%7B%20%22category%22:%20%22jump%22,%20%22des%22:%20%22m%22,%20%22url%22:%20%22https://wbbny.m.jd.com/babelDiy/Zeus/2cKMj86srRdhgWcKonfExzK4ZMBy/index.html%22%20%7D`;
 !(async () => {
   await requireConfig();
   if (!cookiesArr[0]) {
