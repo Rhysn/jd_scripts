@@ -132,13 +132,13 @@ async function jdNian() {
       if ($.hasGroup) await pkInfo()
       await helpFriendsPK()
     }
+    await map()
+    await $.wait(2000)
+    await queryMaterials()
     if($.full) return
     await $.wait(2000)
     await killCouponList()
     await $.wait(2000)
-    await map()
-    await $.wait(2000)
-    await queryMaterials()
     await getTaskList()
     await $.wait(1000)
     await doTask()
