@@ -1,6 +1,6 @@
 /*
 全民炸年兽 过年活动
-更新时间：2021-01-25 21:13
+更新时间：2021-02-04 10:47
 做任务，收爆竹，年味小镇任务
 脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
 // quantumultx
@@ -47,7 +47,7 @@ const JD_API_HOST = `https://api.m.jd.com/client.action?functionId=`;
         continue;
       }
       console.log('\n\n京东账号：'+merge.nickname + ' 任务开始')
-      await nian_pk_getHomeData();
+      //await nian_pk_getHomeData();
       await nian_getHomeData();
       await qryCompositeMaterials()
       await msgShow();
@@ -116,8 +116,9 @@ function nian_getTaskDetail(shopSign = "",appSign = "",timeout = 0){
           data = JSON.parse(data);
           if (shopSign === "") {
             shopSign = '""'
-            if (appSign === "") console.log(`您的个人助力码：${data.data.result.inviteId}`)
+            if (appSign === "" && data.data.result) console.log(`您的个人助力码：${data.data.result.inviteId}`)
           }
+          if (!data.data.result) return
           for (let i = 0;i < data.data.result.taskVos.length;i ++) {
             //if (merge.black)  return ;
             console.log( "\n" + data.data.result.taskVos[i].taskType + '-' + data.data.result.taskVos[i].taskName + (appSign&&"（微信小程序）") + '-'  +  (data.data.result.taskVos[i].status === 1 ? `已完成${data.data.result.taskVos[i].times}-未完成${data.data.result.taskVos[i].maxTimes}` : "全部已完成")  )
@@ -134,8 +135,9 @@ function nian_getTaskDetail(shopSign = "",appSign = "",timeout = 0){
                     let time = Date.now()
                     let key = minusByByte(nonstr.slice(0,5),String(time).slice(-5))
                     let msg = `random=${rnd}&token=d89985df35e6a2227fd2e85fe78116d2&time=${time}&nonce_str=${nonstr}&key=${key}&is_trust=true`
-                    let sign = bytesToHex(wordsToBytes(getSign(msg))).toUpperCase()
-                    let  taskBody = `functionId=nian_collectScore&body={"taskId":${data.data.result.taskVos[i].taskId},"itemId":"${list[j].itemId}","ss":"{\\"extraData\\":{\\"is_trust\\":true,\\"sign\\":\\"${sign}\\",\\"time\\":${time},\\"encrypt\\":\\"3\\",\\"nonstr\\":\\"${nonstr}\\",\\"jj\\":\\"\\",\\"token\\":\\"d89985df35e6a2227fd2e85fe78116d2\\",\\"cf_v\\":\\"1.0.1\\",\\"client_version\\":\\"2.1.3\\",\\"sceneid\\":\\"homePageh5\\"},\\"random\\":\\"${rnd}\\",\\"secretp\\":\\"${secretp}\\"}","actionType":"1","shopSign":${shopSign}}&client=wh5&clientVersion=1.0.0`
+                    let sign = bytesToHex(wordsToBytes(getSign(msg))).toUpperCase() //,\"random\":\"${rnd}\"
+                    let taskBody = `functionId=nian_collectScore&body={"taskId":${data.data.result.taskVos[i].taskId},"ss":"{\\"extraData\\":{\\"is_trust\\":true,\\"sign\\":\\"${sign}\\",\\"fpb\\":\\"\\",\\"time\\":${time},\\"encrypt\\":\\"3\\",\\"nonstr\\":\\"${nonstr}\\",\\"jj\\":\\"\\",\\"token\\":\\"d89985df35e6a2227fd2e85fe78116d2\\",\\"cf_v\\":\\"1.0.2\\",\\"client_version\\":\\"2.2.1\\",\\"buttonid\\":\\"jmdd-react-smash_62\\",\\"sceneid\\":\\"homePageh5\\"},\\"secretp\\":\\"${secretp}\\",\\"random\\":\\"${rnd}\\"}","itemId":"${list[j].itemId}","actionType":1,"shopSign":${shopSign}}&client=wh5&clientVersion=1.0.0`
+                    //console.log(taskBody)
                     console.log("\n"+(list[j].title||list[j].shopName))
                     await nian_collectScore(taskBody,2000)
                     //}
@@ -155,9 +157,10 @@ function nian_getTaskDetail(shopSign = "",appSign = "",timeout = 0){
                 let nonstr = randomWord(false,10)
                 let time = Date.now()
                 let key = minusByByte(nonstr.slice(0,5),String(time).slice(-5))
-                let msg = `inviteId=-1&rnd=${rnd}&stealId=-1&taskId=${data.data.result.taskVos[i].taskId}&token=d89985df35e6a2227fd2e85fe78116d2&time=${time}&nonce_str=${nonstr}&key=${key}&is_trust=true`
+                let msg = `random=${rnd}&token=d89985df35e6a2227fd2e85fe78116d2&time=${time}&nonce_str=${nonstr}&key=${key}&is_trust=true`
                 let sign = bytesToHex(wordsToBytes(getSign(msg))).toUpperCase()
-                let taskBody = `functionId=nian_collectScore&body={"taskId":${data.data.result.taskVos[i].taskId},"itemId":"1","ss":"{\\"extraData\\":{\\"is_trust\\":true,\\"sign\\":\\"${sign}\\",\\"time\\":${time},\\"encrypt\\":\\"3\\",\\"nonstr\\":\\"${nonstr}\\",\\"jj\\":\\"\\",\\"token\\":\\"d89985df35e6a2227fd2e85fe78116d2\\",\\"cf_v\\":\\"1.0.1\\",\\"client_version\\":\\"2.1.3\\",\\"sceneid\\":\\"homePageh5\\"},\\"businessData\\":{\\"taskId\\":\\"${data.data.result.taskVos[i].taskId}\\",\\"rnd\\":\\"${rnd}\\",\\"inviteId\\":\\"-1\\",\\"stealId\\":\\"-1\\"},\\"secretp\\":\\"${secretp}\\"}","actionType":"1","shopSign":${shopSign}}&client=wh5&clientVersion=1.0.0`
+                //let taskBody = `functionId=nian_collectScore&body={"taskId":${data.data.result.taskVos[i].taskId},"itemId":"1","ss":"{\\"extraData\\":{\\"is_trust\\":true,\\"sign\\":\\"${sign}\\",\\"time\\":${time},\\"encrypt\\":\\"3\\",\\"nonstr\\":\\"${nonstr}\\",\\"jj\\":\\"\\",\\"token\\":\\"d89985df35e6a2227fd2e85fe78116d2\\",\\"cf_v\\":\\"1.0.1\\",\\"client_version\\":\\"2.1.3\\",\\"sceneid\\":\\"homePageh5\\"},\\"businessData\\":{\\"taskId\\":\\"${data.data.result.taskVos[i].taskId}\\",\\"rnd\\":\\"${rnd}\\",\\"inviteId\\":\\"-1\\",\\"stealId\\":\\"-1\\"},\\"secretp\\":\\"${secretp}\\"}","actionType":"1","shopSign":${shopSign}}&client=wh5&clientVersion=1.0.0`
+                let taskBody = `functionId=nian_collectScore&body={"taskId":${data.data.result.taskVos[i].taskId},"ss":"{\\"extraData\\":{\\"is_trust\\":true,\\"sign\\":\\"${sign}\\",\\"fpb\\":\\"\\",\\"time\\":${time},\\"encrypt\\":\\"3\\",\\"nonstr\\":\\"${nonstr}\\",\\"jj\\":\\"\\",\\"token\\":\\"d89985df35e6a2227fd2e85fe78116d2\\",\\"cf_v\\":\\"1.0.2\\",\\"client_version\\":\\"2.2.1\\",\\"buttonid\\":\\"jmdd-react-smash_62\\",\\"sceneid\\":\\"homePageh5\\"},\\"secretp\\":\\"${secretp}\\",\\"random\\":\\"${rnd}\\"}","itemId":"1","actionType":1,"shopSign":${shopSign}}&client=wh5&clientVersion=1.0.0`
                 if (merge.black)  return ;
                   //if (typeof data.data.result.taskVos[i].simpleRecordInfoVo !== "undefined"){
                   //  taskBody = encodeURIComponent(`{"dataSource":"newshortAward","method":"getTaskAward","reqParams":"{\\"taskToken\\":\\"${data.data.result.taskVos[i].simpleRecordInfoVo.taskToken}\\"}","sdkVersion":"1.0.0","clientLanguage":"zh"}`)
@@ -329,7 +332,7 @@ function nian_collectProduceScore(timeout = 0){
           'Accept-Encoding' : `gzip, deflate, br`,
           'Accept-Language' : `zh-cn`
         },
-        body : `functionId=nian_collectProduceScore&body={"ss":"{\\"extraData\\":{\\"is_trust\\":true,\\"sign\\":\\"${sign}\\",\\"fpb\\":\\"xAX3mMUyCgH120XCrQXIZUw==\\",\\"time\\":${time},\\"encrypt\\":\\"3\\",\\"nonstr\\":\\"${nonstr}\\",\\"jj\\":\\"\\",\\"token\\":\\"d89985df35e6a2227fd2e85fe78116d2\\",\\"cf_v\\":\\"1.0.1\\",\\"client_version\\":\\"2.1.3\\",\\"sceneid\\":\\"homePageh5\\"},\\"random\\":\\"${rnd}\\",\\"secretp\\":\\"${secretp}\\"}"}&client=wh5&clientVersion=1.0.0`
+        body : `functionId=nian_collectProduceScore&body={"ss":"{\\"extraData\\":{\\"is_trust\\":true,\\"sign\\":\\"${sign}\\",\\"fpb\\":\\"\\",\\"time\\":${time},\\"encrypt\\":\\"3\\",\\"nonstr\\":\\"${nonstr}\\",\\"jj\\":\\"\\",\\"token\\":\\"d89985df35e6a2227fd2e85fe78116d2\\",\\"cf_v\\":\\"1.0.2\\",\\"client_version\\":\\"2.2.1\\",\\"buttonid\\":\\"jmdd-react-smash_0\\",\\"sceneid\\":\\"homePageh5\\"},\\"secretp\\":\\"${secretp}\\",\\"random\\":\\"${rnd}\\"}"}&client=wh5&clientVersion=1.0.0`
       }
       //console.log(url.body)
       $.post(url, async (err, resp, data) => {
@@ -341,7 +344,7 @@ function nian_collectProduceScore(timeout = 0){
             //merge.black = true;
             return ;
           }
-          console.log(`\n收取爆竹：${data.data.result.produceScore}`)
+          if (data.data.result) console.log(`\n收取爆竹：${data.data.result.produceScore}`)
         } catch (e) {
           $.logErr(e, resp);
         } finally {
@@ -466,9 +469,11 @@ function nian_getFeedDetail(taskId,timeout = 0){
                 let nonstr = randomWord(false,10)
                 let time = Date.now()
                 let key = minusByByte(nonstr.slice(0,5),String(time).slice(-5))
-                let msg = `inviteId=-1&rnd=${rnd}&stealId=-1&taskId=${taskId}&token=d89985df35e6a2227fd2e85fe78116d2&time=${time}&nonce_str=${nonstr}&key=${key}&is_trust=true`
-                let sign = bytesToHex(wordsToBytes(getSign(msg))).toUpperCase()
-                let taskBody = `functionId=nian_collectScore&body={"taskId":${list[i].taskId},"itemId":"${list[i].productInfoVos[j].skuId}","ss":"{\\"extraData\\":{\\"is_trust\\":true,\\"sign\\":\\"${sign}\\",\\"time\\":${time},\\"encrypt\\":\\"3\\",\\"nonstr\\":\\"${nonstr}\\",\\"jj\\":\\"\\",\\"token\\":\\"d89985df35e6a2227fd2e85fe78116d2\\",\\"cf_v\\":\\"1.0.1\\",\\"client_version\\":\\"2.1.3\\",\\"sceneid\\":\\"homePageh5\\"},\\"businessData\\":{\\"taskId\\":\\"${taskId}\\",\\"rnd\\":\\"${rnd}\\",\\"inviteId\\":\\"-1\\",\\"stealId\\":\\"-1\\"},\\"secretp\\":\\"${secretp}\\"}","shopSign":""}&client=wh5&clientVersion=1.0.0`
+                let msg = `random=${rnd}&token=d89985df35e6a2227fd2e85fe78116d2&time=${time}&nonce_str=${nonstr}&key=${key}&is_trust=true`
+                let sign = bytesToHex(wordsToBytes(getSign(msg))).toUpperCase() //,\"random\":\"${rnd}\"
+                let taskBody = `functionId=nian_collectScore&body={"taskId":${list[i].taskId},"ss":"{\\"extraData\\":{\\"is_trust\\":true,\\"sign\\":\\"${sign}\\",\\"fpb\\":\\"\\",\\"time\\":${time},\\"encrypt\\":\\"3\\",\\"nonstr\\":\\"${nonstr}\\",\\"jj\\":\\"\\",\\"token\\":\\"d89985df35e6a2227fd2e85fe78116d2\\",\\"cf_v\\":\\"1.0.2\\",\\"client_version\\":\\"2.2.1\\",\\"buttonid\\":\\"jmdd-react-smash_62\\",\\"sceneid\\":\\"homePageh5\\"},\\"secretp\\":\\"${secretp}\\",\\"random\\":\\"${rnd}\\"}","itemId":"${list[i].productInfoVos[j].skuId}","actionType":1}&client=wh5&clientVersion=1.0.0`
+                //console.log(taskBody)
+                //body={"taskId":${list[i].taskId},"itemId":"${list[i].productInfoVos[j].skuId}","ss":"{\\"extraData\\":{\\"is_trust\\":true,\\"sign\\":\\"${sign}\\",\\"time\\":${time},\\"encrypt\\":\\"3\\",\\"nonstr\\":\\"${nonstr}\\",\\"jj\\":\\"\\",\\"token\\":\\"d89985df35e6a2227fd2e85fe78116d2\\",\\"cf_v\\":\\"1.0.1\\",\\"client_version\\":\\"2.1.3\\",\\"sceneid\\":\\"homePageh5\\"},\\"random\\":\\"${rnd}\\",\\"secretp\\":\\"${secretp}\\"}","shopSign":""}&client=wh5&clientVersion=1.0.0`
                 console.log(list[i].productInfoVos[j].skuName)
                 await nian_collectScore(taskBody,1000)
               }
@@ -596,7 +601,7 @@ function nian_getHomeData(body= "",timeout = 0) {
                 let key = minusByByte(nonstr.slice(0,5),String(time).slice(-5))
                 let msg = `random=${rnd}&token=d89985df35e6a2227fd2e85fe78116d2&time=${time}&nonce_str=${nonstr}&key=${key}&is_trust=true`
                 let sign = bytesToHex(wordsToBytes(getSign(msg))).toUpperCase()
-                let taskBody = `functionId=nian_collectScore&body={"taskId":2,"itemId":"${data.data.result.homeMainInfo.guestInfo.itemId}","inviteId": "${body}","ss":"{\\"extraData\\":{\\"is_trust\\":true,\\"sign\\":\\"${sign}\\",\\"time\\":${time},\\"encrypt\\":\\"3\\",\\"nonstr\\":\\"${nonstr}\\",\\"jj\\":\\"\\",\\"token\\":\\"d89985df35e6a2227fd2e85fe78116d2\\",\\"cf_v\\":\\"1.0.1\\",\\"client_version\\":\\"2.1.3\\",\\"sceneid\\":\\"homePageh5\\"},,\\"random\\":\\"${rnd}\\",\\"secretp\\":\\"${secretp}\\"}"}&client=wh5&clientVersion=1.0.0`
+                let taskBody = `functionId=nian_collectScore&body={"taskId":2,"ss":"{\\"extraData\\":{\\"is_trust\\":true,\\"sign\\":\\"${sign}\\",\\"fpb\\":\\"\\",\\"time\\":${time},\\"encrypt\\":\\"3\\",\\"nonstr\\":\\"${nonstr}\\",\\"jj\\":\\"\\",\\"token\\":\\"d89985df35e6a2227fd2e85fe78116d2\\",\\"cf_v\\":\\"1.0.2\\",\\"client_version\\":\\"2.2.1\\",\\"buttonid\\":\\"jmdd-react-smash_62\\",\\"sceneid\\":\\"homePageh5\\"},\\"secretp\\":\\"${secretp}\\",\\"random\\":\\"${rnd}\\"}","itemId":"${data.data.result.homeMainInfo.guestInfo.itemId}","actionType":1}&client=wh5&clientVersion=1.0.0`
                 await nian_collectScore(taskBody, 1000)
               }
               return
@@ -607,7 +612,7 @@ function nian_getHomeData(body= "",timeout = 0) {
             await nian_pk_getHomeData('cgxZdTXtI7rY7QzIDVGruT27sg3MZUNTPPXB0nSP-6UZYxVnPt82X4524ho')
             //await nian_pk_assistGroup()
             if (data.data.result.homeMainInfo.raiseInfo.buttonStatus === 2 ) await nian_raise(1000)
-            await nian_getHomeData('cgxZdTXtI7rY7QzIDVGruT27sg3MZUNTPPXB0nSP-6UZYxVnPt82X4524ho');
+            await nian_getHomeData('cgxZdTXtIL3Z4wnNDAeu6Y-k5HVO0vtcMWaZRSbUQlzsbeNrk_nyKx2dLxg');
             await nian_getTaskDetail("","app")
             await nian_getTaskDetail()
           } else {
