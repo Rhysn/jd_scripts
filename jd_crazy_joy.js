@@ -622,21 +622,25 @@ function getSpecialJoy() {
             data = JSON.parse(data);
             if (data['resultCode'] === '0') {
               if (data.data) {
-                message += '五福汪情况:'
-                for (let item of data['data']) {
-                  if (item['joyId'] === 1003) {
-                    message += `多多JOY(${item['count']}只) `
-                  } else if (item['joyId'] === 1004) {
-                    message += `快乐JOY(${item['count']}只) `
-                  } else if (item['joyId'] === 1005) {
-                    message += `好物JOY(${item['count']}只) `
-                  } else if (item['joyId'] === 1006) {
-                    message += `省钱JOY(${item['count']}只) `
-                  } else if (item['joyId'] === 1007) {
-                    message += `东东JOY(${item['count']}只)`
-                  } else {
-                    message += `暂无`
+                message += '五福汪:'
+                if (data['data'] && data['data'].length > 0) {
+                  for (let item of data['data']) {
+                    if (item['joyId'] === 1003) {
+                      message += `多多JOY(${item['count']}只) `
+                    } else if (item['joyId'] === 1004) {
+                      message += `快乐JOY(${item['count']}只) `
+                    } else if (item['joyId'] === 1005) {
+                      message += `好物JOY(${item['count']}只) `
+                    } else if (item['joyId'] === 1006) {
+                      message += `省钱JOY(${item['count']}只) `
+                    } else if (item['joyId'] === 1007) {
+                      message += `东东JOY(${item['count']}只)`
+                    } else {
+                      message += `暂无`
+                    }
                   }
+                } else {
+                  message += `暂无`;
                 }
                 if (data['data'].length >= 5) {
                   $.msg($.name, '', `京东账号 ${$.index}${$.nickName}\n恭喜你,已集成五福汪可合成分红JOY了`)
@@ -708,7 +712,7 @@ function taskUrl(functionId, body = '') {
 function readShareCode() {
   console.log(`开始`)
   return new Promise(async resolve => {
-    $.get({url: `https://allgreat.xyz/Scripts/JD/InviteCodes/jd_CrazyJoyInviteCode.json`}, (err, resp, data) => {
+    $.get({url: `https://allgreat.xyz/Scripts/JD/InviteCodes/jd_CrazyJoyInviteCode.json`, 'timeout': 10000}, (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
