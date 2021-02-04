@@ -118,6 +118,10 @@ async function jdNian() {
   try {
     $.full = false
     await getHomeData()
+    await map()
+    await $.wait(2000)
+    await queryMaterials()
+    if($.full) return
     if (!$.secretp) return
     let hour = new Date().getUTCHours()
     if (1 <= hour && hour < 12) {
@@ -134,10 +138,6 @@ async function jdNian() {
       if ($.hasGroup) await pkInfo()
       await helpFriendsPK()
     }
-    await map()
-    await $.wait(2000)
-    await queryMaterials()
-    if($.full) return
     await $.wait(2000)
     await killCouponList()
     await $.wait(2000)
