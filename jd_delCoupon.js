@@ -154,6 +154,8 @@ function getCoupon() {
 function isJDCoupon(title) {
   if (title.indexOf('京东') > -1)
     return true
+  else if (title.indexOf('全品类') > -1)
+    return true
   else if (title.indexOf('超市') > -1)
     return true
   else if (title.indexOf('京贴') > -1)
