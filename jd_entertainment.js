@@ -109,7 +109,7 @@ async function entertainment() {
   console.log(message);
   await submitShareCode({ 'share_code': $.shareCode, 'pt_key': $.UserName });
   if ($.isNode()) {
-  await notify.sendNotify(`${$.name}运行完成`, `京东账号${$.index} ${$.nickName || $.UserName}\n请手动打开领取奖品\nhttps://lzdz-isv.isvjcloud.com/dingzhi/change/able/activity/3508994?activityId=dz2102100001340201\n`);
+  //await notify.sendNotify(`${$.name}运行完成`, `京东账号${$.index} ${$.nickName || $.UserName}\n请手动打开领取奖品\nhttps://lzdz-isv.isvjcloud.com/dingzhi/change/able/activity/3508994?activityId=dz2102100001340201\n`);
   }
 }
 
@@ -461,7 +461,7 @@ function taskPostUrl(function_id, body) {
 }
 function getShareCode() {
   return new Promise(async resolve => {
-      $.get({ url: `https://api.r2ray.com/jd.entertainment/index` }, (err, resp, data) => {
+      $.get({ url: `https://allgreat.xyz/Scripts/JD/InviteCodes/jd_entertainment.json` }, (err, resp, data) => {
           try {
               if (err) {
                   console.log(`${JSON.stringify(err)}`)
