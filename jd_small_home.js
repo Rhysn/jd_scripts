@@ -42,7 +42,7 @@ const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 
-const inviteCodesUrl = 'https://allgreat.xyz/Scripts/JD/InviteCodes/jd_updateSmallHomeInviteCode.json';
+const inviteCodesUrl = 'https://rules.allgreat.xyz/Scripts/JD/InviteCodes/jd_updateSmallHomeInviteCode.json';
 const inviteCodesUrlByCDN = 'https://cdn.jsdelivr.net/gh/Rhysn/RulesForSurge@main/Scripts/JD/InviteCodes/jd_updateSmallHomeInviteCode.json';
 const inviteCodesUrlByCDN2 = 'https://raw.fastgit.org/Rhysn/RulesForSurge/main/Scripts/JD/InviteCodes/jd_updateSmallHomeInviteCode.json';
 

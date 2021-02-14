@@ -27,7 +27,7 @@ const homeDataFunPrefixArr = ['', '', 'healthyDay', 'healthyDay', 'ts', 'wfh', '
 const collectScoreFunPrefixArr = ['', '', '', '', 'harmony', 'wfh', 'harmony', 'harmony'];
 const lotteryResultFunPrefixArr = ['', '', 'interact_template', 'interact_template', 'ts', 'wfh', 'interact_template', 'interact_template'];
 const browseTimeArr = ['', '', '15', '', '6', '', '', '']
-const taskInfoPath = 'https://allgreat.xyz/Scripts/JD/InviteCodes/jd_lotteryMachine.json';
+const taskInfoPath = 'https://rules.allgreat.xyz/Scripts/JD/InviteCodes/jd_lotteryMachine.json';
 let merge = {}
 let gameOverMessage = ""
 //IOS等用户直接用NobyDa的jd cookie

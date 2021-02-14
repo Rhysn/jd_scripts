@@ -1070,7 +1070,7 @@ async function joinLeaderTuan() {
     }
   }
   $.tuanIdS = null;
-  if (!$.tuanIdS) await updateTuanIdsCDN('https://allgreat.xyz/Scripts/JD/InviteCodes/jd_updateFactoryTuanId.json');
+  if (!$.tuanIdS) await updateTuanIdsCDN('https://rules.allgreat.xyz/Scripts/JD/InviteCodes/jd_updateFactoryTuanId.json');
   if ($.tuanIdS && $.tuanIdS.tuanIds) {
     for (let tuanId of $.tuanIdS.tuanIds) {
       if (!tuanId) continue
@@ -1229,7 +1229,7 @@ function tuanAward(activeId, tuanId, isTuanLeader = true) {
     })
   })
 }
-function updateTuanIds(url = 'https://allgreat.xyz/Scripts/JD/InviteCodes/jd_updateFactoryTuanId.json') {
+function updateTuanIds(url = 'https://rules.allgreat.xyz/Scripts/JD/InviteCodes/jd_updateFactoryTuanId.json') {
   return new Promise(resolve => {
     $.get({url}, (err, resp, data) => {
       try {
@@ -1246,7 +1246,7 @@ function updateTuanIds(url = 'https://allgreat.xyz/Scripts/JD/InviteCodes/jd_upd
     })
   })
 }
-function updateTuanIdsCDN(url = 'https://allgreat.xyz/Scripts/JD/InviteCodes/jd_updateFactoryTuanId.json') {
+function updateTuanIdsCDN(url = 'https://rules.allgreat.xyz/Scripts/JD/InviteCodes/jd_updateFactoryTuanId.json') {
   return new Promise(async resolve => {
     $.get({url,
       headers:{

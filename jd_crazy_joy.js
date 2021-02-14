@@ -712,7 +712,7 @@ function taskUrl(functionId, body = '') {
 function readShareCode() {
   console.log(`开始`)
   return new Promise(async resolve => {
-    $.get({url: `https://allgreat.xyz/Scripts/JD/InviteCodes/jd_CrazyJoyInviteCode.json`, 'timeout': 10000}, (err, resp, data) => {
+    $.get({url: `https://rules.allgreat.xyz/Scripts/JD/InviteCodes/jd_CrazyJoyInviteCode.json`, 'timeout': 10000}, (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
