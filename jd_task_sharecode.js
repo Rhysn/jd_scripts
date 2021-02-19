@@ -1,5 +1,6 @@
 /*
 抽奖机活动分享码获取
+bash -c "exec 1<>/proc/1/fd/1; exec 2<>/proc/1/fd/2; set -o allexport; source /all; source /env; source /cookies; node /scripts/jd_task_sharecode.js > /logs/jd_task_sharecode.log 2>&1 | sed 's/^/ 【获取活动分享码】/'; "
  */
 const $ = new Env('抽奖机活动分享码');
 
@@ -25,7 +26,7 @@ if ($.isNode()) {
 }
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
 const JD_API_GET_HOST = 'https://api.m.jd.com/api';
-const taskInfoPath = 'https://allgreat.xyz/Scripts/JD/InviteCodes/jd_lotteryMachine.json';
+const taskInfoPath = 'https://rules.allgreat.xyz/Scripts/JD/InviteCodes/jd_lotteryMachine.json';
 
 const get_ua = "jdapp;iPhone;9.3.2;14.2.1;app_device/IOS;pap/JA2015_311210|9.3.2|IOS 14.2.1;Mozilla/5.0 (iPhone; CPU iPhone OS 14_2_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1";
 
