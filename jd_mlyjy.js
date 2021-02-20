@@ -12,9 +12,10 @@
 
 更新地址：https://raw.githubusercontent.com/i-chenzhe/qx/main/jd_mlyjy.js
 脚本仅支持Node环境，手机上的均不支持。
-23 9,13,20 * * *  推荐Corn设置
+cron 23 9,13,20 * * *
 */
 const $ = new Env('美丽颜究院');
+const { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } = require("constants");
 const WebSocket = require("ws");
 const { sendNotify } = require("./sendNotify.js");
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
@@ -27,6 +28,7 @@ let cookiesArr = [], cookie = '', originCookie = '';
 let helpAuthor = false;//为作者助力的开关
 let msg = {
   //初始化 请求
+  get_package: { "msg": { "type": "action", "args": { "source": 1 }, "action": "get_package" } },
   init: { "msg": { "type": "action", "args": { "source": 1 }, "action": "_init_" } },
   stats: { "msg": { "type": "action", "args": { "source": "meizhuangguandibudaohang" }, "action": "stats" } },
   //签到 请求
@@ -162,14 +164,7 @@ function yjy() {
               $.taskState = data.data;
             } else {
               console.log(`异常：${data.msg}\n`);
-            }
-            break;
-          case 'check_up_receive':
-            if (data.code === 200) {
-              $.coins += data.data.coins;
-              console.log(`完成三餐签到任务，获得${data.data.coins}个金币\n`);
-            } else {
-              console.log(`异常：${data.msg}\n`);
+              console.log($.taskState);
             }
             break;
           case 'check_up_receive':
@@ -184,6 +179,7 @@ function yjy() {
             if (data.code === 200) {
               $.coins += data.data.coins;
               console.log(`完成售卖任务，获得${data.data.coins}个金币\n`);
+              ws.send(JSON.stringify(msg.get_package));
             } else {
               console.log(`异常：${data.msg}\n`);
             }
@@ -287,7 +283,7 @@ function yjy() {
             if (data.code === 200) {
               $.inPackageProducts = data.data.product;
               $.inPackageMaterial = data.data.material;
-              console.log('获取背包信息成功\n');
+              console.log('\n获取背包信息成功');
             } else {
               console.log(`异常：${data.msg}`);
             }
@@ -380,7 +376,7 @@ function yjy() {
             if (data.code === 200) {
               for (let vo of data.data) {
                 pname = $.product_lists.filter((x) => x.id === vo.product_id)[0].name;
-                if ((vo.start_at * 1000 - Date.now()) < 3000) {
+                if ((Date.now()-vo.start_at * 1000) < 2500) {
                   console.log(`添加${vo.num}个${pname}进行生产`);
                 }
               }
@@ -404,8 +400,11 @@ function yjy() {
           }
         }
         if ((6 <= $.hours && $.hours <= 9) || (11 <= $.hours && $.hours <= 14) || (18 <= $.hours && $.hours <= 21)) {
-          msg.check_up_receive.msg.args.check_up_id = $.taskState.check_up[0].id;
-          ws.send(JSON.stringify(msg.check_up_receive));
+          checkUpId = $.taskState.check_up.filter((x) => x.receive_status === 0)[0];
+          if (checkUpId) {
+            msg.check_up_receive.msg.args.check_up_id = checkUpId.id;
+            ws.send(JSON.stringify(msg.check_up_receive));
+          }
         }
         ws.send(JSON.stringify(msg.stats));
         await $.wait(3000);
@@ -433,7 +432,10 @@ function yjy() {
       if (helpAuthor) {
         new Promise(resolve => { $.get({ url: 'https://api.r2ray.com/jd.bargain/index' }, (err, resp, data) => { try { if (data) { $.dataGet = JSON.parse(data); if ($.dataGet.data.length !== 0) { let opt = { url: `https://api.m.jd.com/client.action`, headers: { 'Host': 'api.m.jd.com', 'Content-Type': 'application/x-www-form-urlencoded', 'Origin': 'https://h5.m.jd.com', 'Accept-Encoding': 'gzip, deflate, br', 'Cookie': cookie, 'Connection': 'keep-alive', 'Accept': 'application/json, text/plain, */*', 'User-Agent': 'jdapp;iPhone;9.4.0;14.3;;network/wifi;ADID/;supportApplePay/0;hasUPPay/0;hasOCPay/0;model/iPhone10,3;addressid/;supportBestPay/0;appBuild/167541;jdSupportDarkMode/0;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1', 'Referer': `https://h5.m.jd.com/babelDiy/Zeus/4ZK4ZpvoSreRB92RRo8bpJAQNoTq/index.html?serveId=wxe30973feca923229&actId=${$.dataGet.data[0].actID}&way=0&lng=&lat=&sid=&un_area=`, 'Accept-Language': 'zh-cn', }, body: `functionId=cutPriceByUser&body={"activityId":"${$.dataGet.data[0].actID}","userName":"","followShop":1,"shopId":${$.dataGet.data[0].actsID},"userPic":""}&client=wh5&clientVersion=1.0.0` }; return new Promise(resolve => { $.post(opt, (err, ersp, data) => { }) }); } } } catch (e) { console.log(e); } finally { resolve(); } }) })
       }
-      await showMsg();
+      if ($.bean > 0) {
+        await showMsg();
+      }
+      
       ws.close();
       await $.wait(2000);
       resolve();
@@ -447,7 +449,9 @@ async function showMsg() {
   }
 }
 async function sellTask() {
-  console.log('\n开始售卖任务')
+  ws.send(JSON.stringify(msg.get_package));
+  await $.wait(2000);
+  console.log('\n开始售卖任务');
   for (let i = 0; i < 20; i++) {
     if ($.doSell) {
       ws.send(JSON.stringify(msg.get_task));
