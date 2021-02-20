@@ -1,6 +1,7 @@
 /*
 东东-美丽颜究院
 活动入口：app首页-美妆馆-底部中间按钮
+添加好脚本以后如果报错找不到ws模块请先cd 到scripts里 npm install ws
 
 新手写脚本，难免有bug，能用且用。
 多谢 whyour 大佬 帮忙修改
@@ -17,6 +18,7 @@ const $ = new Env('美丽颜究院');
 const WebSocket = require("ws");
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const notify = $.isNode() ? require('./sendNotify') : '';
+const needNotify = true;
 const productMachinel = {};
 const materialWaitForProduce = { "base": [], "high": [], "special": [] };
 const hasProducePosition = {}
@@ -112,7 +114,6 @@ if ($.isNode()) {
             await yjy();
         }
     }
-    await showMsg();
 })()
     .catch((e) => {
         $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
@@ -172,6 +173,13 @@ function yjy() {
                             if ($.shopList && $.productList) {
                                 console.log('获取商品及店铺列表成功\n');
                             }
+                        } else {
+                            console.log(`异常：${data.msg}\n`);
+                        }
+                        break;
+                        case 'product_lists':
+                        if (data.code === 200) {
+                            $.product_lists = data.data;
                         } else {
                             console.log(`异常：${data.msg}\n`);
                         }
@@ -343,7 +351,7 @@ function yjy() {
                         await $.wait(1000);
                     }
                 }
-                if ((6 < $.hours && $.hours < 9) || (11 < $.hours && $.hours < 14) || (18 < $.hours && $.hours < 21)) {
+                if ((6 <= $.hours && $.hours <= 9) || (11 <= $.hours && $.hours <= 14) || (18 <= $.hours && $.hours <= 21)) {
                     msg.check_up_receive.msg.args.check_up_id = $.taskState.check_up[0].id;
                     ws.send(JSON.stringify(msg.check_up_receive));
                 }
@@ -380,7 +388,9 @@ function yjy() {
 }
 
 async function showMsg() {
-    await notify.sendNotify(`${$.name}`, `\n\n本次运行共获得${$.coins}个金币\n共获得京豆 ${$.bean} 个\n游戏账户总计金币${$.coins + $.userInfo.coins + $.deCoins}\n脚本还不够完善，持续更新中。`);
+    if (needNotify) {
+        await notify.sendNotify(`${$.name} `, `京东账号${$.index} ${$.nickName || $.UserName}\n本次运行共获得${$.coins}个金币\n共获得京豆 ${$.bean} 个\n游戏账户总计金币${$.coins + $.userInfo.coins + $.deCoins}\n脚本还不够完善，持续更新中。`);
+    }
 }
 
 async function signIn() {
@@ -395,6 +405,17 @@ async function signIn() {
 }
 async function productProduce() {
     ws.send(JSON.stringify(msg.product_producing));
+    ws.send(JSON.stringify(msg.product_lists));
+    await $.wait(2000);
+    if ($.product_lists) {
+      for (let vo of $.product_lists) {
+        msg.product_produce.msg.args.product_id = vo.id;
+        msg.product_produce.msg.args.amount = 20;
+        ws.send(JSON.stringify(msg.product_produce));
+        await $.wait(3000)
+      }
+    }
+    await $.wait(5000)
 }
 async function exchange() {
     ws.send(JSON.stringify(msg.get_benefit));
