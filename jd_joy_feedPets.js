@@ -41,13 +41,7 @@ if ($.isNode()) {
   })
   if (process.env.JD_DEBUG && process.env.JD_DEBUG === 'false') console.log = () => {};
 } else {
-  let cookiesData = $.getdata('CookiesJD') || "[]";
-  cookiesData = jsonParse(cookiesData);
-  cookiesArr = cookiesData.map(item => item.cookie);
-  cookiesArr.reverse();
-  cookiesArr.push(...[$.getdata('CookieJD2'), $.getdata('CookieJD')]);
-  cookiesArr.reverse();
-  cookiesArr = cookiesArr.filter(item => item !== "" && item !== null && item !== undefined);
+  cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
 }
 let jdNotify = true;//是否开启静默运行。默认true开启
 let message = '', subTitle = '';
@@ -250,11 +244,13 @@ function TotalBean() {
           console.log(`${$.name} API请求失败，请检查网路重试`)
         } else {
           if (data) {
+            $.log(`debug::${data}\n`)
             data = JSON.parse(data);
             if (data['retcode'] === 13) {
               $.isLogin = false; //cookie过期
               return
             }
+            
             $.nickName = data['base'].nickname;
           } else {
             console.log(`京东服务器返回空数据`)
