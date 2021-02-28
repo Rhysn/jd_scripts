@@ -1079,9 +1079,18 @@ async function joinLeaderTuan() {
   }
 }
 function JoinTuan(tuanId) {
+  var year = new Date().getFullYear();
+  var month = new Date().getMonth()+1;
+  var day = new Date().getDate();
+  var hour = new Date().getHours();
+  var minute = new Date().getMinutes();
+  var second = new Date().getSeconds();
+  month = month > 9 ? month : '0'.concat(month);
+  day = day > 9 ? day : '0'.concat(day);
+  let nowtime = year.toString().concat(month,day,hour,minute,second);
   return new Promise((resolve) => {
     const options = {
-      'url': `https://m.jingxi.com/dreamfactory/tuan/JoinTuan?activeId=${escape(tuanActiveId)}&tuanId=${escape(tuanId)}&_time=${Date.now()}&_=${Date.now()}&sceneval=2&g_login_type=1&stk=_time,activeId,tuanId&_ste=1&h5st=${decrypt(Date.now())}`,
+      'url': `https://m.jingxi.com/dreamfactory/tuan/JoinTuan?activeId=${escape(tuanActiveId)}&tuanId=${escape(tuanId)}&_time=${Date.now()}&_=${Date.now()}&sceneval=2&g_login_type=1&g_ty=1&stk=_time,activeId,tuanId&_ste=1&h5st=${decrypt(nowtime)}`,
       "headers": {
         "Accept": "*/*",
         "Accept-Encoding": "gzip, deflate, br",
