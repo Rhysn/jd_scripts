@@ -1078,19 +1078,10 @@ async function joinLeaderTuan() {
     }
   }
 }
-function JoinTuan(tuanId) {
-  var year = new Date().getFullYear();
-  var month = new Date().getMonth()+1;
-  var day = new Date().getDate();
-  var hour = new Date().getHours();
-  var minute = new Date().getMinutes();
-  var second = new Date().getSeconds();
-  month = month > 9 ? month : '0'.concat(month);
-  day = day > 9 ? day : '0'.concat(day);
-  let nowtime = year.toString().concat(month,day,hour,minute,second);
+function JoinTuan(tuanId, stk = '_time,activeId,tuanId') {
   return new Promise((resolve) => {
     const options = {
-      'url': `https://m.jingxi.com/dreamfactory/tuan/JoinTuan?activeId=${escape(tuanActiveId)}&tuanId=${escape(tuanId)}&_time=${Date.now()}&_=${Date.now()}&sceneval=2&g_login_type=1&g_ty=1&stk=_time,activeId,tuanId&_ste=1&h5st=${decrypt(nowtime)}`,
+      'url': `https://m.jingxi.com/dreamfactory/tuan/JoinTuan?activeId=${escape(tuanActiveId)}&tuanId=${escape(tuanId)}&_time=${Date.now()}&_=${Date.now()}&sceneval=2&g_login_type=1&_ste=1&h5st=${decrypt(Date.now(), stk)}`,
       "headers": {
         "Accept": "*/*",
         "Accept-Encoding": "gzip, deflate, br",
@@ -1098,7 +1089,7 @@ function JoinTuan(tuanId) {
         "Connection": "keep-alive",
         "Cookie": cookie,
         "Host": "m.jingxi.com",
-        "Referer": `https://st.jingxi.com/pingou/dream_factory/divide.html?activeId=${escape(tuanActiveId)}&sTuanId=${escape(tuanId)}&sPin=q0aZPe-QA6AChOBXOoOMBA%3D%3D&sType=101&share_ptag=138912.5.11&srv=jinshusongjin_https://wq.jd.com/cube/front/activePublish/dream_factory_report/380556.html_jing`,
+        "Referer": "https://st.jingxi.com/pingou/dream_factory/divide.html?exchange=%7B%22activeId%22:%22ilOin38J30PcT9xnWbx9lw%3D%3D%22,%22sTuanId%22:%22QvqM7GtgQQJUO8jaz1CYBA%3D%3D%22,%22sPin%22:%22V5LkjP4WRyjeCKR9VRwcRX0bBuTz7MEK0-E99EJ7u0k%3D%22,%22sType%22:%22101%22%7D&ptag=139022.1.2?srv=jinshusongjin_https://wq.jd.com/cube/front/activePublish/dream_factory_report/380556.html_jing",
         "User-Agent": "jdpingou"
       }
     }
