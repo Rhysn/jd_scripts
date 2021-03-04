@@ -1555,7 +1555,15 @@ function decrypt(time, stk, type) {
   }
 }
 function thisDate(){
-  return new Date(time).Format("yyyyMMddhhmmssS");
+  var year = new Date().getFullYear();
+  var month = new Date().getMonth()+1;
+  var day = new Date().getDate();
+  var hour = new Date().getHours();
+  var minute = new Date().getMinutes();
+  var second = new Date().getSeconds();
+  month = month > 9 ? month : '0'.concat(month);
+  day = day > 9 ? day : '0'.concat(day);
+  return year.toString().concat(month,day,hour,minute,second);
 
 }
 // prettier-ignore
