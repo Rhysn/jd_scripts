@@ -126,7 +126,7 @@ function getUserInfo() {
         } else {
           $.userInfo = JSON.parse(data.match(/query\((.*)\n/)[1]).data
           // console.log(`您的好友助力码为${$.userInfo.shareid}`)
-          console.log(`当前幸运值：${$.userInfo.bless}`)
+          //console.log(`当前幸运值：${$.userInfo.bless}`)
           for (let task of $.info.config.tasks) {
             if (!$.userInfo.complete_task_list.includes(task['_id'])) {
               console.log(`去做任务${task['_id']}`)
