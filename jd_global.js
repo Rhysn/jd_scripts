@@ -43,8 +43,8 @@ if ($.isNode()) {
 
 const JD_API_HOST = 'https://api.m.jd.com/', actCode = 'visa-card-001';
 const inviteCodes = [
-  'SGQvN05nSDJWRTBzMjQ2bnY1RTFKNCt4UWxYbEZ2c1J0LzBqK05XcjRBbz0=@UzFHU0VyWUdjbVFsM0NLT28xSlVtZz09',
-  'SGQvN05nSDJWRTBzMjQ2bnY1RTFKNCt4UWxYbEZ2c1J0LzBqK05XcjRBbz0=@UzFHU0VyWUdjbVFsM0NLT28xSlVtZz09',
+  'SGQvN05nSDJWRTBzMjQ2bnY1RTFKNCt4UWxYbEZ2c1J0LzBqK05XcjRBbz0=@UzFHU0VyWUdjbVFsM0NLT28xSlVtZz09@ZFVnQ1pUK1FYR0RQQzlYZlU1cnZwTm54aE5hemJ2cTE2WXZKZXVzcmkvdz0=@VEoyWTFlajFYNm9rTWJ6RmF6THBMQT09',
+  'SGQvN05nSDJWRTBzMjQ2bnY1RTFKNCt4UWxYbEZ2c1J0LzBqK05XcjRBbz0=@UzFHU0VyWUdjbVFsM0NLT28xSlVtZz09@ZFVnQ1pUK1FYR0RQQzlYZlU1cnZwTm54aE5hemJ2cTE2WXZKZXVzcmkvdz0=@VEoyWTFlajFYNm9rTWJ6RmF6THBMQT09',
 ];
 $.invites = [];
 !(async () => {
@@ -350,10 +350,12 @@ function shareCodesFormat() {
       const tempIndex = $.index > inviteCodes.length ? (inviteCodes.length - 1) : ($.index - 1);
       $.newShareCodes = inviteCodes[tempIndex].split('@');
     }
+    /*
     const readShareCodeRes = await readShareCode();
     if (readShareCodeRes && readShareCodeRes.code === 200) {
       $.newShareCodes = [...new Set([...$.newShareCodes, ...(readShareCodeRes.data || [])])];
     }
+    */
     console.log(`第${$.index}个京东账号将要助力的好友${JSON.stringify($.newShareCodes)}`)
     resolve();
   })
