@@ -152,7 +152,6 @@ const JD_API_HOST = "https://urvsaggpt.m.jd.com/guardianstar";
     }
   }
   // console.log($.allShareId);
-  /*
   for (let v = 0; v < cookiesArr.length; v++) {
     cookie = cookiesArr[v];
     console.log(`自己账号内部互助\n\n`);
@@ -164,7 +163,6 @@ const JD_API_HOST = "https://urvsaggpt.m.jd.com/guardianstar";
       }
     }
     console.log(`如有剩下的机会，助力作者\n\n`);
-    */
     for (let index = 0; index < starID.length; index++) {
       $.activeId = starID[index];
       await doSupport(shareID[index]);
