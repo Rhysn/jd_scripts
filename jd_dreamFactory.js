@@ -1574,7 +1574,7 @@ function investKey(){
     const hour = new Date().getHours();
     if(hour > 4 && hour < 6) return false;
     const minute = new Date().getMinutes();
-    if(minute > 20 && hour % 2 > 0) return false;
+    if(minute > 20 || hour % 2 > 0) return false;
     return true;
 }
 // prettier-ignore
