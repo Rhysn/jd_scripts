@@ -114,7 +114,11 @@ function QueryJDUserInfo(timeout = 0) {
                         merge.enabled = false
                         return
                     }
-                    merge.nickname = data.base.nickname || $.name;
+                    if (data['retcode'] === 0) {
+              $.nickName = (data['base'] && data['base'].nickname) || $.name;
+            } else {
+              $.nickName = $.name
+            }
                 } catch (e) {
                     $.logErr(e, resp);
                 } finally {
