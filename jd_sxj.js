@@ -57,6 +57,14 @@ const shareID = [
   "2a8e215c-7bb6-4058-99f0-ab5cd04662dd",
   "ac328cb1-61c3-49e0-8ed7-7a0cbd14fe64",
 ];
+const shareID2 = [
+  "599bf662-1c71-4844-96f2-9d6c48c04348",
+  "a56e4010-e05a-4d69-868c-f7bc681bb071",
+  "b2e87ea0-1039-4541-bb54-c00b2630f718",
+  "64deab19-a6a5-4fb7-b3c5-403ad82db101",
+  "d55ce782-7a26-4b9a-b5b8-bccc598f6311",
+  "70cd03fa-72cd-4191-8ef7-c0dee56bf038",
+];
 $.allShareId = {};
 const JD_API_HOST = "https://urvsaggpt.m.jd.com/guardianstar";
 !(async () => {
@@ -143,6 +151,7 @@ const JD_API_HOST = "https://urvsaggpt.m.jd.com/guardianstar";
     for (let index = 0; index < starID.length; index++) {
       $.activeId = starID[index];
       await doSupport(shareID[index]);
+      await doSupport(shareID2[index]);
     }
   }
 })()
