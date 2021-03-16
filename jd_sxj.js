@@ -57,29 +57,6 @@ const shareID = [
   "2a8e215c-7bb6-4058-99f0-ab5cd04662dd",
   "ac328cb1-61c3-49e0-8ed7-7a0cbd14fe64",
 ];
-const shareID2 = [
-  "599bf662-1c71-4844-96f2-9d6c48c04348",
-  "a56e4010-e05a-4d69-868c-f7bc681bb071",
-  "b2e87ea0-1039-4541-bb54-c00b2630f718",
-  "64deab19-a6a5-4fb7-b3c5-403ad82db101",
-  "d55ce782-7a26-4b9a-b5b8-bccc598f6311",
-  "70cd03fa-72cd-4191-8ef7-c0dee56bf038",
-];
-shareID3 = [
-  "e5f2a6d1-7dfc-43ca-88ba-ade90d8e2a40",
-  "e18f300a-ffd0-4ade-bbd7-457669d67c35",
-  "e4f094fc-69ad-4c5b-ae79-b6020c598d77",
-  "fc0fa2f7-acb6-4949-835c-b2fa6ad68860",
-  "b5bf72de-b1d2-4187-839a-a0ee52d48678",
-  "838074f0-33d9-402c-a2df-4b0362769a87"];
-shareID4 = [
-  "bdd6ed93-745f-4bdd-8371-8e475e0624df",
-  "c157e8ed-24d2-4d6f-993c-e88cf916d964",
-  "8c71b4e8-97f2-422f-bd3a-c08258b15d8a",
-  "e8b957d7-f5b0-46d7-a46d-8d363ea9ac6f",
-  "32332bd0-3060-467e-bde6-c2ee0c8893f7",
-  "5cbf86af-870e-4fcf-a199-f7df24f22c27"
-];
 $.allShareId = {};
 const JD_API_HOST = "https://urvsaggpt.m.jd.com/guardianstar";
 !(async () => {
@@ -166,9 +143,6 @@ const JD_API_HOST = "https://urvsaggpt.m.jd.com/guardianstar";
     for (let index = 0; index < starID.length; index++) {
       $.activeId = starID[index];
       await doSupport(shareID[index]);
-      await doSupport(shareID2[index]);
-      await doSupport(shareID3[index]);
-      await doSupport(shareID4[index]);
     }
   }
 })()

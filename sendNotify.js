@@ -2,7 +2,7 @@
  * @Author: lxk0301 https://gitee.com/lxk0301
  * @Date: 2020-08-19 16:12:40 
  * @Last Modified by: lxk0301
- * @Last Modified time: 2021-3-12 11:52:54
+ * @Last Modified time: 2021-3-16 9:52:54
  */
 const querystring = require("querystring");
 const $ = new Env();
@@ -19,13 +19,16 @@ let BARK_SOUND = '';
 
 
 // =======================================telegram机器人通知设置区域===========================================
-//此处填你telegram bot 的Token，例如：1077xxx4424:AAFjv0FcqxxxxxxgEMGfi22B4yh15R5uw
+//此处填你telegram bot 的Token，telegram机器人通知推送必填项.例如：1077xxx4424:AAFjv0FcqxxxxxxgEMGfi22B4yh15R5uw
 //(环境变量名 TG_BOT_TOKEN)
 let TG_BOT_TOKEN = '';
-//此处填你接收通知消息的telegram用户的id，例如：129xxx206
+//此处填你接收通知消息的telegram用户的id，telegram机器人通知推送必填项.例如：129xxx206
 //(环境变量名 TG_USER_ID)
 let TG_USER_ID = '';
-//Telegram api自建的反向代理地址(不懂可忽略),默认tg官方api(环境变量名:TG_API_HOST)
+//tg推送HTTP代理设置(不懂可忽略,telegram机器人通知推送功能中非必填)
+let TG_PROXY_HOST = '';//例如:127.0.0.1(环境变量名:TG_PROXY_HOST)
+let TG_PROXY_PORT = '';//例如:1080(环境变量名:TG_PROXY_PORT)
+//Telegram api自建的反向代理地址(不懂可忽略,telegram机器人通知推送功能中非必填),默认tg官方api(环境变量名:TG_API_HOST)
 let TG_API_HOST = 'api.telegram.org'
 // =======================================钉钉机器人通知设置区域===========================================
 //此处填你钉钉 bot 的webhook，例如：5a544165465465645d0f31dca676e7bd07415asdasd
@@ -98,6 +101,8 @@ if (process.env.TG_BOT_TOKEN) {
 if (process.env.TG_USER_ID) {
   TG_USER_ID = process.env.TG_USER_ID;
 }
+if (process.env.TG_PROXY_HOST) TG_PROXY_HOST = process.env.TG_PROXY_HOST;
+if (process.env.TG_PROXY_PORT) TG_PROXY_PORT = process.env.TG_PROXY_PORT;
 if (process.env.TG_API_HOST) TG_API_HOST = process.env.TG_API_HOST;
 
 if (process.env.DD_BOT_TOKEN) {
@@ -306,18 +311,18 @@ function tgBotNotify(text, desp) {
     if (TG_BOT_TOKEN && TG_USER_ID) {
       const options = {
         url: `https://${TG_API_HOST}/bot${TG_BOT_TOKEN}/sendMessage`,
-        body: `chat_id=${TG_USER_ID}&text=${text}\n\n${desp}&disable_web_page_preview=true`,
+        body: `chat_id=${TG_USER_ID}&text=${text}\n\n${desp}&disable_web_page_preview=true&parse_mode=Markdown`,
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
         }
       }
-      if (process.env.TG_PROXY_HOST && process.env.TG_PROXY_PORT) {
+      if (TG_PROXY_HOST && TG_PROXY_PORT) {
         const tunnel = require("tunnel");
         const agent = {
           https: tunnel.httpsOverHttp({
             proxy: {
-              host: process.env.TG_PROXY_HOST,
-              port: process.env.TG_PROXY_PORT * 1
+              host: TG_PROXY_HOST,
+              port: TG_PROXY_PORT * 1
             }
           })
         }
