@@ -37,11 +37,10 @@ const helpAu = false; //帮作者助力 免费拿活动
 const notify = $.isNode() ? require('./sendNotify') : '';
 let jdNotify = true;//是否关闭通知，false打开通知推送，true关闭通知推送
 const randomCount = $.isNode() ? 20 : 5;
-let tuanActiveId = '';
+let tuanActiveId = `6S9y4sJUfA2vPQP6TLdVIQ==`;
 const jxOpenUrl = `openjd://virtual?params=%7B%20%22category%22:%20%22jump%22,%20%22des%22:%20%22m%22,%20%22url%22:%20%22https://wqsd.jd.com/pingou/dream_factory/index.html%22%20%7D`;
 let cookiesArr = [], cookie = '', message = '', allMessage = '';
 const inviteCodes = [ 'NTXGxnRwTQkr7rbDn08j4w==@XU6GKz30yCKA4LYvpnm5zw==@q0aZPe-QA6AChOBXOoOMBA==@60y72tM8PjtxKeL4EMpTOQ==@QDotuqdYVNrSa3atJZ_V9Q==' ];
-let stopHelpFriendCollect = false;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 $.tuanIds = [];
 if ($.isNode()) {
@@ -54,8 +53,6 @@ if ($.isNode()) {
   cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
 }
 !(async () => {
-  if($.isNode() && process.env.DREAM_FACTORY_STOP_KEY === 'true') return;//状态静止
-  
   $.CryptoJS = $.isNode() ? require('crypto-js') : CryptoJS;
   await requireConfig();
   if (!cookiesArr[0]) {
@@ -88,7 +85,6 @@ if ($.isNode()) {
       await jdDreamFactory()
     }
   }
-  /*
   for (let i = 0; i < cookiesArr.length; i++) {
     if (cookiesArr[i]) {
       cookie = cookiesArr[i];
@@ -107,7 +103,6 @@ if ($.isNode()) {
       }
     }
   }
-  */
   if ($.isNode() && allMessage) {
     await notify.sendNotify(`${$.name}`, `${allMessage}`, { url: jxOpenUrl })
   }
@@ -132,10 +127,8 @@ async function jdDreamFactory() {
     await QueryHireReward();//收取招工电力
     await PickUp();//收取自家的地下零件
     await stealFriend();
-    if(tuanActiveId){
-        await tuanActivity();
-        await QueryAllTuan();
-    }
+    await tuanActivity();
+    await QueryAllTuan();
     await exchangeProNotify();
     await showMsg();
     if (helpAu === true) await helpAuthor();
@@ -179,8 +172,6 @@ function collectElectricity(facId = $.factoryId, help = false, master) {
             } else {
               if (help) {
                 console.log(`收取好友电力失败:${data.msg}\n`);
-                //console.log(data);
-                if(data.ret === 11016) stopHelpFriendCollect = true;
               } else {
                 console.log(`收取电力失败:${data.msg}\n`);
               }
@@ -725,7 +716,7 @@ async function PickUp(encryptPin = $.encryptPin, help = false) {
       } else {
         $.log(`自家地下暂无零件可收`)
       }
-      //$.pickUpMyselfComponent = false;
+      $.pickUpMyselfComponent = false;
     }
     for (let item of componentList) {
       await $.wait(1000);
@@ -743,10 +734,9 @@ async function PickUp(encryptPin = $.encryptPin, help = false) {
         } else {
           if (help) {
             console.log(`收好友[${encryptPin}]零件失败：${PickUpComponentRes.msg},直接跳出`)
-            $.pickUpMyselfComponent = false;
           } else {
             console.log(`收自己地下零件失败：${PickUpComponentRes.msg},直接跳出`);
-            //$.pickUpMyselfComponent = false;
+            $.pickUpMyselfComponent = false;
           }
           break
         }
@@ -821,28 +811,20 @@ function PickUpComponent(index, encryptPin) {
 }
 //偷好友的电力
 async function stealFriend() {
-  /*
   if (!$.pickUpMyselfComponent) {
     $.log(`今日收取零件已达上限，偷好友零件也达到上限，故跳出`)
     return
   }
-  */
   await getFriendList();
   $.friendList = [...new Set($.friendList)];
   for (let i = 0; i < $.friendList.length; i++) {
     let pin = $.friendList[i];//好友的encryptPin
-    if (pin === 'XU6GKz30yCKA4LYvpnm5zw==' || pin === 'NTXGxnRwTQkr7rbDn08j4w==') {
-      continue
+    if (pin === 'V5LkjP4WRyjeCKR9VRwcRX0bBuTz7MEK0-E99EJ7u0k=' || pin === 'Bo-jnVs_m9uBvbRzraXcSA==') {
+      //continue
     }
-    if($.pickUpMyselfComponent) {
-      await PickUp(pin, true);
-      await $.wait(1000);
-    }
+    await PickUp(pin, true);
     await getFactoryIdByPin(pin);//获取好友工厂ID
-    await $.wait(1000);
     if ($.stealFactoryId) await collectElectricity($.stealFactoryId,true, pin);
-    if(stopHelpFriendCollect) return;
-    await $.wait(1000);
   }
 }
 function getFriendList(sort = 0) {
@@ -1084,7 +1066,7 @@ async function joinLeaderTuan() {
     }
   }
   $.tuanIdS = null;
-  if (!$.tuanIdS) await updateTuanIdsCDN('https://rules.allgreat.xyz/Scripts/JD/InviteCodes/jd_updateFactoryTuanId.json');
+  if (!$.tuanIdS) await updateTuanIdsCDN('https://gitee.com/shylocks/updateTeam/raw/main/jd_updateFactoryTuanId.json');
   if ($.tuanIdS && $.tuanIdS.tuanIds) {
     for (let tuanId of $.tuanIdS.tuanIds) {
       if (!tuanId) continue
@@ -1243,7 +1225,7 @@ function tuanAward(activeId, tuanId, isTuanLeader = true) {
     })
   })
 }
-function updateTuanIds(url = 'https://rules.allgreat.xyz/Scripts/JD/InviteCodes/jd_updateFactoryTuanId.json') {
+function updateTuanIds(url = 'https://raw.githubusercontent.com/LXK9301/updateTeam/master/jd_updateFactoryTuanId.json') {
   return new Promise(resolve => {
     $.get({url}, (err, resp, data) => {
       try {
@@ -1260,7 +1242,7 @@ function updateTuanIds(url = 'https://rules.allgreat.xyz/Scripts/JD/InviteCodes/
     })
   })
 }
-function updateTuanIdsCDN(url = 'https://rules.allgreat.xyz/Scripts/JD/InviteCodes/jd_updateFactoryTuanId.json') {
+function updateTuanIdsCDN(url) {
   return new Promise(async resolve => {
     $.get({url,
       headers:{
@@ -1397,8 +1379,7 @@ function shareCodesFormat() {
 }
 function requireConfig() {
   return new Promise(async resolve => {
-    //await updateTuanIdsCDN('https://gitee.com/lxk0301/updateTeam/raw/master/jd_updateFactoryTuanId.json');
-    await updateTuanIds();
+    await updateTuanIdsCDN('https://gitee.com/lxk0301/updateTeam/raw/master/shareCodes/jd_updateFactoryTuanId.json');
     if ($.tuanIdS && $.tuanIdS.tuanActiveId) {
       tuanActiveId = $.tuanIdS.tuanActiveId;
     }
