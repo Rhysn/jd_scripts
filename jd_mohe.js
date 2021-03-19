@@ -92,7 +92,7 @@ $.shareId = ["8051f482-5619-47d3-8d2e-7b49a1c1675e","27352a8c-365c-408f-83d4-175
             console.log(`开始随机互助互助\n\n`);
             for (let item of body['data'] || []) {
               console.log(`账号 ${$.index} ${$.UserName} 开始给 ${item}进行助力`)
-              const res = await addShare(item);
+              const res = null//await addShare(item);
               if (res && res['code'] === 2005) {
                 console.log(`次数已用完，跳出助力`)
                 break
