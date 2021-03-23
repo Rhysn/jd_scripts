@@ -136,8 +136,10 @@ async function jdDreamFactory() {
     await PickUp();//收取自家的地下零件
     await stealFriend();
     if(tuanActiveId){
-        await tuanActivity();
-        await QueryAllTuan();
+      for(let item of $.tuanIdS.tuanIds)
+        await JoinTuan(item);
+      await tuanActivity();
+      await QueryAllTuan();
     }
     await exchangeProNotify();
     await showMsg();
