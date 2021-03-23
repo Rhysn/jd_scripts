@@ -1571,12 +1571,11 @@ function submitInviteId(userName) {
       (err, resp, _data) => {
         try {
           const { data = {} } = JSON.parse(_data);
-          $.log(`\n邀请码提交：${data.value}\n${$.showLog ? _data : ''}`);
           if (data.value) {
-            $.result.push('【邀请码】：提交成功！');
+            console.log('【邀请码】：提交成功！');
           }
         } catch (e) {
-          $.logErr(e, resp);
+          console.log(e);
         } finally {
           resolve();
         }
@@ -1593,12 +1592,11 @@ function submitTuanId(userName) {
       (err, resp, _data) => {
         try {
           const { data = {} } = JSON.parse(_data);
-          $.log(`\n团码提交成功：${data.value}\n${$.showLog ? _data : ''}`);
           if (data.value) {
-            $.result.push('团码提交成功！');
+            console.log('团码提交成功！');
           }
         } catch (e) {
-          $.logErr(e, resp);
+          console.log(e);
         } finally {
           resolve();
         }
