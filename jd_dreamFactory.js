@@ -141,9 +141,9 @@ async function jdDreamFactory() {
         await JoinTuan(item);
       await tuanActivity();
       await QueryAllTuan();
-      if(theTuanId) await submitTuanId($.UserName);
+      //if(theTuanId) await submitTuanId($.UserName);
     }
-    await submitInviteId($.UserName);
+    //await submitInviteId($.UserName);
     await exchangeProNotify();
     await showMsg();
     if (helpAu === true) await helpAuthor();
