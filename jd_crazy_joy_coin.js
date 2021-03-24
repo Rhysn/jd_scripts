@@ -242,6 +242,7 @@ async function jdCrazyJoy() {
     })
     for (let idx in obj) {
       const vo = obj[idx];
+      console.log(idx)
       if (idx < 34 && vo.length >= 2) {
         await mergeJoy(vo[0], vo[1]);
         await $.wait(1000);
