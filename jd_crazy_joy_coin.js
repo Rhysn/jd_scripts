@@ -243,7 +243,7 @@ async function jdCrazyJoy() {
     })
     for (let idx in obj) {
       const vo = obj[idx];
-      console.log(idx)
+      //console.log(idx)
       if (idx < 34 && vo.length >= 2) {
         await mergeJoy(vo[0], vo[1]);
         await $.wait(3000);
@@ -259,7 +259,7 @@ async function jdCrazyJoy() {
   await getUserBean()
   await $.wait(1000)
   console.log(`当前信息：${$.bean} 京豆，${$.coin} 金币`)
-  
+  await $.wait(6000);
   await getJoyList();
   console.log(`现有Joy等级表：${$.joyIds}`);
   await getNeedJoyLevel();
