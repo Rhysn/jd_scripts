@@ -283,6 +283,7 @@ async function jdCrazyJoy() {
                 }
             })
             const vo = obj[34];
+            console.log(`${vo[0]}-${vo[1]}`);
             await mergeJoy(vo[0], vo[1]);
             await $.wait(5000);
             return
@@ -376,6 +377,7 @@ function mergeJoy(x, y) {
         } else {
           if (safeGet(data)) {
             data = JSON.parse(data);
+            console.log(`${data}`)
             if (data.success && data.data.newJoyId) {
               buyJoyLevelArr.pop()
               if (data.data.newJoyId > 34) {
