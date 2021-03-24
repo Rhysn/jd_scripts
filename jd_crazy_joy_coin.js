@@ -377,8 +377,29 @@ function mergeJoy(x, y) {
           if (safeGet(data)) {
             data = JSON.parse(data);
             if (data.success && data.data.newJoyId) {
-              console.log(`合并成功，获得${data.data.newJoyId}级Joy`)
               buyJoyLevelArr.pop()
+              if (data.data.newJoyId > 34) {
+                let level = function (newJoyId) {
+                  switch (newJoyId) {
+                    case 1003:
+                      return '多多JOY'
+                    case 1004:
+                      return '快乐JOY'
+                    case 1005:
+                      return '好物JOY'
+                    case 1006:
+                      return '省钱JOY'
+                    case 1007:
+                      return '东东JOY'
+                    default:
+                      return '未知JOY'
+                  }
+                }
+                console.log(`合并成功，获得${level(data.data.newJoyId)}级Joy`)
+                if (data.data.newJoyId === 1007 && $.isNode()) await notify.sendNotify($.name, `京东账号${$.index} ${$.nickName}\n合并成功，获得${level(data.data.newJoyId)}级Joy`)
+              } else {
+                console.log(`合并成功，获得${data.data.newJoyId}级Joy`)
+              }
             } else
               console.log(`合并失败，错误`)
           }
