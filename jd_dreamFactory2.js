@@ -35,19 +35,16 @@ cron "10 * * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd
 
 const $ = new Env('京喜工厂');
 const JD_API_HOST = 'https://m.jingxi.com';
-const helpAu = true; //帮作者助力 免费拿活动
+const helpAu = false; //帮作者助力 免费拿活动
 const notify = $.isNode() ? require('./sendNotify') : '';
 let jdNotify = true;//是否关闭通知，false打开通知推送，true关闭通知推送
 const randomCount = $.isNode() ? 20 : 5;
-let tuanActiveId = `6S9y4sJUfA2vPQP6TLdVIQ==`;
+let tuanActiveId = '';
 const jxOpenUrl = `openjd://virtual?params=%7B%20%22category%22:%20%22jump%22,%20%22des%22:%20%22m%22,%20%22url%22:%20%22https://wqsd.jd.com/pingou/dream_factory/index.html%22%20%7D`;
 let cookiesArr = [], cookie = '', message = '', allMessage = '';
-const inviteCodes = [
-  'V5LkjP4WRyjeCKR9VRwcRX0bBuTz7MEK0-E99EJ7u0k=@0WtCMPNq7jekehT6d3AbFw==',
-  "gB99tYLjvPcEFloDgamoBw==@7dluIKQMp0bySgcr8AqFgw==",
-  '-OvElMzqeyeGBWazWYjI1Q==',
-  'GFwo6PntxDHH95ZRzZ5uAg=='
-];
+let theShareCode = '', theTuanId = '';
+const inviteCodes = [ 'NTXGxnRwTQkr7rbDn08j4w==@XU6GKz30yCKA4LYvpnm5zw==@q0aZPe-QA6AChOBXOoOMBA==@60y72tM8PjtxKeL4EMpTOQ==@QDotuqdYVNrSa3atJZ_V9Q==' ];
+let stopHelpFriendCollect = false;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 $.tuanIds = [];
 if ($.isNode()) {
@@ -92,6 +89,7 @@ if ($.isNode()) {
       await jdDreamFactory()
     }
   }
+  /*
   for (let i = 0; i < cookiesArr.length; i++) {
     if (cookiesArr[i]) {
       cookie = cookiesArr[i];
@@ -110,6 +108,7 @@ if ($.isNode()) {
       }
     }
   }
+  */
   if ($.isNode() && allMessage) {
     await notify.sendNotify(`${$.name}`, `${allMessage}`, { url: jxOpenUrl })
   }
@@ -135,8 +134,14 @@ async function jdDreamFactory() {
     await QueryHireReward();//收取招工电力
     await PickUp();//收取自家的地下零件
     await stealFriend();
-    await tuanActivity();
-    await QueryAllTuan();
+    if(tuanActiveId){
+      for(let item of $.tuanIdS.tuanIds)
+        await JoinTuan(item);
+      await tuanActivity();
+      await QueryAllTuan();
+      //if(theTuanId) await submitTuanId($.UserName);
+    }
+    //await submitInviteId($.UserName);
     await exchangeProNotify();
     await showMsg();
     if (helpAu === true) await helpAuthor();
@@ -178,6 +183,8 @@ function collectElectricity(facId = $.factoryId, help = false, master) {
             } else {
               if (help) {
                 console.log(`收取好友电力失败:${data.msg}\n`);
+                //console.log(data);
+                if(data.ret === 11016) stopHelpFriendCollect = true;
               } else {
                 console.log(`收取电力失败:${data.msg}\n`);
               }
@@ -584,6 +591,7 @@ function userInfo() {
                 console.log(`当前电力：${data.user.electric}`)
                 console.log(`当前等级：${data.user.currentLevel}`)
                 console.log(`\n【京东账号${$.index}（${$.UserName}）的${$.name}好友互助码】${data.user.encryptPin}`);
+                theShareCode = data.user.encryptPin;
                 console.log(`已投入电力：${production.investedElectric}`);
                 console.log(`所需电力：${production.needElectric}`);
                 console.log(`生产进度：${((production.investedElectric / production.needElectric) * 100).toFixed(2)}%`);
@@ -723,7 +731,7 @@ async function PickUp(encryptPin = $.encryptPin, help = false) {
       } else {
         $.log(`自家地下暂无零件可收`)
       }
-      $.pickUpMyselfComponent = false;
+      //$.pickUpMyselfComponent = false;
     }
     for (let item of componentList) {
       await $.wait(1000);
@@ -741,9 +749,10 @@ async function PickUp(encryptPin = $.encryptPin, help = false) {
         } else {
           if (help) {
             console.log(`收好友[${encryptPin}]零件失败：${PickUpComponentRes.msg},直接跳出`)
+            $.pickUpMyselfComponent = false;
           } else {
             console.log(`收自己地下零件失败：${PickUpComponentRes.msg},直接跳出`);
-            $.pickUpMyselfComponent = false;
+            //$.pickUpMyselfComponent = false;
           }
           break
         }
@@ -818,20 +827,28 @@ function PickUpComponent(index, encryptPin) {
 }
 //偷好友的电力
 async function stealFriend() {
+  /*
   if (!$.pickUpMyselfComponent) {
     $.log(`今日收取零件已达上限，偷好友零件也达到上限，故跳出`)
     return
   }
+  */
   await getFriendList();
   $.friendList = [...new Set($.friendList)];
   for (let i = 0; i < $.friendList.length; i++) {
     let pin = $.friendList[i];//好友的encryptPin
-    if (pin === 'V5LkjP4WRyjeCKR9VRwcRX0bBuTz7MEK0-E99EJ7u0k=' || pin === 'Bo-jnVs_m9uBvbRzraXcSA==') {
+    if (pin === 'XU6GKz30yCKA4LYvpnm5zw==' || pin === 'NTXGxnRwTQkr7rbDn08j4w==') {
       continue
     }
-    await PickUp(pin, true);
-    // await getFactoryIdByPin(pin);//获取好友工厂ID
-    // if ($.stealFactoryId) await collectElectricity($.stealFactoryId,true, pin);
+    if($.pickUpMyselfComponent) {
+      await PickUp(pin, true);
+      await $.wait(1000);
+    }
+    await getFactoryIdByPin(pin);//获取好友工厂ID
+    await $.wait(1000);
+    if ($.stealFactoryId) await collectElectricity($.stealFactoryId,true, pin);
+    if(stopHelpFriendCollect) return;
+    await $.wait(1000);
   }
 }
 function getFriendList(sort = 0) {
@@ -1034,6 +1051,7 @@ function CreateTuan() {
             data = JSON.parse(data);
             if (data['ret'] === 0) {
               console.log(`开团成功tuanId为\n${data.data['tuanId']}`);
+              theTuanId = data.data['tuanId'];
               $.tuanIds.push(data.data['tuanId']);
             } else {
               console.log(`开团异常：${JSON.stringify(data)}`);
@@ -1303,7 +1321,7 @@ function shareCodesFormat() {
 }
 function requireConfig() {
   return new Promise(async resolve => {
-    await updateTuanIdsCDN('https://gitee.com/lxk0301/updateTeam/raw/master/shareCodes/jd_updateFactoryTuanId.json');
+    await updateTuanIdsCDN('https://rules.allgreat.xyz/Scripts/JD/InviteCodes/jd_updateFactoryTuanId.json');
     if ($.tuanIdS && $.tuanIdS.tuanActiveId) {
       tuanActiveId = $.tuanIdS.tuanActiveId;
     }
@@ -1526,6 +1544,47 @@ function getUrlQueryParams(url_string, param) {
   let data = url.searchParams.get(param);
   return data ? data : '';
 }
+function submitInviteId(userName) {
+  return new Promise(resolve => {
+    $.post(
+      {
+        url: `https://api.ninesix.cc/api/jx-factory/${theShareCode}/${encodeURIComponent(userName)}`,
+      },
+      (err, resp, _data) => {
+        try {
+          const { data = {} } = JSON.parse(_data);
+          if (data.value) {
+            console.log('【邀请码】：提交成功！');
+          }
+        } catch (e) {
+          console.log(e);
+        } finally {
+          resolve();
+        }
+      },
+    );
+  });
+}
+function submitTuanId(userName) {
+  return new Promise(resolve => {
+    $.post(
+      {
+        url: `https://api.ninesix.cc/api/jx-factory-tuan/${theTuanId}/${encodeURIComponent(userName)}`,
+      },
+      (err, resp, _data) => {
+        try {
+          const { data = {} } = JSON.parse(_data);
+          if (data.value) {
+            console.log('团码提交成功！');
+          }
+        } catch (e) {
+          console.log(e);
+        } finally {
+          resolve();
+        }
+      },
+    );
+  });
 
 /**
  * 获取url参数值
