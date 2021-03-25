@@ -30,16 +30,16 @@ const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const notify = $.isNode() ? require('./sendNotify') : '';
 let cookiesArr = [], cookie = '', originCookie = '', message = '';
 let helpAuthor = false;//为作者助力的开关
-const ACT_ID = 'dz2102100001340207';
+const ACT_ID = 'dz2102100001340208';
 const questionList = [
-  { q: '0c32c1c0e2284331beec6910dc07a948', a: 'A:杨钰莹' },
-  { q: '3576e8750b0b4322977420622aff18a0', a: 'C:王勉' },
-  { q: '43669f0fcf074342934e1422a26d164a', a: 'B:杜海涛' },
-  { q: '7ef574a3f282466ea36cbd4d0b6e1685', a: 'A:王晨艺' },
-  { q: 'ade513a501ce48df9a4816566f24904e', a: 'B:沈凌' },
-  { q: 'a8e35c93ad79460d871f42a10bce68d4', a: 'A:沈梦辰' },
-  { q: 'afd88ed596324ba9a84129112d2fb8b6', a: 'C:锤娜丽莎' },
-  { q: 'c6bacb5e9aac49f0bc4beae144decf80', a: 'B:玲花' },
+  { q: '0c32c1c0e2284331beec6910dc07a948', a: 'B:潘玮柏' },
+  { q: '3576e8750b0b4322977420622aff18a0', a: 'A:印小天' },
+  { q: '43669f0fcf074342934e1422a26d164a', a: 'C:艾福杰尼' },
+  { q: '7ef574a3f282466ea36cbd4d0b6e1685', a: 'C:李雪琴' },
+  { q: 'a8e35c93ad79460d871f42a10bce68d4', a: 'B:杜海涛' },
+  { q: 'ade513a501ce48df9a4816566f24904e', a: 'B:黄龄' },
+  { q: 'afd88ed596324ba9a84129112d2fb8b6', a: 'B:张海宇' },
+  { q: 'c6bacb5e9aac49f0bc4beae144decf80', a: 'B:吴昕' },
   { q: 'e5421dda894e4b43863aad4fd524fd9f', a: 'C:杨迪' }
 ]
 if ($.isNode()) {
