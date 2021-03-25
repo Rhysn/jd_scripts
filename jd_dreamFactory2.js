@@ -1,6 +1,6 @@
 /*
 京东京喜工厂
-更新时间：2021-3-23 修复做任务、收集电力出现火爆，不能完成任务
+更新时间：2021-3-24 修复做任务、收集电力出现火爆，不能完成任务
 重新计算h5st验证
 参考自 ：https://www.orzlee.com/web-development/2021/03/03/lxk0301-jingdong-signin-scriptjingxi-factory-solves-the-problem-of-unable-to-signin.html
 活动入口：京东APP-游戏与互动-查看更多-京喜工厂
@@ -57,8 +57,6 @@ if ($.isNode()) {
   cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
 }
 !(async () => {
-  if($.isNode() && process.env.DREAM_FACTORY_STOP_KEY === 'true') return;//状态静止
-  
   $.CryptoJS = $.isNode() ? require('crypto-js') : CryptoJS;
   await requireConfig();
   if (!cookiesArr[0]) {
@@ -68,7 +66,7 @@ if ($.isNode()) {
   for (let i = 0; i < cookiesArr.length; i++) {
     if (cookiesArr[i]) {
       cookie = cookiesArr[i];
-      $.UserName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1])
+      $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
       $.index = i + 1;
       $.isLogin = true;
       $.nickName = '';
@@ -102,7 +100,7 @@ if ($.isNode()) {
       }
       console.log(`\n参加作者的团\n`);
       await joinLeaderTuan();//参团
-      $.UserName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1])
+      $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
       console.log(`\n账号内部相互进团\n`);
       for (let item of $.tuanIds) {
         console.log(`${$.UserName} 去参加团 ${item}\n`);
@@ -206,7 +204,7 @@ function collectElectricity(facId = $.factoryId, help = false, master) {
 function investElectric() {
   return new Promise(async resolve => {
     // const url = `/dreamfactory/userinfo/InvestElectric?zone=dream_factory&productionId=${$.productionId}&sceneval=2&g_login_type=1`;
-      $.get(taskurl('userinfo/InvestElectric', `productionId=${$.productionId}`, `_time,productionId,zone`), (err, resp, data) => {
+    $.get(taskurl('userinfo/InvestElectric', `productionId=${$.productionId}`, `_time,productionId,zone`), (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
@@ -416,24 +414,23 @@ async function helpFriends() {
     $.log(`今日助力好友机会已耗尽\n`);
   }
 }
-// 帮助用户
+// 帮助用户,此处UA不可更换,否则助力功能会失效
 function assistFriend(sharepin) {
   return new Promise(async resolve => {
     // const url = `/dreamfactory/friend/AssistFriend?zone=dream_factory&sharepin=${escape(sharepin)}&sceneval=2&g_login_type=1`
-    /*
-    const options = {
-      'url': `https://m.jingxi.com/dreamfactory/friend/AssistFriend?zone=dream_factory&sharepin=${escape(sharepin)}&sceneval=2&g_login_type=1`,
-      'headers': {
-        "Accept-Encoding": "gzip, deflate, br",
-        "Accept-Language": "zh-cn",
-        "Connection": "keep-alive",
-        "Cookie": cookie,
-        "Host": "m.jingxi.com",
-        "Referer": "https://st.jingxi.com/pingou/dream_factory/index.html",
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
-      }
-    }
-    */
+    // const options = {
+    //   'url': `https://m.jingxi.com/dreamfactory/friend/AssistFriend?zone=dream_factory&sharepin=${escape(sharepin)}&sceneval=2&g_login_type=1`,
+    //   'headers': {
+    //     "Accept": "*/*",
+    //     "Accept-Encoding": "gzip, deflate, br",
+    //     "Accept-Language": "zh-cn",
+    //     "Connection": "keep-alive",
+    //     "Cookie": cookie,
+    //     "Host": "m.jingxi.com",
+    //     "Referer": "https://st.jingxi.com/pingou/dream_factory/index.html",
+    //     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
+    //   }
+    // }
     const options = taskurl('friend/AssistFriend', `sharepin=${escape(sharepin)}`, `_time,sharepin,zone`);
     $.get(options, (err, resp, data) => {
       try {
@@ -1188,24 +1185,8 @@ function tuanAward(activeId, tuanId, isTuanLeader = true) {
     })
   })
 }
-function updateTuanIds(url = 'https://rules.allgreat.xyz/Scripts/JD/InviteCodes/jd_updateFactoryTuanId.json') {
-  return new Promise(resolve => {
-    $.get({url}, (err, resp, data) => {
-      try {
-        if (err) {
-          console.log(`${JSON.stringify(err)}`)
-        } else {
-          $.tuanIdS = JSON.parse(data);
-        }
-      } catch (e) {
-        $.logErr(e, resp)
-      } finally {
-        resolve();
-      }
-    })
-  })
-}
-function updateTuanIdsCDN(url = 'https://rules.allgreat.xyz/Scripts/JD/InviteCodes/jd_updateFactoryTuanId.json') {
+
+function updateTuanIdsCDN(url) {
   return new Promise(async resolve => {
     $.get({url,
       headers:{
@@ -1255,10 +1236,11 @@ async function exchangeProNotify() {
     if (nowTimes < exchangeEndTime) {
       //还可以兑换
       // 一:在兑换超时这一天(2020/12/8 09:20:04)的前2小时内通知
-      if ((exchangeEndTime - nowTimes) <= 3600000 * 2) {
-        $.msg($.name, ``, `【京东账号${$.index}】${$.nickName}\n【生产商品】${$.productName}${(exchangeEndTime - nowTimes) / 60*60*1000}分钟后兑换超时\n【兑换截止时间】${$.exchangeEndTime}\n请速去京喜APP->首页->好物0元造进行兑换`, {'open-url': jxOpenUrl, 'media-url': $.picture})
+      if ((exchangeEndTime - nowTimes.getTime()) <= 3600000 * 2) {
+        let expiredTime = parseInt(((exchangeEndTime - nowTimes.getTime()) / (60*1000)).toFixed(0))
+        $.msg($.name, ``, `【京东账号${$.index}】${$.nickName}\n【生产商品】${$.productName}${expiredTime}分钟后兑换超时\n【兑换截止时间】${$.exchangeEndTime}\n请速去京喜APP->首页->好物0元造进行兑换`, {'open-url': jxOpenUrl, 'media-url': $.picture})
         // if ($.isNode()) await notify.sendNotify(`${$.name} - 京东账号${$.index} - ${$.nickName}`, `【京东账号${$.index}】${$.nickName}\n【生产商品】${$.productName}${(exchangeEndTime - nowTimes) / 60*60*1000}分钟后兑换超时\n【兑换截止时间】${$.exchangeEndTime}\n请速去京喜APP->首页->好物0元造进行兑换`, { url: jxOpenUrl })
-        if ($.isNode()) allMessage += `【京东账号${$.index}】${$.nickName}\n【生产商品】${$.productName}${(exchangeEndTime - nowTimes) / 60*60*1000}分钟后兑换超时\n【兑换截止时间】${$.exchangeEndTime}\n请速去京喜APP->首页->好物0元造进行兑换${$.index !== cookiesArr.length ? '\n\n' : ''}`
+        if ($.isNode()) allMessage += `【京东账号${$.index}】${$.nickName}\n【生产商品】${$.productName}${expiredTime}分钟后兑换超时\n【兑换截止时间】${$.exchangeEndTime}\n请速去京喜APP->首页->好物0元造进行兑换${$.index !== cookiesArr.length ? '\n\n' : ''}`
       }
       //二:在兑换超时日期前的时间一天通知三次(2020/12/6 9,10,11点,以及在2020/12/7 9,10,11点各通知一次)
       if (nowHours === exchangeEndHours || nowHours === (exchangeEndHours + 1) || nowHours === (exchangeEndHours + 2)) {
@@ -1340,8 +1322,7 @@ function shareCodesFormat() {
 }
 function requireConfig() {
   return new Promise(async resolve => {
-    //await updateTuanIdsCDN('https://gitee.com/lxk0301/updateTeam/raw/master/jd_updateFactoryTuanId.json');
-    await updateTuanIds();
+    await updateTuanIdsCDN('https://rules.allgreat.xyz/Scripts/JD/InviteCodes/jd_updateFactoryTuanId.json');
     if ($.tuanIdS && $.tuanIdS.tuanActiveId) {
       tuanActiveId = $.tuanIdS.tuanActiveId;
     }
@@ -1456,7 +1437,6 @@ function taskurl(functionId, body = '', stk) {
       'Accept': '*/*',
       'Connection': 'keep-alive',
       'User-Agent': functionId === 'AssistFriend' ? "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36" : 'jdpingou',
-      //'User-Agent': 'jdpingou',
       'Accept-Language': 'zh-cn',
       'Referer': 'https://wqsd.jd.com/pingou/dream_factory/index.html',
       'Accept-Encoding': 'gzip, deflate, br',
