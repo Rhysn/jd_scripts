@@ -101,6 +101,7 @@ if ($.isNode()) {
       console.log(`\n参加作者的团\n`);
       await joinLeaderTuan();//参团
       $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
+      if (cookiesArr && cookiesArr.length < 2) return
       console.log(`\n账号内部相互进团\n`);
       for (let item of $.tuanIds) {
         console.log(`${$.UserName} 去参加团 ${item}\n`);
@@ -390,7 +391,11 @@ function hireAward(date, type = 0) {
 }
 async function helpFriends() {
   let Hours = new Date(new Date().getTime() + new Date().getTimezoneOffset()*60*1000 + 8*60*60*1000).getHours();
-  if ($.canHelpFlag && Hours >= 6) {
+  if (Hours < 6) {
+    console.log(`\n未到招工时间(每日6-24点之间可招工)\n`)
+    return
+  }
+  if ($.canHelpFlag) {
     await shareCodesFormat();
     for (let code of $.newShareCodes) {
       if (code) {
@@ -411,7 +416,7 @@ async function helpFriends() {
       }
     }
   } else {
-    $.log(`今日助力好友机会已耗尽\n`);
+    $.log(`\n今日助力好友机会已耗尽\n`);
   }
 }
 // 帮助用户,此处UA不可更换,否则助力功能会失效
@@ -469,6 +474,7 @@ function QueryFriendList() {
             if (data['ret'] === 0) {
               data = data['data'];
               const { assistListToday = [], assistNumMax, hireListToday = [], hireNumMax } = data;
+              console.log(`\n\n你今日还能帮好友打工（${assistNumMax - assistListToday.length || 0}/${assistNumMax}）次\n\n`);
               if (assistListToday.length === assistNumMax) {
                 $.canHelpFlag = false;
               }
@@ -1505,7 +1511,7 @@ function jsonParse(str) {
   }
 }
 function decrypt(time, stk, type, url) {
-  stk = stk || (url ? getUrlQueryParams(url, '_stk') : '')
+  stk = stk || (url ? getUrlData(url, '_stk') : '')
   if (stk) {
     // const random = '9c66+/6i1jjP';
     // const token = `tk01wc7621cbea8nQmVZSmlhZi94FdUu+YM8dL1NZhoyQSy2c0po7rgY+nXdXBWRaUzOoLBqlpqOccJ56KHSjVil7Q7w`;
@@ -1529,21 +1535,10 @@ function decrypt(time, stk, type, url) {
     // console.log(`st:${st}\n`)
     // console.log(`hash2:${JSON.stringify(["".concat(timestamp.toString()), "".concat(fingerprint.toString()), "".concat(appId.toString()), "".concat(token), "".concat(hash2)])}\n`)
     // console.log(`h5st:${["".concat(timestamp.toString()), "".concat(fingerprint.toString()), "".concat(appId.toString()), "".concat(token), "".concat(hash2)].join(";")}\n`)
-    return ["".concat(timestamp.toString()), "".concat(fingerprint.toString()), "".concat(appId.toString()), "".concat(token), "".concat(hash2)].join(";")
+    return encodeURIComponent(["".concat(timestamp.toString()), "".concat(fingerprint.toString()), "".concat(appId.toString()), "".concat(token), "".concat(hash2)].join(";"))
   } else {
     return '20210318144213808;8277529360925161;10001;tk01w952a1b73a8nU0luMGtBanZTHCgj0KFVwDa4n5pJ95T/5bxO/m54p4MtgVEwKNev1u/BUjrpWAUMZPW0Kz2RWP8v;86054c036fe3bf0991bd9a9da1a8d44dd130c6508602215e50bb1e385326779d'
   }
-}
-/**
- * 新增url参数获取函数
- * @param url_string
- * @param param
- * @returns {string|string}
- */
-function getUrlQueryParams(url_string, param) {
-  let  url = new URL(url_string);
-  let data = url.searchParams.get(param);
-  return data ? data : '';
 }
 
 /**
@@ -1553,15 +1548,22 @@ function getUrlQueryParams(url_string, param) {
  * @returns {string}
  */
 function getUrlData(url, name) {
-  const query = url.match(/\?.*/)[0].substring(1)
-  const vars = query.split('&')
-  for (let i = 0; i < vars.length; i++) {
-    const pair = vars[i].split('=')
-    if (pair[0] === name) {
-      return pair[1];
+  if (typeof URL !== "undefined") {
+    let urls = new URL(url);
+    let data = urls.searchParams.get(name);
+    return data ? data : '';
+  } else {
+    const query = url.match(/\?.*/)[0].substring(1)
+    const vars = query.split('&')
+    for (let i = 0; i < vars.length; i++) {
+      const pair = vars[i].split('=')
+      if (pair[0] === name) {
+        // return pair[1];
+        return vars[i].substr(vars[i].indexOf('=') + 1);
+      }
     }
+    return ''
   }
-  return ''
 }
 function submitInviteId(userName) {
   return new Promise(resolve => {
