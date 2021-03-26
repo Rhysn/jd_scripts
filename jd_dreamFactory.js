@@ -392,6 +392,10 @@ function hireAward(date, type = 0) {
 }
 async function helpFriends() {
   let Hours = new Date(new Date().getTime() + new Date().getTimezoneOffset()*60*1000 + 8*60*60*1000).getHours();
+  if (Hours < 13) {
+    console.log(`\n未到招工时间(每日6-24点之间可招工)\n`)
+    return
+  }
   if ($.canHelpFlag && Hours >= 6) {
     await shareCodesFormat();
     for (let code of $.newShareCodes) {
