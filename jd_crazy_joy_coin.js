@@ -227,7 +227,7 @@ async function jdCrazyJoy() {
     }
   }
   var mergeKey = true;
-  while(mergeKey){
+  while(mergeKey && new Date().getHours() != 11){
     await $.wait(3000);
     mergeKey = false;
     await getJoyList();
