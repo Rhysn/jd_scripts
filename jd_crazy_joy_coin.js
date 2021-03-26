@@ -227,8 +227,8 @@ async function jdCrazyJoy() {
     }
   }
   var mergeKey = true;
-  while(mergeKey && new Date().getHours() != 11){
-    await $.wait(3000);
+  while(mergeKey){
+    await $.wait(6000);
     mergeKey = false;
     await getJoyList();
     let obj = {};
@@ -246,7 +246,7 @@ async function jdCrazyJoy() {
       //console.log(idx)
       if (idx < 34 && vo.length >= 2) {
         await mergeJoy(vo[0], vo[1]);
-        //await $.wait(3000);
+        await $.wait(3000);
         mergeKey = true;
       }
     }
