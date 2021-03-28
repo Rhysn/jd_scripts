@@ -381,7 +381,7 @@ function msgShow() {
       $.ctrTemp = `${jdNotify}` === 'false';
     }
     //默认只在兑换奖品成功后弹窗提醒。情况情况加，只打印日志，不弹窗
-    if ($.beanscount && $.ctrTemp) {
+    if ($.ctrTemp) {
       $.msg($.name, ``, `【京东账号${$.index}】${$.nickName || $.UserName}\n${coinToBeans ? `【兑换${$.title}】${ $.beanscount ? `成功，数量：${$.beanscount}个` : $.beanerr}` : "您设置的是不兑换奖品"}`);
       allMessage += `【京东账号${$.index}】${$.nickName || $.UserName}\n${coinToBeans ? `【兑换${$.title}】${$.beanscount ? `成功，数量：${$.beanscount}个` : $.beanerr}` : "您设置的是不兑换奖品"}${$.index !== cookiesArr.length ? '\n\n' : ''}`
       // if ($.isNode()) {
