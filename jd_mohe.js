@@ -2,22 +2,22 @@
 5G超级盲盒，可抽奖获得京豆，建议在凌晨0点时运行脚本，白天抽奖基本没有京豆，4小时运行一次收集热力值
 活动地址: https://isp5g.m.jd.com
 活动时间：2021-03-19到2021-04-30
-更新时间：2021-03-20 08:55
+更新时间：2021-03-30 12:00
 脚本兼容: QuantumultX, Surge,Loon, JSBox, Node.js
 =================================Quantumultx=========================
 [task_local]
 #5G超级盲盒
-0 0,1-23/3 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_mohe.js, tag=5G超级盲盒, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
+0 0,1-23/3 * * * https://jdsharedresourcescdn.azureedge.net/jdresource/jd_mohe.js, tag=5G超级盲盒, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
 
 =================================Loon===================================
 [Script]
-cron "0 0,1-23/3 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_mohe.js,tag=5G超级盲盒
+cron "0 0,1-23/3 * * *" script-path=https://jdsharedresourcescdn.azureedge.net/jdresource/jd_mohe.js,tag=5G超级盲盒
 
 ===================================Surge================================
-5G超级盲盒 = type=cron,cronexp="0 0,1-23/3 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_mohe.js
+5G超级盲盒 = type=cron,cronexp="0 0,1-23/3 * * *",wake-system=1,timeout=3600,script-path=https://jdsharedresourcescdn.azureedge.net/jdresource/jd_mohe.js
 
 ====================================小火箭=============================
-5G超级盲盒 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_mohe.js, cronexpr="0 0,1-23/3 * * *", timeout=3600, enable=true
+5G超级盲盒 = type=cron,script-path=https://jdsharedresourcescdn.azureedge.net/jdresource/jd_mohe.js, cronexpr="0 0,1-23/3 * * *", timeout=3600, enable=true
  */
 const $ = new Env('5G超级盲盒');
 const notify = $.isNode() ? require('./sendNotify') : '';
@@ -25,7 +25,7 @@ const notify = $.isNode() ? require('./sendNotify') : '';
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 let jdNotify = true;//是否关闭通知，false打开通知推送，true关闭通知推送
 //IOS等用户直接用NobyDa的jd cookie
-let cookiesArr = [], cookie = '', message;
+let cookiesArr = [], cookie = '', message, allMessage = '';
 if ($.isNode()) {
   Object.keys(jdCookieNode).forEach((item) => {
     cookiesArr.push(jdCookieNode[item])
@@ -51,7 +51,7 @@ $.shareId = [];
   for (let i = 0; i < cookiesArr.length; i++) {
     if (cookiesArr[i]) {
       cookie = cookiesArr[i];
-      $.UserName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1]);
+      $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
       $.index = i + 1;
       $.isLogin = true;
       $.nickName = '';
@@ -76,9 +76,9 @@ $.shareId = [];
       await getAward();//抽奖
     }
   }
-  //ios端22点通知一次
-  if (new Date().getHours() === 22) {
-    $.msg($.name, '', `任务已做完\n抽奖详情查看 https://isp5g.m.jd.com`, {"open-url": "https://isp5g.m.jd.com"});
+  if (allMessage) {
+    if ($.isNode()) await notify.sendNotify($.name, allMessage);
+    $.msg($.name, '', allMessage, {"open-url": "https://isp5g.m.jd.com"})
   }
   await $.http.get({url: `https://code.c-hiang.cn//api/v1/jd/mohe/read/20`, timeout: 10000}).then(async (resp) => {
     if (resp.statusCode === 200) {
@@ -92,11 +92,11 @@ $.shareId = [];
         console.log(`读取邀请码异常:${e}`)
       }
     }
-  });
+  }).catch((e) => console.log(`catch 读取邀请码异常:${e}`));
   for (let v = 0; v < cookiesArr.length; v++) {
     cookie = cookiesArr[v];
     $.index = v + 1;
-    $.UserName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1]);
+    $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
     console.log(`\n\n自己账号内部互助`);
     for (let item of $.shareId) {
       console.log(`账号 ${$.index} ${$.UserName} 开始给 ${item}进行助力`)
@@ -261,6 +261,8 @@ function getCoin() {
         }
       } catch (e) {
         $.logErr(e, resp);
+      } finally {
+        resolve();
       }
     })
   })
@@ -412,11 +414,15 @@ async function getAward() {
           console.log(`====抽奖结果====,${JSON.stringify(lotteryRes.data)}`);
           console.log(lotteryRes.data.name);
           console.log(lotteryRes.data.beanNum);
+          if ((lotteryRes.data['prizeId'] && lotteryRes.data['prizeId'] !== '9999') || lotteryRes.data.name !== '未中奖') {
+            message += `抽奖获得：${lotteryRes.data.name}\n`;
+          }
         } else if (lotteryRes.code === 4001) {
           console.log(`抽奖失败,${lotteryRes.msg}`);
           break;
         }
       }
+      if (message) allMessage += `京东账号${$.index} ${$.nickName}\n${message}抽奖详情查看 https://isp5g.m.jd.com/#/myPrize${$.index !== cookiesArr.length ? '\n\n' : ''}`
     } else {
       console.log(`目前热力值${total},不够抽奖`)
     }
@@ -495,14 +501,14 @@ function shareUrl() {
           $.shareId.push(data['data']);
           console.log(`\n【京东账号${$.index}（${$.nickName || $.UserName}）的${$.name}好友互助码】${data['data']}\n`);
           console.log(`此邀请码一天一变化，旧的不可用`)
-          await $.http.get({url: `https://code.c-hiang.cn/autocommit/mohe/insert/${data['data']}`, timeout: 10000}).then((resp) => {
+          $.http.get({url: `https://code.c-hiang.cn/autocommit/mohe/insert/${data['data']}`, timeout: 30000}).then((resp) => {
             // console.log('resp', resp)
             if (resp.statusCode === 200) {
               try {
                 let { body } = resp;
                 body = JSON.parse(body);
                 if (body['code'] === 200) {
-                  console.log(`\n邀请码【${data['data']}】提交成功\n`)
+                  console.log(`\n【京东账号${$.index}（${$.nickName || $.UserName}）的${$.name}好友互助码】${data['data']}提交成功\n`)
                 } else if (body['code'] === 400) {
                   // console.log(`邀请码 【${data['data']}】 已存在\n`)
                 } else {
@@ -512,12 +518,12 @@ function shareUrl() {
                 console.log(`邀请码提交异常:${e}`)
               }
             }
-          });
+          }).catch((e) => console.log(`catch 邀请码提交异常:${e}`));
         }
       } catch (e) {
         $.logErr(e, resp);
       } finally {
-        resolve(data);
+        resolve();
       }
     })
   })
