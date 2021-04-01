@@ -137,14 +137,15 @@ async function jdDreamFactory() {
     await QueryHireReward();//收取招工电力
     await PickUp();//收取自家的地下零件
     await stealFriend();
+    let Hours = new Date(new Date().getTime() + new Date().getTimezoneOffset()*60*1000 + 8*60*60*1000).getHours();
     if(tuanActiveId){
       for(let item of $.tuanIdS.tuanIds)
         await JoinTuan(item);
       await tuanActivity();
       await QueryAllTuan();
-      if(theTuanId) await submitTuanId($.UserName);
+      if(theTuanId && Hours < 13) await submitTuanId($.UserName);
     }
-    await submitInviteId($.UserName);
+    if(Hours === 13) await submitInviteId($.UserName);
     await exchangeProNotify();
     await showMsg();
     if (helpAu === true) await helpAuthor();
@@ -414,6 +415,7 @@ async function helpFriends() {
           break
         } else {
           console.log(`助力朋友[${code}]失败：${assistFriendRes.msg}`)
+          await $.wait(1000);
         }
       }
     }
@@ -730,7 +732,7 @@ function DrawProductionStagePrize() {
 }
 async function PickUp(encryptPin = $.encryptPin, help = false) {
   $.pickUpMyselfComponent = true;
-  const GetUserComponentRes = await GetUserComponent(encryptPin, 500);
+  const GetUserComponentRes = await GetUserComponent(encryptPin, 1300);
   if (GetUserComponentRes && GetUserComponentRes['ret'] === 0) {
     const { componentList } = GetUserComponentRes['data'];
     if (componentList && componentList.length <= 0) {
@@ -1193,6 +1195,7 @@ function tuanAward(activeId, tuanId, isTuanLeader = true) {
 function updateTuanIdsCDN(url) {
   return new Promise(async resolve => {
     $.get({url,
+      timeout: 20000,
       headers:{
         "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/87.0.4280.88"
       }}, (err, resp, data) => {
@@ -1201,17 +1204,17 @@ function updateTuanIdsCDN(url) {
           console.log(`${JSON.stringify(err)}`)
         } else {
           if (safeGet(data)) {
-            $.tuanIdS = JSON.parse(data);
+            $.tuanIdS = data = JSON.parse(data);
           }
         }
       } catch (e) {
         $.logErr(e, resp)
       } finally {
-        resolve();
+        resolve(data || []);
       }
     })
-    await $.wait(3000)
-    resolve();
+    await $.wait(20000)
+    resolve([]);
   })
 }
 
