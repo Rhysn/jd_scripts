@@ -415,6 +415,7 @@ async function helpFriends() {
           break
         } else {
           console.log(`助力朋友[${code}]失败：${assistFriendRes.msg}`)
+          await $.wait(1000);
         }
       }
     }
