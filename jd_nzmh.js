@@ -65,6 +65,7 @@ if ($.isNode()) {
       }
       try {
         await jdMh('https://anmp.jd.com/babelDiy/Zeus/3eycdtM8eVKR1VqWb2GdxRiHFWmP/index.html')
+        await jdMh('https://anmp.jd.com/babelDiy/Zeus/2x3yeXUmPbFVCAoXKQqSrdrQuoBk/index.html')
         //3.24-3.26
         //if (new Date().getDate() < 27) await jdMh('https://anmp.jd.com/babelDiy/Zeus/4HVt431hqqWW8Nsb2t9jZKmJp4En/index.html');
         // await jdMh('https://anmp.jd.com/babelDiy/Zeus/3UGPT8RMBu4kL2YAYN98MgkcDhRq/index.html?wxAppName=jd')
