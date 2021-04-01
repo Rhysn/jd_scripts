@@ -137,14 +137,15 @@ async function jdDreamFactory() {
     await QueryHireReward();//收取招工电力
     await PickUp();//收取自家的地下零件
     await stealFriend();
+    let Hours = new Date(new Date().getTime() + new Date().getTimezoneOffset()*60*1000 + 8*60*60*1000).getHours();
     if(tuanActiveId){
       for(let item of $.tuanIdS.tuanIds)
         await JoinTuan(item);
       await tuanActivity();
       await QueryAllTuan();
-      if(theTuanId) await submitTuanId($.UserName);
+      if(theTuanId && Hours < 13) await submitTuanId($.UserName);
     }
-    await submitInviteId($.UserName);
+    if(Hours === 13) await submitInviteId($.UserName);
     await exchangeProNotify();
     await showMsg();
     if (helpAu === true) await helpAuthor();
