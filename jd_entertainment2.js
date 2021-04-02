@@ -471,7 +471,6 @@ function taskPostUrl(function_id, body) {
       'Accept-Encoding': 'gzip, deflate, br',
       'Content-Type': 'application/x-www-form-urlencoded',
       'Connection': 'keep-alive',
-      'Content-Length': '29',
       'Cookie': `${cookie}`,
       'Host': 'lzdz-isv.isvjcloud.com',
       'Origin': 'https://lzdz-isv.isvjcloud.com',
