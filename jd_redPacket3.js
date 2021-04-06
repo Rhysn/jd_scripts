@@ -214,7 +214,7 @@ function TotalBean() {
 
 function getUrl(function_id, body) {
     var sss = {
-        url: `${JD_API_HOST}?functionId=${function_id}&body=${JSON.stringify(body)}&appid=activities_platform&_t=${new Date().getTime() * 1000}`,
+        url: `${JD_API_HOST}?functionId=${function_id}&body=${JSON.stringify(body)}&appid=activities_platform&_t=${new Date().getTime()}`,
         headers: {
             "Host": "api.m.jd.com",
             "Origin": "https://prodev.m.jd.com",
@@ -233,7 +233,7 @@ function getUrl(function_id, body) {
 function postUrl(function_id, body) {
     var sss = {
       url: `${JD_API_HOST}`,
-      body: `functionId=${function_id}body=${JSON.stringify(body)}&appid=activities_platform&_t==${new Date().getTime() * 1000}`,
+      body: `functionId=${function_id}body=${JSON.stringify(body)}&appid=activities_platform&_t==${new Date().getTime()}`,
       headers: {
         "Host": "api.m.jd.com",
         "Content-Type": "application/x-www-form-urlencoded",
