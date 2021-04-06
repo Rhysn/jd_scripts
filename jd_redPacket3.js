@@ -80,6 +80,7 @@ function springRewardReceive() {
                 } else {
                     if (safeGet(data)) {
                         data = JSON.parse(data);
+                        console.log(data);
                         if (data.success) {
                             console.log(`抽奖成功,获得${prizeDesc}`);
                             message += `抽奖成功,获得${prizeDesc}\n`;
@@ -108,6 +109,7 @@ function springRewardList() {
                 } else {
                     if (safeGet(data)) {
                         data = JSON.parse(data);
+                        console.log(data);
                         if (data.success) {
                             var rewardsList = data.data.items;
                             for(let item of rewardsList){
@@ -213,7 +215,7 @@ function TotalBean() {
 }
 
 function getUrl(function_id, body) {
-    var sss = {
+    return {
         url: `${JD_API_HOST}?functionId=${function_id}&body=${JSON.stringify(body)}&appid=activities_platform&_t=${new Date().getTime()}`,
         headers: {
             "Host": "api.m.jd.com",
@@ -227,11 +229,9 @@ function getUrl(function_id, body) {
             "Accept-Language": "zh-cn"
         }
     }
-    console.log(sss);
-    return sss;
 }
 function postUrl(function_id, body) {
-    var sss = {
+    return {
       url: `${JD_API_HOST}`,
       body: `functionId=${function_id}body=${JSON.stringify(body)}&appid=activities_platform&_t==${new Date().getTime()}`,
       headers: {
@@ -248,8 +248,6 @@ function postUrl(function_id, body) {
         "Accept-Language": "zh-cn"
       }
     }
-    console.log(sss);
-    return sss;
 }
 function jsonParse(str) {
     if (typeof str == "string") {
