@@ -81,8 +81,8 @@ function springRewardReceive() {
                     if (safeGet(data)) {
                         data = JSON.parse(data);
                         if (data.success) {
-                            console.log(`抽奖成功,获得${prizeDesc}`);
-                            message += `抽奖成功,获得${prizeDesc}\n`;
+                            console.log(`抽奖成功,获得${data.data.received.prizeDesc}`);
+                            message += `抽奖成功,获得${data.data.received.prizeDesc}\n`;
                             if(data.data.received.prizeType === 4) $.discount = $.discount + data.data.received.amount;
                         } else {
                             console.log(`抽奖失败，${data.errMsg}`);
