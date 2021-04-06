@@ -23,6 +23,7 @@ const LinkId = 'jOkIZzWCgGa9NfPuHBSx1A';
 let inviterList = ['IM1x7kvuw_5EvxHHlV5hS7lx7cjhj1rUFjbsvXxbbag', 'xkGccBO_aV2IsgD3t-camg']
 const inviterStr = inviterList[Math.round(Math.random(inviterList.length - 1))];
 
+var message = '';
 !(async () => {
     if (!cookiesArr[0]) {
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
