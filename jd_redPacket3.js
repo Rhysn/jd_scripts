@@ -108,6 +108,7 @@ function springRewardList() {
                 } else {
                     if (safeGet(data)) {
                         data = JSON.parse(data);
+                        console.log(data);
                         if (data.success) {
                             var rewardsList = data.data.items;
                             for(let item of rewardsList){
