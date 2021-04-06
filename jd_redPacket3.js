@@ -213,7 +213,7 @@ function TotalBean() {
 }
 
 function getUrl(function_id, body) {
-    return {
+    var sss = {
         url: `${JD_API_HOST}?functionId=${function_id}&body=${JSON.stringify(body)}&appid=activities_platform&_t=${new Date().getTime() * 1000}`,
         headers: {
             "Host": "api.m.jd.com",
@@ -227,9 +227,11 @@ function getUrl(function_id, body) {
             "Accept-Language": "zh-cn"
         }
     }
+    console.log(sss);
+    return sss;
 }
 function postUrl(function_id, body) {
-    return {
+    var sss = {
       url: `${JD_API_HOST}`,
       body: `functionId=${function_id}body=${JSON.stringify(body)}&appid=activities_platform&_t==${new Date().getTime() * 1000}`,
       headers: {
@@ -246,7 +248,9 @@ function postUrl(function_id, body) {
         "Accept-Language": "zh-cn"
       }
     }
-  }
+    console.log(sss);
+    return sss;
+}
 function jsonParse(str) {
     if (typeof str == "string") {
         try {
