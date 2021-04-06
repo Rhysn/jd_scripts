@@ -214,7 +214,6 @@ function TotalBean() {
 function getUrl(function_id, body) {
     return {
         url: `${JD_API_HOST}?functionId=${function_id}&body=${JSON.stringify(body)}&appid=activities_platform&_t=${new Date().getTime() * 1000}`,
-        body = ``,
         headers: {
             "Host": "api.m.jd.com",
             "Origin": "https://prodev.m.jd.com",
