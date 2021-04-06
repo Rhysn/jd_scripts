@@ -20,10 +20,10 @@ if ($.isNode()) {
 
 const JD_API_HOST = 'https://api.m.jd.com/api';
 const LinkId = 'jOkIZzWCgGa9NfPuHBSx1A';
+var message = '';
 let inviterList = ['IM1x7kvuw_5EvxHHlV5hS7lx7cjhj1rUFjbsvXxbbag', 'xkGccBO_aV2IsgD3t-camg']
 const inviterStr = inviterList[Math.round(Math.random(inviterList.length - 1))];
 
-var message = '';
 !(async () => {
     if (!cookiesArr[0]) {
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
@@ -80,7 +80,6 @@ function springRewardReceive() {
                 } else {
                     if (safeGet(data)) {
                         data = JSON.parse(data);
-                        console.log(data);
                         if (data.success) {
                             console.log(`抽奖成功,获得${prizeDesc}`);
                             message += `抽奖成功,获得${prizeDesc}\n`;
@@ -109,7 +108,6 @@ function springRewardList() {
                 } else {
                     if (safeGet(data)) {
                         data = JSON.parse(data);
-                        console.log(data);
                         if (data.success) {
                             var rewardsList = data.data.items;
                             for(let item of rewardsList){
@@ -216,7 +214,7 @@ function TotalBean() {
 
 function getUrl(function_id, body) {
     return {
-        url: `${JD_API_HOST}?functionId=${function_id}&body=${JSON.stringify(body)}&appid=activities_platform&_t=${new Date().getTime()}`,
+        url: `${JD_API_HOST}?functionId=${function_id}&body=${body}&appid=activities_platform&_t=${new Date().getTime()}`,
         headers: {
             "Host": "api.m.jd.com",
             "Origin": "https://prodev.m.jd.com",
@@ -233,7 +231,7 @@ function getUrl(function_id, body) {
 function postUrl(function_id, body) {
     return {
       url: `${JD_API_HOST}`,
-      body: `functionId=${function_id}body=${JSON.stringify(body)}&appid=activities_platform&_t==${new Date().getTime()}`,
+      body: `functionId=${function_id}body=${body}&appid=activities_platform&_t==${new Date().getTime()}`,
       headers: {
         "Host": "api.m.jd.com",
         "Content-Type": "application/x-www-form-urlencoded",
@@ -248,7 +246,7 @@ function postUrl(function_id, body) {
         "Accept-Language": "zh-cn"
       }
     }
-}
+  }
 function jsonParse(str) {
     if (typeof str == "string") {
         try {
