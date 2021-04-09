@@ -30,18 +30,43 @@ const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const notify = $.isNode() ? require('./sendNotify') : '';
 let cookiesArr = [], cookie = '', originCookie = '', message = '';
 let helpAuthor = false;//为作者助力的开关
-const ACT_ID = 'dz2102100001340209';
-const questionList = [
-  { q: 'e74e7f9e3d784d9d8c5ca78942572162', a: 'B:乔杉' },
-  { q: '47dc1d1bd14749a1907f876cd5df6743', a: 'B:沈凌' },
-  { q: '5e6706d60a0142e589568f3c7a4ac5bb', a: 'C:锤娜丽莎' },
-  { q: 'c54ea3369cf0477597321ecabc098e94', a: 'A:霍尊' },
-  { q: 'e1a35486ae42437392cbd35ee3ae827b', a: 'A:弦子' },
-  { q: 'e35c6763450f4d959cbb65b081b503d4', a: 'B:戴军' },
-  { q: 'ee4e3252ec7f45a6a6046fbee485af0d', a: 'B:娄艺潇' },
-  { q: 'f3858cd43dd8426fb57329c1961aa379', a: 'B:大张伟' },
-  { q: 'ffcf56ba78d049fa875a44ae5b34efec', a: 'B:白凯南' }
-]
+const ACT_ID = 'dz2102100001340210';
+const questionList = [{
+    q: '0503d3c84d9c48ddadc6508d37f70745',
+    a: 'B:刘维'
+},
+{
+    q: '0d9d87a70be04f8da9e9f8b63b4f2f9b',
+    a: 'A:钟镇涛'
+},
+{
+    q: '3e1da1914ca84372aeb344d35347f8c7',
+    a: 'C:曾可妮'
+},
+{
+    q: '630088ab1aff4e7590f8fea5e8d789f2',
+    a: 'B:刘嘉玲'
+},
+{
+    q: '818fc1e9d5ec493983695d5b9c654a04',
+    a: 'B:傅菁'
+},
+{
+    q: '9c2f4c779c1943aeb34cfe1ab0e6eedc',
+    a: 'B:明道'
+},
+{
+    q: 'cf6dfcd3d04e490094553e175399b289',
+    a: 'B:李维嘉'
+},
+{
+    q: 'db06cf73786243e999a407589d97071c',
+    a: 'A:王智'
+},
+{
+    q: 'fdea99b90ea848f299823101b9e3b901',
+    a: 'C:萨顶顶'
+}]
 if ($.isNode()) {
   Object.keys(jdCookieNode).forEach((item) => {
     cookiesArr.push(jdCookieNode[item])
