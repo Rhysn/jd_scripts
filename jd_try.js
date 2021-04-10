@@ -23,7 +23,7 @@ const selfdomain = 'https://try.m.jd.com'
 let allGoodList = []
 
 // default params
-$.pageSize = 12
+$.pageSize = 48
 let cidsList = ["家用电器", "手机数码", "电脑办公", "家居家装"]
 let typeList = ["普通试用", "闪电试用"]
 let goodFilters = "教程@软件@英语@辅导@培训@壳@膜".split('@')
