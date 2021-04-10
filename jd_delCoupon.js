@@ -158,11 +158,15 @@ function isJDCoupon(title) {
     return true
   else if (title.indexOf('话费') > -1)
     return true
-  else if (title.indexOf('小鸽有礼') > -1)
+  else if (title.indexOf('运费') > -1)
     return true
-  else if (title.indexOf('旗舰店') > -1)
-    return false
+  else if (title.indexOf('快递') > -1)
+    return true
+  else if (title.indexOf('支付') > -1)
+    return true
   else if (title.indexOf('生鲜') > -1)
+    return true
+  else if (title.indexOf('京喜工厂') > -1)
     return true
   else
     return false
