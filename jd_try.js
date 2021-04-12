@@ -213,7 +213,7 @@ async function filterGoodList() {
 		// 2. good 距离结束不到10min
 		// 3. good 的结束时间大于一天
 		// 4. good 的价格小于最小的限制
-		if (!good || good.jdPrice < minPrice) {
+		if (!good || good.endTime < now + 10 * 60 * 1000 || good.endTime > oneMoreDay || good.jdPrice < minPrice) {
 			return false
 		}
 		for (let item of goodFilters) {
