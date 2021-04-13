@@ -25,7 +25,7 @@ let allMessage = '';
 let bodyList = {
   "13": {
     "url": "https://api.m.jd.com/client.action?functionId=liveActivityV946&uuid=8888888&client=apple&clientVersion=9.4.1&st=1617851035011&sign=ce3542c09121b1474c0beba1413fec13&sv=112",
-    "body": "body=%7B%22liveId%22%3A%223866703%22%7D"
+    "body": "body=%7B%22liveId%22%3A%223890589%22%7D"
   },
   "14": {
     "url": "https://api.m.jd.com/client.action?functionId=liveActivityV946&uuid=8888888&client=apple&clientVersion=9.4.1&st=1617851034027&sign=811dcdb1ef6f4e775f7ccf4f42d73a7a&sv=111",
@@ -47,16 +47,16 @@ let ids = {
   '11': 'RRA2CnovS9KVTTwBD9NV7o4kc3P8PTN', 
   '12': 'RRA2CnovS9KVTTwBD9NV7o4kc3P8PTN', 
   '13': 'RRA2CnovS9KVTTwBD9NV7o4kc3P8PTN', 
-  '14': 'RRA2CnovS9KVTTwBD9NV7o4kc3P8PTN', 
-  '15': 'RRA2CnovS9KVTTwBD9NV7o4kc3P8PTN', 
-  '16': 'RRA2CnovS9KVTTwBD9NV7o4kc3P8PTN', 
-  '17': 'RRA2CnovS9KVTTwBD9NV7o4kc3P8PTN', 
-  '18': 'RRA2CnovS9KVTTwBD9NV7o4kc3P8PTN', 
-  '19': 'RRA2CnovS9KVTTwBD9NV7o4kc3P8PTN', 
-  '20': 'RRA2CnovS9KVTTwBD9NV7o4kc3P8PTN', 
-  '21': 'RRA2CnovS9KVTTwBD9NV7o4kc3P8PTN', 
-  '22': 'RRA2CnovS9KVTTwBD9NV7o4kc3P8PTN', 
-  '23': 'RRA2CnovS9KVTTwBD9NV7o4kc3P8PTN'
+  '14': 'RRA4RhWMc159kA62qLbaEa88evE7owb', 
+  '15': 'RRA4RhWMc159kA62qLbaEa88evE7owb', 
+  '16': 'RRA4RhWMc159kA62qLbaEa88evE7owb', 
+  '17': 'RRA4RhWMc159kA62qLbaEa88evE7owb', 
+  '18': 'RRA4RhWMc159kA62qLbaEa88evE7owb', 
+  '19': 'RRA4RhWMc159kA62qLbaEa88evE7owb', 
+  '20': 'RRA4RhWMc159kA62qLbaEa88evE7owb', 
+  '21': 'RRA4RhWMc159kA62qLbaEa88evE7owb', 
+  '22': 'RRA4RhWMc159kA62qLbaEa88evE7owb', 
+  '23': 'RRA4RhWMc159kA62qLbaEa88evE7owb'
 }
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
