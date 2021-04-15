@@ -830,7 +830,7 @@ async function doFriendsWater() {
       });
       console.log(`需要浇水的好友列表shareCodes:${JSON.stringify(needWaterFriends)}`);
       let waterFriendsCount = 0, cardInfoStr = '';
-      for (let index = 0; index < needWaterFriends.length; index ++) {
+      for (let index = 0; index < needWaterFriends.length - 1; index ++) {
         await waterFriendForFarm(needWaterFriends[index]);
         console.log(`为第${index+1}个好友浇水结果:${JSON.stringify($.waterFriendForFarmRes)}\n`)
         if ($.waterFriendForFarmRes.code === '0') {
