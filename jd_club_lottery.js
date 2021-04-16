@@ -86,7 +86,7 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
     cookie = cookiesArr[v];
     $.index = v + 1;
     $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
-    $.canHelp = true;
+    $.canHelp = false;
     if ($.canHelp) {
       $.assigFirends = $.assigFirends.concat({
         "encryptAssignmentId": "2mPXah3aWb3Q86kkaCMhey6sNYR4",
