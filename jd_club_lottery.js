@@ -87,7 +87,6 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
     //0点不进行互助
     let Hours = new Date(new Date().getTime() + new Date().getTimezoneOffset()*60*1000 + 8*60*60*1000).getHours();
     if(Hours === 0) break;
-    $.assigFirends.concat($.teamShareCodes);
     cookie = cookiesArr[v];
     $.index = v + 1;
     $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
@@ -98,6 +97,24 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
         "assignmentType": 2,
         "itemId": "SZm_olqSxIOtH97BATGmKoWraLaw",
       })
+      for(let item of $.teamShareCodes){
+        if (item['encryptAssignmentId'] && item['assignmentType'] && item['itemId']) {
+          console.log(`\n账号 ${$.index} ${$.UserName} 开始给 ${item['itemId']} 进行助力`)
+          await superBrandDoTask({
+            "activityId": $.activityId,
+            "encryptProjectId": $.encryptProjectId,
+            "encryptAssignmentId": item['encryptAssignmentId'],
+            "assignmentType": item['assignmentType'],
+            "itemId": item['itemId'],
+            "actionType": 0,
+            "source": "main"
+          });
+          if (!$.canHelp) {
+            console.log(`次数已用完，跳出助力`)
+            break
+          }
+        }
+      }
       for (let item of $.assigFirends || []) {
         if (item['encryptAssignmentId'] && item['assignmentType'] && item['itemId']) {
           console.log(`\n账号 ${$.index} ${$.UserName} 开始给 ${item['itemId']} 进行助力`)
@@ -1068,7 +1085,7 @@ function superShakePostUrl(function_id, body) {
 }
 function getTeamShareCode() {
   return new Promise(resolve => {
-    $.get({url: "https://allgreat.xyz/Scripts/JD/InviteCodes/jd_club_lottery.json",headers:{
+    $.get({url: "https://rules.allgreat.xyz/Scripts/JD/InviteCodes/jd_club_lottery.json",headers:{
         "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/87.0.4280.88"
       }}, async (err, resp, data) => {
       try {
