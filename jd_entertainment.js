@@ -33,7 +33,7 @@ let helpAuthor = false;//为作者助力的开关
 const ACT_ID = 'dz2102100001340211';
 const questionList = [{
     q: '05bb5dd38c70476f88d73620a8949b86',
-    a: 'B:陈超尉'
+    a: 'A:卡斯柏'
 },
 {
     q: '35e1cf0a624943ebbdd604cd2d4c94b4',
