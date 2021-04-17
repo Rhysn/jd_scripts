@@ -27,9 +27,9 @@ let bodyList = {
     "url": "https://api.m.jd.com/client.action?functionId=liveActivityV946&uuid=8888888&client=apple&clientVersion=9.4.1&st=1617851035011&sign=ce3542c09121b1474c0beba1413fec13&sv=112",
     "body": "body=%7B%22liveId%22%3A%223890589%22%7D"
   },
-  "16": {
+  "17": {
     "url": "https://api.m.jd.com/client.action?functionId=liveActivityV946&uuid=8888888&client=apple&clientVersion=9.4.1&st=1617851034027&sign=811dcdb1ef6f4e775f7ccf4f42d73a7a&sv=111",
-    "body": "body=%7B%22liveId%22%3A%223916360%22%7D"
+    "body": "body=%7B%22liveId%22%3A%223915958%22%7D"
   }
 }
 let ids = {
@@ -54,9 +54,9 @@ let ids = {
   '18': 'RRA4RhWMc159kA62qLbaEa88evE7owb', 
   '19': 'RRA4RhWMc159kA62qLbaEa88evE7owb', 
   '20': 'RRA2r2VbxqLS4eUpVyzFd6E1PXg7bsb', 
-  '21': 'RRA2r2VbxqLS4eUpVyzFd6E1PXg7bsb', 
-  '22': 'RRA483xhR8USaNnYapE1RkqDFW6YACh', 
-  '23': 'RRA778gVJjryaeNqMoJyAQvHq89NHF'
+  '21': 'RRA3hxUenLtmhAMPCuUc3CEeUcSPFdD', 
+  '22': 'RRA3hxUenLtmhAMPCuUc3CEeUcSPFdD', 
+  '23': 'RRA3hxUenLtmhAMPCuUc3CEeUcSPFdD'
 }
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
