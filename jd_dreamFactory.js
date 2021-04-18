@@ -145,7 +145,7 @@ async function jdDreamFactory() {
       await QueryAllTuan();
       if(theTuanId) await submitTuanId($.UserName);
     }
-    if(Hours < 6) await submitInviteId($.UserName);
+    if(Hours < 1) await submitInviteId($.UserName);
     await exchangeProNotify();
     await showMsg();
     if (helpAu === true) await helpAuthor();
