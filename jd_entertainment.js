@@ -53,7 +53,7 @@ const questionList = [{
 },
 {
     q: 'e07dfe989aef4d64b792126204c9cea0',
-    a: 'C:蔡康永'
+    a: 'A:何炅'
 },
 {
     q: 'ee81cf8dbcc946d682203b19802d34d8',
