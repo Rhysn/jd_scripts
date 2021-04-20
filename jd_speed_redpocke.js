@@ -21,7 +21,8 @@ if ($.isNode()) {
 const JD_API_HOST = 'https://api.m.jd.com/api';
 const LinkId = 'jOkIZzWCgGa9NfPuHBSx1A';
 var message = '';
-let inviterList = ['IM1x7kvuw_5EvxHHlV5hS7lx7cjhj1rUFjbsvXxbbag', 'xkGccBO_aV2IsgD3t-camg']
+let inviterList = ['3WlavFVGOr8QELUtF3sPxzCZD5Noz6TYY3Huko2VPow']
+//let inviterList = ['IM1x7kvuw_5EvxHHlV5hS7lx7cjhj1rUFjbsvXxbbag', 'xkGccBO_aV2IsgD3t-camg']
 const inviterStr = inviterList[Math.round(Math.random(inviterList.length - 1))];
 var wechatCash = new Array();
 
