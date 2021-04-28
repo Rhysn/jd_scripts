@@ -18,8 +18,9 @@
 var ECK = process.env.JD_COOKIE.toString().split("&"); 
 var Key = ECK[0];
 var DualKey = ECK[1] || ''; 
-var OtherKey = [];
-ECK.forEach(element => OtherKey.push({"cookie":element}))
+var OtherKey = '';
+ECK.forEach(element => OtherKey.concat（OtherKey ? OtherKey : OtherKey + ',', '{"cookie":', element, '}'）);
+OtherKey = '['.concat(OtherKey, ']');
 
 /*
 var Key = ''; //单引号内自行填写您抓取的Cookie
