@@ -2,6 +2,7 @@
 签到领现金，每日2毛～5毛
 可互助，助力码每日不变，只变日期
 活动入口：京东APP搜索领现金进入
+更新时间：2021-04-28
 已支持IOS双京东账号,Node.js支持N个京东账号
 脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
 ============Quantumultx===============
@@ -23,11 +24,12 @@ const $ = new Env('签到领现金');
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
-let jdNotify = true;//是否关闭通知，false打开通知推送，true关闭通知推送
+let jdNotify = false;//是否关闭通知，false打开通知推送，true关闭通知推送
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
 let helpAuthor = true;
 const randomCount = $.isNode() ? 20 : 5;
+let cash_exchange = true;//是否消耗2元红包兑换200京豆，默认是
 const inviteCodes = [
   `eU9Ya-qxZ64n82jTznZB0A@f0JpMLXsZ_kg9W3Wzg@Ih4_b-62Yfsi9Wi6iw@eU9Yau21NK0kp23TyiJFhw`,
   `eU9Ya-qxZ64n82jTznZB0A@f0JpMLXsZ_kg9W3Wzg@Ih4_b-62Yfsi9Wi6iw@eU9Yau21NK0kp23TyiJFhw`
@@ -89,12 +91,24 @@ async function jdCash() {
   await getReward()
   await getReward('2');
   $.exchangeBeanNum = 0;
-  console.log(`\n\n开始花费2元红包兑换200京豆，一周可换四次`)
-  for (let i = 0; i < 4; i++) {
-    await exchange2();//兑换200京豆(2元红包换200京豆，一周四次。)
-  }
-  if ($.exchangeBeanNum) {
-    message += `兑换京豆成功，获得${$.exchangeBeanNum}京豆\n`;
+  cash_exchange = $.isNode() ? (process.env.CASH_EXCHANGE ? process.env.CASH_EXCHANGE : `${cash_exchange}`) : ($.getdata('cash_exchange') ? $.getdata('cash_exchange') : `${cash_exchange}`);
+  if (cash_exchange === 'true') {
+    console.log(`\n\n开始花费2元红包兑换200京豆，一周可换四次`)
+    for (let item of ["-1", "0", "1", "2", "3"]) {
+      $.canLoop = true;
+      if ($.canLoop) {
+        for (let i = 0; i < 4; i++) {
+          await exchange2(item);//兑换200京豆(2元红包换200京豆，一周四次。)
+        }
+        if (!$.canLoop) {
+          console.log(`已找到符合的兑换条件，跳出\n`);
+          break
+        }
+      }
+    }
+    if ($.exchangeBeanNum) {
+      message += `兑换京豆成功，获得${$.exchangeBeanNum * 100}京豆\n`;
+    }
   }
   await index(true)
   // await showMsg()
@@ -260,12 +274,24 @@ function getReward(source = 1) {
     })
   })
 }
-function exchange2() {
-  let body = 'body=%7B%22node%22%3A%22-1%22%2C%22configVersion%22%3A%221.0%22%7D&client=apple&clientVersion=9.4.6&openudid=ad9e83697b055306e6b5c1d78bf341d8dd990644&sign=3a5351d59e976ac3c75e55d840fa82c0&st=1616142615135&sv=102&uuid=hjudwgohxzVu96krv%2FT6Hg%3D%3D'
+function exchange2(node) {
+  let body = '';
+  const data = {node,"configVersion":"1.0"}
+  if (data['node'] === '-1') {
+    body = `body=${encodeURIComponent(JSON.stringify(data))}&uuid=8888888&client=apple&clientVersion=9.4.1&st=1619595890027&sign=92a8abba7b6846f274ac9803aa5a283d&sv=102`;
+  } else if (data['node'] === '0') {
+    body = `body=${encodeURIComponent(JSON.stringify(data))}&uuid=8888888&client=apple&clientVersion=9.4.1&st=1619597882090&sign=e00bd6c3af2a53820825b94f7a648551&sv=100`;
+  } else if (data['node'] === '1') {
+    body = `body=${encodeURIComponent(JSON.stringify(data))}&uuid=8888888&client=apple&clientVersion=9.4.1&st=1619595655007&sign=2e72bbd21e5f5775fe920eac129f89a2&sv=111`;
+  } else if (data['node'] === '2') {
+    body = `body=${encodeURIComponent(JSON.stringify(data))}&uuid=8888888&client=apple&clientVersion=9.4.1&st=1619597924095&sign=c04c70370ff68d71890de08a18cac981&sv=112`;
+  } else if (data['node'] === '3') {
+    body = `body=${encodeURIComponent(JSON.stringify(data))}&uuid=8888888&client=apple&clientVersion=9.4.1&st=1619597953001&sign=4c36b3d816d4f0646b5c34e7596502f8&sv=122`;
+  }
   return new Promise((resolve) => {
     const options = {
-      url: `${JD_API_HOST}?functionId=cash_exchangeBeans&t=${Date.now()}`,
-      body: body,
+      url: `${JD_API_HOST}?functionId=cash_exchangeBeans&t=${Date.now()}&${body}`,
+      body: `body=${escape(JSON.stringify(data))}`,
       headers: {
         'Cookie': cookie,
         'Host': 'api.m.jd.com',
@@ -284,11 +310,18 @@ function exchange2() {
         } else {
           if (safeGet(data)) {
             data = JSON.parse(data);
-            if (data.code === 0 && data.data && data.data.bizCode === 0) {
-              console.log(`花费2元红包兑换200成功！获得${data.data.result.beanName}`)
-              $.exchangeBeanNum += data.data.result.beanName;
+            if (data['code'] === 0) {
+              if (data.data.bizCode === 0) {
+                console.log(`花费${data.data.result.needMoney}元红包兑换成功！获得${data.data.result.beanName}\n`)
+                $.exchangeBeanNum += parseInt(data.data.result.needMoney);
+                $.canLoop = false;
+              } else {
+                console.log('花费2元红包兑换200京豆失败：' + data.data.bizMsg)
+                if (data.data.bizCode === 504) $.canLoop = true;
+                if (data.data.bizCode === 120) $.canLoop = false;
+              }
             } else {
-              console.log('花费2元红包兑换200京豆失败：' + data.data.bizMsg)
+              console.log(`兑换京豆失败：${JSON.stringify(data)}\n`);
             }
           }
         }
@@ -379,6 +412,9 @@ function requireConfig() {
           $.shareCodesArr.push(shareCodes[item])
         }
       })
+    } else {
+      if ($.getdata('jd_cash_invite')) $.shareCodesArr = $.getdata('jd_cash_invite').split('\n').filter(item => !!item);
+      console.log(`\nBoxJs设置的京喜财富岛邀请码:${$.getdata('jd_cash_invite')}\n`);
     }
     console.log(`您提供了${$.shareCodesArr.length}个账号的${$.name}助力码\n`);
     resolve()
