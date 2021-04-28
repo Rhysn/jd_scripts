@@ -18,7 +18,7 @@ const exec = require('child_process').execSync
 const fs = require('fs')
 const download = require('download');
 let resultPath = "./result.txt";
-let JD_DailyBonusPath = "./JD_DailyBonus.js";
+let JD_DailyBonusPath = __dirname + "./JD_DailyBonus.js";
 let outPutUrl = './';
 let NodeSet = 'CookieSet.json';
 let cookiesArr = [], cookie = '', allMessage = '';
