@@ -20,7 +20,7 @@ var Key = ECK[0];
 var DualKey = ECK[1] || ''; 
 var OtherKey = '';
 ECK.forEach(element => 
-  OtherKey = (OtherKey.startWith('{') ? OtherKey.concat(',') : OtherKey).concat('{"cookie":', element , '}'));
+  OtherKey = (OtherKey.startsWith('{') ? OtherKey.concat(',') : OtherKey).concat('{"cookie":', element , '}'));
 
 OtherKey = '['.concat(OtherKey, ']');
 
