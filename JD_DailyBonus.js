@@ -15,13 +15,19 @@
 
 开启抓包app后, Safari浏览器登录 https://bean.m.jd.com/bean/signIndex.action 点击签到并且出现签到日历后, 返回抓包app搜索关键字 functionId=signBean 复制请求头Cookie填入以下Key处的单引号内即可 */
 
-var ECK = process.env.JD_COOKIE.toString().split("&"); //单引号内自行填写您抓取的Cookie
+var ECK = process.env.JD_COOKIE.toString().split("&"); 
 var Key = ECK[0];
+var DualKey = ECK[1] || ''; 
+var OtherKey = [];
+ECK.forEach(element => OtherKey.push({"cookie":element}))
 
-var DualKey = ECK[1] || ''; //如需双账号签到,此处单引号内填写抓取的"账号2"Cookie, 否则请勿填写
+/*
+var Key = ''; //单引号内自行填写您抓取的Cookie
+
+var DualKey = ''; //如需双账号签到,此处单引号内填写抓取的"账号2"Cookie, 否则请勿填写
 
 var OtherKey = ''; //第三账号或以上的Cookie json串数据, 以下样例为第三第四账号：var OtherKey = '[{"cookie":"pt_key=xxxxxx;pt_pin=yyyyyy"},{"cookie":"pt_key=xxxxxx;pt_pin=yyyyyy"}]'
-
+*/
 /* 注1: 以上选项仅针对于JsBox或Node.js, 如果使用QX,Surge,Loon, 请使用脚本获取Cookie.
    注2: 双账号用户抓取"账号1"Cookie后, 请勿点击退出账号(可能会导致Cookie失效), 需清除浏览器资料或更换浏览器登录"账号2"抓取.
    注3: 如果复制的Cookie开头为"Cookie: "请把它删除后填入.
