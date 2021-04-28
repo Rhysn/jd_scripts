@@ -19,11 +19,11 @@ var ECK = process.env.JD_COOKIE.toString().split("&");
 var Key = ECK[0];
 var DualKey = ECK[1] || ''; 
 var OtherKey = '';
-ECK.forEach(element => 
-  OtherKey = (OtherKey.startsWith('{') ? OtherKey.concat(',') : OtherKey).concat('{"cookie":', element , '}'));
-
-OtherKey = '['.concat(OtherKey, ']');
-
+if(ECK.length > 2) {
+  ECK.splice(0,2);
+  ECK.forEach(element => OtherKey = (OtherKey.startsWith('{') ? OtherKey.concat(',') : OtherKey).concat('{"cookie":"', element , '"}'));
+  OtherKey = '['.concat(OtherKey, ']');
+}
 /*
 var Key = ''; //单引号内自行填写您抓取的Cookie
 
