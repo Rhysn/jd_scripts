@@ -2,7 +2,7 @@
  * @Author: lxk0301 https://gitee.com/lxk0301
  * @Date: 2020-11-27 09:19:21
  * @Last Modified by: lxk0301
- * @Last Modified time: 2021-4-27 16:58:02
+ * @Last Modified time: 2021-5-12 16:58:02
  */
 /*
 赚京豆脚本，一：签到(一周签到可获得30京豆)，二：做任务 天天领京豆(加速领京豆)、三：赚京豆-瓜分京豆
@@ -52,7 +52,7 @@ const JD_API_HOST = 'https://api.m.jd.com/api';
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
     return;
   }
-  await getAuthorShareCode('http://qr6pzoy01.hn-bkt.clouddn.com/jd_zz.json');
+  await getAuthorShareCode('https://a.nz.lu/jd_zz.json');
   await getAuthorShareCode('https://raw.githubusercontent.com/gitupdate/updateTeam/master/shareCodes/jd_zz.json');
   await getRandomCode();
   for (let i = 0; i < cookiesArr.length; i++) {
@@ -88,18 +88,20 @@ const JD_API_HOST = 'https://api.m.jd.com/api';
           console.log(`账号 ${$.UserName} 开始给 【${$.tuanList[j]['assistedPinEncrypted']}】助力`)
           await helpFriendTuan($.tuanList[j])
           if(!$.canHelp) break
+          await $.wait(200)
         }
       }
-      if ($.canHelp) {
-        $.authorTuanList = [...$.authorTuanList, ...($.body1 || [])];
-        if ($.authorTuanList.length) console.log(`开始账号内部互助 赚京豆-瓜分京豆 活动，如有剩余则给作者lxk0301和随机团助力`)
-        for (let j = 0; j < $.authorTuanList.length; ++j) {
-          console.log(`账号 ${$.UserName} 开始给作者lxk0301和随机团 ${$.authorTuanList[j]['assistedPinEncrypted']}助力`)
+      //if ($.canHelp) {
+        //$.authorTuanList = [...$.authorTuanList, ...($.body1 || [])];
+        //if ($.authorTuanList.length) console.log(`开始账号内部互助 赚京豆-瓜分京豆 活动，如有剩余则给作者lxk0301和随机团助力`)
+        //for (let j = 0; j < $.authorTuanList.length; ++j) {
+          //console.log(`账号 ${$.UserName} 开始给作者lxk0301和随机团 ${$.authorTuanList[j]['assistedPinEncrypted']}助力`)
           //await helpFriendTuan($.authorTuanList[j])
-          if(!$.canHelp) break
-        }
-      }
-    }
+          //if(!$.canHelp) break
+          //await $.wait(200)
+        //}
+      //}
+    //}
   }
 })()
     .catch((e) => {
@@ -539,7 +541,7 @@ function openRedPacket(floorToken) {
 //================赚京豆开团===========
 async function distributeBeanActivity() {
   try {
-    $.tuan = null
+    $.tuan = ''
     $.hasOpen = false;
     $.assistStatus = 0;
     await getUserTuanInfo()
@@ -553,7 +555,7 @@ async function distributeBeanActivity() {
       $.http.post({
         url: `https://code.c-hiang.cn/autocommit/zuan/insert`,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify($.tuan),
+        body: JSON.stringify(Object.assign($.tuan, {"time": Date.now()})),
         timeout: 30000
       }).then((resp) => {
         if (resp.statusCode === 200) {
@@ -579,7 +581,13 @@ async function distributeBeanActivity() {
 }
 function helpFriendTuan(body) {
   return new Promise(resolve => {
-    $.get(taskUrl("vvipclub_distributeBean_assist", body), async (err, resp, data) => {
+    const data = {
+      "activityIdEncrypted": body['activityIdEncrypted'],
+      "assistStartRecordId": body['assistStartRecordId'],
+      "channel": body['channel'],
+    }
+    delete body['time'];
+    $.get(taskTuanUrl("vvipclub_distributeBean_assist", body), async (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
@@ -594,6 +602,7 @@ function helpFriendTuan(body) {
               else if (data.resultCode === '9200011') console.log('助力结果：已经助力过\n')
               else if (data.resultCode === '2400205') console.log('助力结果：团已满\n')
               else if (data.resultCode === '2400203') {console.log('助力结果：助力次数已耗尽\n');$.canHelp = false}
+              else if (data.resultCode === '9000000') {console.log('助力结果：活动火爆，跳出\n');$.canHelp = false}
               else console.log(`助力结果：未知错误\n${JSON.stringify(data)}\n\n`)
             }
           }
@@ -610,7 +619,7 @@ function helpFriendTuan(body) {
 function getUserTuanInfo() {
   let body = {"paramData": {"channel": "FISSION_BEAN"}}
   return new Promise(resolve => {
-    $.get(taskUrl("distributeBeanActivityInfo", body), async (err, resp, data) => {
+    $.get(taskTuanUrl("distributeBeanActivityInfo", body), async (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
@@ -658,7 +667,7 @@ function getUserTuanInfo() {
 function openTuan() {
   let body = {"activityIdEncrypted": $.tuanActId, "channel": "FISSION_BEAN"}
   return new Promise(resolve => {
-    $.get(taskUrl("vvipclub_distributeBean_startAssist", body), async (err, resp, data) => {
+    $.get(taskTuanUrl("vvipclub_distributeBean_startAssist", body), async (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
@@ -752,7 +761,22 @@ function taskUrl(function_id, body = {}) {
   }
 }
 
-
+function taskTuanUrl(function_id, body = {}) {
+  return {
+    url: `${JD_API_HOST}?functionId=${function_id}&body=${escape(JSON.stringify(body))}&appid=swat_miniprogram&osVersion=5.0.0&clientVersion=3.1.3&fromType=wxapp&timestamp=${new Date().getTime() + new Date().getTimezoneOffset() * 60 * 1000 + 8 * 60 * 60 * 1000}`,
+    headers: {
+      "Accept": "*/*",
+      "Accept-Encoding": "gzip, deflate, br",
+      "Accept-Language": "zh-cn",
+      "Connection": "keep-alive",
+      "Content-Type": "application/x-www-form-urlencoded",
+      "Host": "api.m.jd.com",
+      "Referer": "https://servicewechat.com/wxa5bf5ee667d91626/108/page-frame.html",
+      "Cookie": cookie,
+      "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1"),
+    }
+  }
+}
 
 function TotalBean() {
   return new Promise(async resolve => {
