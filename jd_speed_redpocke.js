@@ -22,7 +22,7 @@ const JD_API_HOST = 'https://api.m.jd.com/api';
 const LinkId = 'AkOULcXbUA_8EAPbYLLMgg';
 var message = '';
 let inviterList = ['3WlavFVGOr8QELUtF3sPxzCZD5Noz6TYY3Huko2VPow','IM1x7kvuw_5EvxHHlV5hS7lx7cjhj1rUFjbsvXxbbag', 'xkGccBO_aV2IsgD3t-camg']
-const inviterStr = inviterList[Math.round(Math.random(inviterList.length - 1))];
+const inviterStr = inviterList[Math.floor(Math.random() * inviterList.length)];
 var wechatCash = new Array();
 
 !(async () => {
