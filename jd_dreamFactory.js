@@ -734,7 +734,8 @@ async function PickUp(encryptPin = $.encryptPin, help = false) {
   $.pickUpMyselfComponent = true;
   const GetUserComponentRes = await GetUserComponent(encryptPin, 500);
   if (GetUserComponentRes && GetUserComponentRes['ret'] === 0) {
-    const { componentList } = GetUserComponentRes['data'] || null;
+    //const { componentList } = GetUserComponentRes['data'];
+    const { componentList } = null;
     if (componentList && componentList.length <= 0) {
       if (help) {
         $.log(`好友【${encryptPin}】地下暂无零件可收`)
