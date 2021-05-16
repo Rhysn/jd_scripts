@@ -135,7 +135,7 @@ async function jdDreamFactory() {
     await taskList();
     await investElectric();
     await QueryHireReward();//收取招工电力
-    //await PickUp();//收取自家的地下零件
+    await PickUp();//收取自家的地下零件
     await stealFriend();
     let Hours = new Date(new Date().getTime() + new Date().getTimezoneOffset()*60*1000 + 8*60*60*1000).getHours();
     if(tuanActiveId){
@@ -733,7 +733,7 @@ function DrawProductionStagePrize() {
 async function PickUp(encryptPin = $.encryptPin, help = false) {
   $.pickUpMyselfComponent = true;
   const GetUserComponentRes = await GetUserComponent(encryptPin, 500);
-  if (GetUserComponentRes && GetUserComponentRes['ret'] === 0) {
+  if (GetUserComponentRes && GetUserComponentRes['ret'] === 0 && GetUserComponentRes['data']) {
     const { componentList } = GetUserComponentRes['data'];
     if (componentList && componentList.length <= 0) {
       if (help) {
