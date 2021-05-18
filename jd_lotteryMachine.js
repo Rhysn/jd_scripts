@@ -60,6 +60,7 @@ const JD_API_HOST = `https://api.m.jd.com/client.action`;
             if (taskInfoJson && taskInfoJson.code === 200) {
                 console.log("活动信息读取成功\n");
                 for (let item of taskInfoJson.data) {
+                    if(!item.validity) continue;
                     console.log(`开始执行【${item.appName}】活动任务\n`);
                     appId = item.appId;
                     shareCodeList = item.sharecodes.concat();
