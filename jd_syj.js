@@ -5,10 +5,9 @@
  * @Last Modified time: 2021-5-14 16:58:02
  */
 /*
-赚京豆脚本，一：签到(一周签到可获得30京豆)，二：做任务 天天领京豆(加速领京豆)、三：赚京豆-瓜分京豆
+赚京豆脚本，一：做任务 天天领京豆(加速领京豆)、三：赚京豆-瓜分京豆
 活动入口：赚京豆(微信小程序)-赚京豆-签到领京豆
 更新地址：https://gitee.com/lxk0301/jd_scripts/raw/master/jd_syj.js
-签到(一周签到可获得30京豆)参考github@jidesheng6修改而来
 已支持IOS双京东账号, Node.js支持N个京东账号
 脚本兼容: QuantumultX, Surge, Loon, 小火箭，JSBox, Node.js
 ============Quantumultx===============
@@ -78,7 +77,6 @@ const JD_API_HOST = 'https://api.m.jd.com/api';
   }
   console.log(`\n\n内部互助 【赚京豆(微信小程序)-瓜分京豆】活动(优先内部账号互助(需内部cookie数量大于${$.assistNum || 4}个)，如有剩余助力次数则给作者lxk0301和随机团助力)\n`)
   for (let i = 0; i < cookiesArr.length; i++) {
-    break
     $.canHelp = true
     if (cookiesArr[i]) {
       cookie = cookiesArr[i];
@@ -92,7 +90,7 @@ const JD_API_HOST = 'https://api.m.jd.com/api';
           await $.wait(200)
         }
       }
-      if ($.canHelp) {
+      if ($.canHelp && false) {
         $.authorTuanList = [...$.authorTuanList, ...($.body1 || [])];
         if ($.authorTuanList.length) console.log(`开始账号内部互助 赚京豆-瓜分京豆 活动，如有剩余则给作者lxk0301和随机团助力`)
         for (let j = 0; j < $.authorTuanList.length; ++j) {
@@ -120,7 +118,7 @@ function showMsg() {
 }
 async function main() {
   try {
-    await userSignIn();//赚京豆-签到领京豆
+    // await userSignIn();//赚京豆-签到领京豆
     await vvipTask();//赚京豆-加速领京豆
     await distributeBeanActivity();//赚京豆-瓜分京豆
     await showMsg();
