@@ -49,6 +49,7 @@ var wechatCash = new Array();
             }
             $.discount = 0;
             await speedRedPacket();
+            await speedSignIn();
             await showMsg();
         }
     }
@@ -232,6 +233,41 @@ function getUrl(function_id, body) {
         }
     }
 }
+async function speedSignIn() {
+    try {
+        await speedSignInDay();
+    } catch (e) {
+        $.logErr(e);
+    }
+}
+function speedSignInDay() {
+    const data = {
+        "linkId": "9WA12jYGulArzWS7vcrwhw",
+        "serviceName": "dayDaySignGetRedEnvelopeSignService",
+        //"linkId" : LinkId,
+        "business" : 1
+    };
+    return new Promise((resolve) => {
+      $.post(signPostUrl('apSignIn_day', data), (err, resp, data) => {
+        try {
+          if (err) {
+            console.log(`\n${$.name}: 极速版签到API查询请求失败 ‼️‼️`);
+            console.log(JSON.stringify(err));
+          } else {
+            data = JSON.parse(data);
+            if(data.success){
+                console.log(`${reward.amount}极速版签到结果${data.data.retMessage}`);
+                message += `${reward.amount}极速版签到结果${data.data.retMessage}\n`;
+            } 
+          }
+        } catch (e) {
+          $.logErr(e, resp);
+        } finally {
+          resolve(data);
+        }
+      })
+    })
+}
 function postUrl(function_id, body) {
     return {
       url: `${JD_API_HOST}`,
@@ -246,6 +282,25 @@ function postUrl(function_id, body) {
         "Accept": "application/json, text/plain, */*",
         "User-Agent": "jdltapp;iPhone;3.3.0;14.4;network/wifi;hasUPPay/0;pushNoticeIsOpen/1;lang/zh_CN;model/iPhone10,1;hasOCPay/0;appBuild/1036;supportBestPay/0;pv/31.31;apprpd/;ref/JDLTSubMainPageViewController;psq/2;ads/;psn/520de14efca6543ff9ed8b686e438a7a11f321df|84;jdv/0|kong|t_2007768203_|jingfen|9228b4f93a94412aa6e3acc90a2c124a|1617174429;adk/;app_device/IOS;pap/JA2020_3112531|3.3.0|IOS 14.4;Mozilla/5.0 (iPhone; CPU iPhone OS 14_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1",
         "Referer": "https://prodev.m.jd.com/jdlite/active/31U4T6S4PbcK83HyLPioeCWrD63j/index.html",
+        //"Content-Length": "274",
+        "Accept-Language": "zh-cn"
+      }
+    }
+  }
+function signPostUrl(function_id, body) {
+    return {
+      url: `${JD_API_HOST}`,
+      body: `functionId=${function_id}&body=${JSON.stringify(body)}&appid=activities_platform&_t==${new Date().getTime()}`,
+      headers: {
+        "Host": "api.m.jd.com",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Origin": "https://daily-redpacket.jd.com",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Cookie": cookie,
+        "Connection": "keep-alive",
+        "Accept": "application/json, text/plain, */*",
+        "User-Agent": "jdltapp;iPhone;3.3.8;14.5.1;network/wifi;hasUPPay/0;pushNoticeIsOpen/1;lang/zh_CN;model/iPhone13,4;addressid/2821783337;hasOCPay/0;appBuild/1063;supportBestPay/0;pv/138.5;apprpd/MyJD_Main;ref/https%3A%2F%2Fdaily-redpacket.jd.com%2F%3FactivityId%3D9WA12jYGulArzWS7vcrwhw%26channel%3Dwojing%26lng%3D114.479631%26lat%3D38.043518%26sid%3Dec4e5bc34c9daf3a147af528de30d14w%26un_area%3D5_142_42544_60039;psq/7;ads/;psn/ea619eb0a5f1e66613851aed4763fd3efb677bcd|273;jdv/0|kong|t_1000170135|tuiguang|notset|1621323085987|1621323085;adk/;app_device/IOS;pap/JA2020_3112531|3.3.8|IOS 14.5.1;Mozilla/5.0 (iPhone; CPU iPhone OS 14_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1",
+        "Referer": "https://daily-redpacket.jd.com/?activityId=9WA12jYGulArzWS7vcrwhw",
         //"Content-Length": "274",
         "Accept-Language": "zh-cn"
       }
