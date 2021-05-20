@@ -256,8 +256,8 @@ function speedSignInDay() {
           } else {
             data = JSON.parse(data);
             if(data.success){
-                console.log(`${reward.amount}极速版签到结果${data.data.retMessage}`);
-                message += `${reward.amount}极速版签到结果${data.data.retMessage}\n`;
+                console.log(`极速版签到结果${data.data.retMessage}`);
+                message += `极速版签到结果${data.data.retMessage}\n`;
             } 
           }
         } catch (e) {
