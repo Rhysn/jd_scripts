@@ -255,7 +255,7 @@ function speedSignInDay() {
             console.log(JSON.stringify(err));
           } else {
             data = JSON.parse(data);
-            console.log(data);
+            //console.log(data);
             if(data.success){
                 console.log(`极速版签到结果${data.data.retMessage}`);
                 message += `极速版签到结果${data.data.retMessage}\n`;
