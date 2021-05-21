@@ -21,8 +21,9 @@ if ($.isNode()) {
 const JD_API_HOST = 'https://api.m.jd.com/api';
 const LinkId = 'AkOULcXbUA_8EAPbYLLMgg';
 var message = '';
-let inviterList = ['3WlavFVGOr8QELUtF3sPxzCZD5Noz6TYY3Huko2VPow','IM1x7kvuw_5EvxHHlV5hS7lx7cjhj1rUFjbsvXxbbag', 'xkGccBO_aV2IsgD3t-camg']
-const inviterStr = inviterList[Math.floor(Math.random() * inviterList.length)];
+let inviterList = ['xkGccBO_aV2IsgD3t-camg']
+//['3WlavFVGOr8QELUtF3sPxzCZD5Noz6TYY3Huko2VPow', 'IM1x7kvuw_5EvxHHlV5hS7lx7cjhj1rUFjbsvXxbbag', 'xkGccBO_aV2IsgD3t-camg']
+var inviterStr = '';
 var wechatCash = new Array();
 
 !(async () => {
@@ -48,6 +49,7 @@ var wechatCash = new Array();
                 continue
             }
             $.discount = 0;
+            inviterStr = inviterList[Math.floor(Math.random() * inviterList.length)];
             await speedRedPacket();
             await speedSignIn();
             await showMsg();
