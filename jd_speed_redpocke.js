@@ -246,7 +246,7 @@ async function speedSignIn() {
         $.logErr(e);
     }
 }
-function speedSignInDay() {
+async function speedSignInDay() {
     const data = {
         "serviceName": ServeceName2,
         "linkId" : LinkId2,
@@ -262,8 +262,8 @@ function speedSignInDay() {
             data = JSON.parse(data);
             //console.log(data);
             if(data.success){
-                console.log(`极速版签到结果${data.data.retMessage}`);
-                message += `极速版签到结果${data.data.retMessage}\n`;
+                console.log(`极速版签到2结果${data.data.retMessage}`);
+                message += `极速版签到2结果${data.data.retMessage}\n`;
             } 
           }
         } catch (e) {
