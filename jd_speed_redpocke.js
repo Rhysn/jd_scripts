@@ -291,9 +291,9 @@ async function signPrizeDetailList() {
                 } else {
                     if (safeGet(data)) {
                         data = JSON.parse(data);
+                        console.log(data);
                         if (data.success) {
                             var rewardsList = data.data.items;
-                            console.log(data.data.items);
                             for(let item of rewardsList){
                                 if(item.prizeType === 4 && item.prizeStatus === 0){
                                     cashForWechat2(item);
