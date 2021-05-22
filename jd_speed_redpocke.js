@@ -295,7 +295,7 @@ async function signPrizeDetailList() {
                             var rewardsList = data.data.items;
                             for(let item of rewardsList){
                                 if(item.prizeType === 4 && item.prizeStatus === 0){
-                                    await wechatCash2(item);
+                                    await cashForWechat2(item);
                                 }
                             }
                         } else {
