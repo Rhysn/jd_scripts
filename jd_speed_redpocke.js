@@ -314,7 +314,7 @@ function signPrizeDetailList() {
 }
 function cashForWechat2(reward) {
     const data = {
-        "businessSource": "SPRING_FESTIVAL_RED_ENVELOPE",
+        "businessSource": "DAY_DAY_RED_PACKET_SIGN",
         "base": {
             "id" : reward.id,
             "business" : reward.business,
