@@ -248,7 +248,7 @@ async function speedSignIn() {
 }
 function speedSignInDay() {
     const data = {
-        "serviceName": ServeceName2,
+        "serviceName": ServiceName2,
         "linkId" : LinkId2,
         "business" : 1
     };
