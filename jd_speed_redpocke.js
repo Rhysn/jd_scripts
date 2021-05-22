@@ -26,6 +26,9 @@ let inviterList = ['xkGccBO_aV2IsgD3t-camg'];
 var inviterStr = '';
 var wechatCash = new Array();
 
+const LinkId2 = '9WA12jYGulArzWS7vcrwhw';
+const ServiceName2 = 'dayDaySignGetRedEnvelopeSignService';
+
 !(async () => {
     if (!cookiesArr[0]) {
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
@@ -238,15 +241,15 @@ function getUrl(function_id, body) {
 async function speedSignIn() {
     try {
         await speedSignInDay();
+        await signPrizeDetailList();
     } catch (e) {
         $.logErr(e);
     }
 }
 function speedSignInDay() {
     const data = {
-        "linkId": "9WA12jYGulArzWS7vcrwhw",
-        "serviceName": "dayDaySignGetRedEnvelopeSignService",
-        //"linkId" : LinkId,
+        "serviceName": ServeceName2,
+        "linkId" : LinkId2,
         "business" : 1
     };
     return new Promise((resolve) => {
@@ -261,6 +264,78 @@ function speedSignInDay() {
             if(data.success){
                 console.log(`极速版签到结果${data.data.retMessage}`);
                 message += `极速版签到结果${data.data.retMessage}\n`;
+            } 
+          }
+        } catch (e) {
+          $.logErr(e, resp);
+        } finally {
+          resolve(data);
+        }
+      })
+    })
+}
+function signPrizeDetailList() {
+    const data = {
+        "serviceName": ServiceName2,
+        "linkId" : LinkId2,
+        "business" : 1,
+        "pageSize":20,
+        "page":1
+    };
+    return new Promise((resolve) => {
+      $.post(signPostUrl('signPrizeDetailList', data), (err, resp, data) => {
+        try {
+                if (err) {
+                    console.log(`${JSON.stringify(err)}`)
+                    console.log(`${$.name} API请求失败，请检查网路重试`)
+                } else {
+                    if (safeGet(data)) {
+                        data = JSON.parse(data);
+                        if (data.success) {
+                            var rewardsList = data.data.items;
+                            for(let item of rewardsList){
+                                if(item.prizeType === 4 && item.prizeStatus === 0){
+                                    await wechatCash2(item);
+                                }
+                            }
+                        } else {
+                            console.log(`获取兑换列表失败`);
+                            message += `获取兑换列表失败\n`;
+                        }
+                    }
+                }
+            } catch (e) {
+                $.logErr(e, resp)
+            } finally {
+                resolve();
+            }
+        })
+    })
+}
+function cashForWechat2(reward) {
+    const data = {
+        "businessSource": "SPRING_FESTIVAL_RED_ENVELOPE",
+        "base": {
+            "id" : reward.id,
+            "business" : reward.business,
+            "poolBaseId" : reward.poolBaseId,
+            "prizeGroupId" : reward.prizeGroupId,
+            "prizeBaseId" : reward.prizeBaseId,
+            "prizeType" : reward.prizeType
+        },
+        "linkId" : LinkId2
+    };
+    return new Promise((resolve) => {
+      $.post(postUrl('apCashWithDraw', data), (err, resp, data) => {
+        try {
+          if (err) {
+            console.log(`\n${$.name}: 微信红包提现API查询请求失败 ‼️‼️`);
+            console.log(JSON.stringify(err));
+          } else {
+            data = JSON.parse(data);
+            if(data.success){
+                console.log(`${reward.amount}微信红包${data.data.message}`);
+                message += `${reward.amount}微信红包${data.data.message}\n`;
             } 
           }
         } catch (e) {
