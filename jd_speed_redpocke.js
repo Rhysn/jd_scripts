@@ -246,7 +246,7 @@ async function speedSignIn() {
         $.logErr(e);
     }
 }
-async function speedSignInDay() {
+function speedSignInDay() {
     const data = {
         "serviceName": ServeceName2,
         "linkId" : LinkId2,
@@ -274,7 +274,7 @@ async function speedSignInDay() {
       })
     })
 }
-function signPrizeDetailList() {
+async function signPrizeDetailList() {
     const data = {
         "serviceName": ServiceName2,
         "linkId" : LinkId2,
