@@ -37,11 +37,7 @@ if ($.isNode()) {
 }
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
 let inviteCodes = ['RtGKz-qnQFiifIWcEtFh0FuCBavrt4mDfsXdbmQgQparmoFe0w@QNy7lLX6QA-leoCZEph_mhapqtvzvtJ83C58CYlGrAhjCA']
-//
-let inviteCodes = [
-  'RtGKi5X8P0rXFvnPT6txmoReYNzv0mAhDoQoWvuQ_TQLZQpw@RtGKzOn1R1imd4aZRdU2hBIBgJ03z2Yq-l50VjzK7d6LW8ENFw@RtGKzuryRFn2LdCbQoJggtEzmhdiJJUKv4qPggRZG_AEBjq-rg@HYbiyeWlRQmkfYP1V5h_msHdhHllBQpLhhZV4Prz1-z-TA@W9GxiKbYIkLcHMXmYIt_mhidwkvZjcvMhX-m5_i2N9q8OtI@RtGKzuWmEw71eIKaQtVn1-X7GtR8p7IcvhW_nUO4Jn0LobU7RA',
-  'xBd-HlYMlLUzqSkuz0qzAzuayqOG3FfAIeOTGLowr29_KbnH2bV4EX4@RtGKzr_wSAn2eIKZRdRm07jvOMS2zVH-g8ri6aOIZPDcI8v7CA@W9GxiKbYIkLcHMXmYIt_mhidwkvZjcvMhX-m5_i2N9q8OtI@RtGKzuWmEw71eIKaQtVn1-X7GtR8p7IcvhW_nUO4Jn0LobU7RA'
-]
+//let inviteCodes = [ 'RtGKi5X8P0rXFvnPT6txmoReYNzv0mAhDoQoWvuQ_TQLZQpw@RtGKzOn1R1imd4aZRdU2hBIBgJ03z2Yq-l50VjzK7d6LW8ENFw@RtGKzuryRFn2LdCbQoJggtEzmhdiJJUKv4qPggRZG_AEBjq-rg@HYbiyeWlRQmkfYP1V5h_msHdhHllBQpLhhZV4Prz1-z-TA@W9GxiKbYIkLcHMXmYIt_mhidwkvZjcvMhX-m5_i2N9q8OtI@RtGKzuWmEw71eIKaQtVn1-X7GtR8p7IcvhW_nUO4Jn0LobU7RA','xBd-HlYMlLUzqSkuz0qzAzuayqOG3FfAIeOTGLowr29_KbnH2bV4EX4@RtGKzr_wSAn2eIKZRdRm07jvOMS2zVH-g8ri6aOIZPDcI8v7CA@W9GxiKbYIkLcHMXmYIt_mhidwkvZjcvMhX-m5_i2N9q8OtI@RtGKzuWmEw71eIKaQtVn1-X7GtR8p7IcvhW_nUO4Jn0LobU7RA']
 !(async () => {
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
