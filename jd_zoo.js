@@ -20,7 +20,7 @@ const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 let cookiesArr = [], cookie = '',secretp = '',shareCodeList = [];
 const JD_API_HOST = `https://api.m.jd.com/client.action?functionId=`;
 
-const teamPKInviterList = ['sSKNX-MpqKOJsNu_n5jYVgFc4NiEWUltw5LvKNoeegLWZ3HrV5xjZCYN5PJDYZA', 'sSKNX-MpqKOPverkwMXYAZGpPHeOCYdSPhfL6WfGjTrbtu9pdkvdzwo', 'sSKNX-MpqKPS4by7m5_eA0hbXIcTgRenF5pWiyAZAcAjixip1VT9V3s', 'sSKNX-MpqKOJsNu-mJyLVYj_N3B40VT7D4Vnhg1fpJVX4XhkWpOQ88SawDljlrI'];
+const teamPKInviterList = ['sSKNX-MpqKOPverkwMXYAZGpPHeOCYdSPhfL6WfGjTrbtu9pdkvdzwo', 'sSKNX-MpqKPS4by7m5_eA0hbXIcTgRenF5pWiyAZAcAjixip1VT9V3s', 'sSKNX-MpqKOJsNu-mJyLVYj_N3B40VT7D4Vnhg1fpJVX4XhkWpOQ88SawDljlrI'];
 
 const homeInviterList = ['ZXTKT0225KkcRxga9AbWIhzykfJYcgFjRWn6-7zx55awQ', 'ZXTKT0184qQtHEdH9FHRJBn3kQFjRWn6-7zx55awQ', 'ZXTKT0225KkcRh8epwXVdhnylaZcJQFjRWn6-7zx55awQ'];
 
