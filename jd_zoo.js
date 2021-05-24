@@ -652,10 +652,24 @@ function zoo_getHomeData(inviteId= "",timeout = 0) {
             //console.log('zoo_getHomeData:' + JSON.stringify(data))
             secretp = data.data.result.homeMainInfo.secretp
             await zoo_collectProduceScore();
-            await zoo_pk_getHomeData('sSKNX-MpqKOJsNu_mZneBluwe_DRzs1f90l6Q_p8OVxtoB-JJEErrVU4eHW7e2I')
+            await $.wait(5000);
+            await zoo_pk_getHomeData('sSKNX-MpqKOJsNu_n5jYVgFc4NiEWUltw5LvKNoeegLWZ3HrV5xjZCYN5PJDYZA');
+            await $.wait(5000);
+            await zoo_pk_getHomeData('sSKNX-MpqKOPverkwMXYAZGpPHeOCYdSPhfL6WfGjTrbtu9pdkvdzwo');
+            await $.wait(5000);
+            await zoo_pk_getHomeData('sSKNX-MpqKOJsNu-mJyLVYj_N3B40VT7D4Vnhg1fpJVX4XhkWpOQ88SawDljlrI');
+            await $.wait(5000);
+            await zoo_pk_getHomeData('sSKNX-MpqKPS4by7m5_eA0hbXIcTgRenF5pWiyAZAcAjixip1VT9V3s');
+            await $.wait(5000);
             //await zoo_pk_assistGroup()
             if (data.data.result.homeMainInfo.raiseInfo.buttonStatus === 1 ) await zoo_raise(1000)
-            await zoo_getHomeData('ZXTKT0225KkcRx4b8lbWJU72wvZZcwFjRWn6-7zx55awQ');
+            await $.wait(5000);
+            await zoo_getHomeData('ZXTKT0225KkcRxga9AbWIhzykfJYcgFjRWn6-7zx55awQ');
+            await $.wait(5000);
+            await zoo_getHomeData('ZXTKT0184qQtHEdH9FHRJBn3kQFjRWn6-7zx55awQ');
+            await $.wait(5000);
+            await zoo_getHomeData('ZXTKT0225KkcRh8epwXVdhnylaZcJQFjRWn6-7zx55awQ');
+            await $.wait(5000);
             //await zoo_getTaskDetail("","app")
             await zoo_getTaskDetail()
           } else {
