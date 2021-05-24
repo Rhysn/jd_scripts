@@ -37,7 +37,11 @@ if ($.isNode()) {
 }
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
 let inviteCodes = ['RtGKz-qnQFiifIWcEtFh0FuCBavrt4mDfsXdbmQgQparmoFe0w@QNy7lLX6QA-leoCZEph_mhapqtvzvtJ83C58CYlGrAhjCA']
-//let inviteCodes = ['xBd-HlYMlLUzqSkuz0qzAzuayqOG3FfAIeOTGLowr29_KbnH2bV4EX4@RtGKzr_wSAn2eIKZRdRm07jvOMS2zVH-g8ri6aOIZPDcI8v7CA@W9GxiKbYIkLcHMXmYIt_mhidwkvZjcvMhX-m5_i2N9q8OtI@RtGKzuWmEw71eIKaQtVn1-X7GtR8p7IcvhW_nUO4Jn0LobU7RA', 'xBd-HlYMlLUzqSkuz0qzAzuayqOG3FfAIeOTGLowr29_KbnH2bV4EX4@RtGKzr_wSAn2eIKZRdRm07jvOMS2zVH-g8ri6aOIZPDcI8v7CA@W9GxiKbYIkLcHMXmYIt_mhidwkvZjcvMhX-m5_i2N9q8OtI@RtGKzuWmEw71eIKaQtVn1-X7GtR8p7IcvhW_nUO4Jn0LobU7RA']
+//
+let inviteCodes = [
+  'RtGKi5X8P0rXFvnPT6txmoReYNzv0mAhDoQoWvuQ_TQLZQpw@RtGKzOn1R1imd4aZRdU2hBIBgJ03z2Yq-l50VjzK7d6LW8ENFw@RtGKzuryRFn2LdCbQoJggtEzmhdiJJUKv4qPggRZG_AEBjq-rg@HYbiyeWlRQmkfYP1V5h_msHdhHllBQpLhhZV4Prz1-z-TA@W9GxiKbYIkLcHMXmYIt_mhidwkvZjcvMhX-m5_i2N9q8OtI@RtGKzuWmEw71eIKaQtVn1-X7GtR8p7IcvhW_nUO4Jn0LobU7RA',
+  'xBd-HlYMlLUzqSkuz0qzAzuayqOG3FfAIeOTGLowr29_KbnH2bV4EX4@RtGKzr_wSAn2eIKZRdRm07jvOMS2zVH-g8ri6aOIZPDcI8v7CA@W9GxiKbYIkLcHMXmYIt_mhidwkvZjcvMhX-m5_i2N9q8OtI@RtGKzuWmEw71eIKaQtVn1-X7GtR8p7IcvhW_nUO4Jn0LobU7RA'
+]
 !(async () => {
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
@@ -73,7 +77,7 @@ let inviteCodes = ['RtGKz-qnQFiifIWcEtFh0FuCBavrt4mDfsXdbmQgQparmoFe0w@QNy7lLX6Q
         console.log(`开始助力 【${$.newShareCodes[i]}】`)
         let res = await getInfo($.newShareCodes[i])
         if (res && res['data']['bizCode'] === 0) {
-          if (res['data']['result']['toasts'] && res['data']['result']['toasts'][0]['status'] === '3') {
+          if (res['data']['result']['toasts'] && res['data']['result']['toasts'][0] && res['data']['result']['toasts'][0]['status'] === '3') {
             console.log(`助力次数已耗尽，跳出`)
             break
           }
@@ -93,15 +97,15 @@ let inviteCodes = ['RtGKz-qnQFiifIWcEtFh0FuCBavrt4mDfsXdbmQgQparmoFe0w@QNy7lLX6Q
           }
         }
       } else {
-        if (new Date().getDate() >= 24) {
-          const res = await city_lotteryAward();//抽奖
-          if (res && res > 0) {
-            for (let i = 0; i < new Array(res).fill('').length; i++) {
-              await $.wait(1000)
-              await city_lotteryAward();//抽奖
-            }
-          }
-        }
+        // if (new Date().getDate() >= 24) {
+        //   const res = await city_lotteryAward();//抽奖
+        //   if (res && res > 0) {
+        //     for (let i = 0; i < new Array(res).fill('').length; i++) {
+        //       await $.wait(1000)
+        //       await city_lotteryAward();//抽奖
+        //     }
+        //   }
+        // }
       }
       await $.wait(1000)
     }
@@ -148,7 +152,7 @@ function getInfo(inviteId, flag = false) {
             }
             if (data.data && data['data']['bizCode'] === 0) {
               for(let vo of data.data.result && data.data.result.mainInfos || []){
-                if (vo.remaingAssistNum === 0 && vo.status === "1") {
+                if (vo && vo.remaingAssistNum === 0 && vo.status === "1") {
                   console.log(vo.roundNum)
                   await receiveCash(vo.roundNum)
                   await $.wait(2*1000)
@@ -273,7 +277,7 @@ function shareCodesFormat() {
       const tempIndex = $.index > inviteCodes.length ? (inviteCodes.length - 1) : ($.index - 1);
       $.newShareCodes = inviteCodes[tempIndex].split('@');
     }
-    const readShareCodeRes = null; //await readShareCode();
+    const readShareCodeRes = await readShareCode();
     if (readShareCodeRes && readShareCodeRes.code === 200) {
       $.newShareCodes = [...new Set([...$.newShareCodes, ...(readShareCodeRes.data || [])])];
     }
