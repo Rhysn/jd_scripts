@@ -45,11 +45,11 @@ var theHomeInviter = '';
         $.msg($.name, `【提示】京东账号${i ? i + 1 : "" } cookie已过期！请先获取cookie\n直接使用NobyDa的京东签到获取`, 'https://bean.m.jd.com/', {"open-url": "https://bean.m.jd.com/"});
         continue;
       }
-      console.log('\n\n京东账号：'+merge.nickname + ' 任务开始');
       
       thePKHomeInviter = teamPKInviterList[Math.floor(Math.random() * teamPKInviterList.length)];
       theHomeInviter = homeInviterList[Math.floor(Math.random() * homeInviterList.length)];
       
+      console.log('\n\n京东账号：'+merge.nickname + ' 任务开始')
       await zoo_pk_getHomeData();
       await zoo_getHomeData();
       //await qryCompositeMaterials()
@@ -885,6 +885,18 @@ function requireConfig() {
     console.log(`共${cookiesArr.length}个京东账号\n`);
     resolve()
   })
+}
+
+function jsonParse(str) {
+  if (typeof str == "string") {
+    try {
+      return JSON.parse(str);
+    } catch (e) {
+      console.log(e);
+      $.msg($.name, '', '请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie')
+      return [];
+    }
+  }
 }
 
 function minusByByte(t, n) {
