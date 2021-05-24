@@ -1,6 +1,6 @@
 /*
 动物联萌 618活动
-更新时间：2021-05-24 10:47
+更新时间：2021-05-24 16:58
 做任务，收金币
 脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
 // quantumultx
@@ -18,22 +18,21 @@ const $ = new Env('动物联萌');
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '',secretp = '',shareCodeList = [];
-if ($.isNode()) {
-  Object.keys(jdCookieNode).forEach((item) => {
-    cookiesArr.push(jdCookieNode[item])
-  })
-} else {
-  cookiesArr.push($.getdata('CookieJD'));
-  cookiesArr.push($.getdata('CookieJD2'));
-}
-
 const JD_API_HOST = `https://api.m.jd.com/client.action?functionId=`;
+
+const teamPKInviterList = ['sSKNX-MpqKOJsNu_n5jYVgFc4NiEWUltw5LvKNoeegLWZ3HrV5xjZCYN5PJDYZA', 'sSKNX-MpqKOPverkwMXYAZGpPHeOCYdSPhfL6WfGjTrbtu9pdkvdzwo', 'sSKNX-MpqKPS4by7m5_eA0hbXIcTgRenF5pWiyAZAcAjixip1VT9V3s', 'sSKNX-MpqKOJsNu-mJyLVYj_N3B40VT7D4Vnhg1fpJVX4XhkWpOQ88SawDljlrI'];
+
+const homeInviterList = ['ZXTKT0225KkcRxga9AbWIhzykfJYcgFjRWn6-7zx55awQ', 'ZXTKT0184qQtHEdH9FHRJBn3kQFjRWn6-7zx55awQ', 'ZXTKT0225KkcRh8epwXVdhnylaZcJQFjRWn6-7zx55awQ'];
+
+var thePKHomeInviter = '';
+var theHomeInviter = '';
+
 !(async () => {
+  await requireConfig()
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {"open-url": "https://bean.m.jd.com/"});
     return;
   }
-
   for (let i = 0; i < cookiesArr.length; i++) {
     cookie = cookiesArr[i];
     if (cookie) {
@@ -46,7 +45,11 @@ const JD_API_HOST = `https://api.m.jd.com/client.action?functionId=`;
         $.msg($.name, `【提示】京东账号${i ? i + 1 : "" } cookie已过期！请先获取cookie\n直接使用NobyDa的京东签到获取`, 'https://bean.m.jd.com/', {"open-url": "https://bean.m.jd.com/"});
         continue;
       }
-      console.log('\n\n京东账号：'+merge.nickname + ' 任务开始')
+      console.log('\n\n京东账号：'+merge.nickname + ' 任务开始');
+      
+      thePKHomeInviter = teamPKInviterList[Math.floor(Math.random() * teamPKInviterList.length)];
+      theHomeInviter = homeInviterList[Math.floor(Math.random() * homeInviterList.length)];
+      
       await zoo_pk_getHomeData();
       await zoo_getHomeData();
       //await qryCompositeMaterials()
@@ -652,24 +655,11 @@ function zoo_getHomeData(inviteId= "",timeout = 0) {
             //console.log('zoo_getHomeData:' + JSON.stringify(data))
             secretp = data.data.result.homeMainInfo.secretp
             await zoo_collectProduceScore();
-            await $.wait(5000);
-            await zoo_pk_getHomeData('sSKNX-MpqKOJsNu_n5jYVgFc4NiEWUltw5LvKNoeegLWZ3HrV5xjZCYN5PJDYZA');
-            await $.wait(5000);
-            await zoo_pk_getHomeData('sSKNX-MpqKOPverkwMXYAZGpPHeOCYdSPhfL6WfGjTrbtu9pdkvdzwo');
-            await $.wait(5000);
-            await zoo_pk_getHomeData('sSKNX-MpqKOJsNu-mJyLVYj_N3B40VT7D4Vnhg1fpJVX4XhkWpOQ88SawDljlrI');
-            await $.wait(5000);
-            await zoo_pk_getHomeData('sSKNX-MpqKPS4by7m5_eA0hbXIcTgRenF5pWiyAZAcAjixip1VT9V3s');
-            await $.wait(5000);
+            await zoo_pk_getHomeData(thePKHomeInviter);
             //await zoo_pk_assistGroup()
             if (data.data.result.homeMainInfo.raiseInfo.buttonStatus === 1 ) await zoo_raise(1000)
             await $.wait(5000);
-            await zoo_getHomeData('ZXTKT0225KkcRxga9AbWIhzykfJYcgFjRWn6-7zx55awQ');
-            await $.wait(5000);
-            await zoo_getHomeData('ZXTKT0184qQtHEdH9FHRJBn3kQFjRWn6-7zx55awQ');
-            await $.wait(5000);
-            await zoo_getHomeData('ZXTKT0225KkcRh8epwXVdhnylaZcJQFjRWn6-7zx55awQ');
-            await $.wait(5000);
+            await zoo_getHomeData(theHomeInviter);
             //await zoo_getTaskDetail("","app")
             await zoo_getTaskDetail()
           } else {
@@ -838,7 +828,7 @@ function zoo_pk_getHomeData(body = "",timeout = 0) {
       $.post(url, async (err, resp, data) => {
         try {
           if (body !== "") {
-            await $.getScript("https://raw.githubusercontent.com/yangtingxiao/QuantumultX/master/memo/jd_zooShareCode.txt").then((text) => (shareCodeList = text.split('\n')))
+            await $.getScript("https://rules.allgreat.xyz/Scripts/JD/InviteCodes/jd_zooPKShareCode.txt").then((text) => (shareCodeList = text.split('\n')))
             for (let i in shareCodeList) {
               if (shareCodeList[i]) await zoo_pk_assistGroup(shareCodeList[i]);
             }
@@ -870,6 +860,31 @@ function randomWord(randomFlag, min, max){
     str += arr[pos];
   }
   return str;
+}
+
+function requireConfig() {
+  return new Promise(resolve => {
+    //Node.js用户请在jdCookie.js处填写京东ck;
+    const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
+    //IOS等用户直接用NobyDa的jd cookie
+    if ($.isNode()) {
+      Object.keys(jdCookieNode).forEach((item) => {
+        if (jdCookieNode[item]) {
+          cookiesArr.push(jdCookieNode[item])
+        }
+      })
+    } else {
+      let cookiesData = $.getdata('CookiesJD') || "[]";
+      cookiesData = jsonParse(cookiesData);
+      cookiesArr = cookiesData.map(item => item.cookie);
+      cookiesArr.reverse();
+      cookiesArr.push(...[$.getdata('CookieJD2'), $.getdata('CookieJD')]);
+      cookiesArr.reverse();
+      cookiesArr = cookiesArr.filter(item => item !== "" && item !== null && item !== undefined);
+    }
+    console.log(`共${cookiesArr.length}个京东账号\n`);
+    resolve()
+  })
 }
 
 function minusByByte(t, n) {
