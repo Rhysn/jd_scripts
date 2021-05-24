@@ -1,7 +1,7 @@
 /*
 城城领现金
 活动时间：2021-05-25到2021-06-03
-更新时间：2021-05-24 09:55
+更新时间：2021-05-24 014:55
 脚本兼容: QuantumultX, Surge,Loon, JSBox, Node.js
 =================================Quantumultx=========================
 [task_local]
@@ -37,7 +37,12 @@ if ($.isNode()) {
 }
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
 let inviteCodes = ['RtGKz-qnQFiifIWcEtFh0FuCBavrt4mDfsXdbmQgQparmoFe0w@QNy7lLX6QA-leoCZEph_mhapqtvzvtJ83C58CYlGrAhjCA']
-//let inviteCodes = [ 'RtGKi5X8P0rXFvnPT6txmoReYNzv0mAhDoQoWvuQ_TQLZQpw@RtGKzOn1R1imd4aZRdU2hBIBgJ03z2Yq-l50VjzK7d6LW8ENFw@RtGKzuryRFn2LdCbQoJggtEzmhdiJJUKv4qPggRZG_AEBjq-rg@HYbiyeWlRQmkfYP1V5h_msHdhHllBQpLhhZV4Prz1-z-TA@W9GxiKbYIkLcHMXmYIt_mhidwkvZjcvMhX-m5_i2N9q8OtI@RtGKzuWmEw71eIKaQtVn1-X7GtR8p7IcvhW_nUO4Jn0LobU7RA','xBd-HlYMlLUzqSkuz0qzAzuayqOG3FfAIeOTGLowr29_KbnH2bV4EX4@RtGKzr_wSAn2eIKZRdRm07jvOMS2zVH-g8ri6aOIZPDcI8v7CA@W9GxiKbYIkLcHMXmYIt_mhidwkvZjcvMhX-m5_i2N9q8OtI@RtGKzuWmEw71eIKaQtVn1-X7GtR8p7IcvhW_nUO4Jn0LobU7RA']
+/*
+let inviteCodes = [
+  'RtGKzO2hSQ33LNbJFNwx1E-Q1tDn9K8F8qFofiSm-kb9IkmSbg@RtGKzuigFAr1K9HPQYBh1gAvRwvmoOS9ZN8FSDjHtppcL3RU5g',
+  'RtGKzuigFAr1K9HPQYBh1gAvRwvmoOS9ZN8FSDjHtppcL3RU5g@RtGKzO2hSQ33LNbJFNwx1E-Q1tDn9K8F8qFofiSm-kb9IkmSbg'
+]
+*/
 !(async () => {
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
@@ -47,7 +52,7 @@ let inviteCodes = ['RtGKz-qnQFiifIWcEtFh0FuCBavrt4mDfsXdbmQgQparmoFe0w@QNy7lLX6Q
   if (exchangeFlag) {
     console.log(`脚本自动抽奖`)
   } else {
-    console.log(`脚本不会自动抽奖，建议活动快结束开启，默认关闭`)
+    console.log(`脚本不会自动抽奖，建议活动快结束开启，默认关闭(在6.2日自动开启抽奖),如需自动抽奖请设置环境变量  JD_CITY_EXCHANGE 为true`);
   }
   for (let i = 0; i < cookiesArr.length; i++) {
     if (cookiesArr[i]) {
@@ -72,10 +77,13 @@ let inviteCodes = ['RtGKz-qnQFiifIWcEtFh0FuCBavrt4mDfsXdbmQgQparmoFe0w@QNy7lLX6Q
       for (let i = 0; i < $.newShareCodes.length; ++i) {
         console.log(`开始助力 【${$.newShareCodes[i]}】`)
         let res = await getInfo($.newShareCodes[i])
-        if (res && res['data']['bizCode'] === 0) {
+        if (res && res['data'] && res['data']['bizCode'] === 0) {
           if (res['data']['result']['toasts'] && res['data']['result']['toasts'][0] && res['data']['result']['toasts'][0]['status'] === '3') {
             console.log(`助力次数已耗尽，跳出`)
             break
+          }
+          if (res['data']['result']['toasts'] && res['data']['result']['toasts'][0]) {
+            console.log(`助力 【${$.newShareCodes[i]}】:${res.data.result.toasts[0].msg}`)
           }
         }
         if ((res && res['status'] && res['status'] === '3') || (res && res.data && res.data.bizCode === -11)) {
@@ -93,15 +101,16 @@ let inviteCodes = ['RtGKz-qnQFiifIWcEtFh0FuCBavrt4mDfsXdbmQgQparmoFe0w@QNy7lLX6Q
           }
         }
       } else {
-        // if (new Date().getDate() >= 24) {
-        //   const res = await city_lotteryAward();//抽奖
-        //   if (res && res > 0) {
-        //     for (let i = 0; i < new Array(res).fill('').length; i++) {
-        //       await $.wait(1000)
-        //       await city_lotteryAward();//抽奖
-        //     }
-        //   }
-        // }
+        //默认6.2开启抽奖
+        if ((new Date().getMonth()  + 1) === 6 && new Date().getDate() >= 2) {
+          const res = await city_lotteryAward();//抽奖
+          if (res && res > 0) {
+            for (let i = 0; i < new Array(res).fill('').length; i++) {
+              await $.wait(1000)
+              await city_lotteryAward();//抽奖
+            }
+          }
+        }
       }
       await $.wait(1000)
     }
@@ -139,21 +148,28 @@ function getInfo(inviteId, flag = false) {
           console.log(`${$.name} API请求失败，请检查网路重试`)
         } else {
           if (safeGet(data)) {
-            if (inviteId) $.log(`助力结果:\n${data}\n`)
+            // if (inviteId) $.log(`\n助力结果:\n${data}\n`)
             data = JSON.parse(data);
-            if (data.data && !data.data.result.userActBaseInfo.inviteId) {
-              console.log(`账号已黑，看不到邀请码`);
-            } else {
-              if (flag) console.log(`\n【京东账号${$.index}（${$.UserName}）的${$.name}好友互助码】${data.data && data.data.result.userActBaseInfo.inviteId}\n`);
-            }
-            if (data.data && data['data']['bizCode'] === 0) {
-              for(let vo of data.data.result && data.data.result.mainInfos || []){
-                if (vo && vo.remaingAssistNum === 0 && vo.status === "1") {
-                  console.log(vo.roundNum)
-                  await receiveCash(vo.roundNum)
-                  await $.wait(2*1000)
+            if (data.code === 0) {
+              if (data.data && data['data']['bizCode'] === 0) {
+                if (flag) console.log(`\n【京东账号${$.index}（${$.UserName}）的${$.name}好友互助码】${data.data && data.data.result.userActBaseInfo.inviteId}\n`);
+                for(let vo of data.data.result && data.data.result.mainInfos || []){
+                  if (vo && vo.remaingAssistNum === 0 && vo.status === "1") {
+                    console.log(vo.roundNum)
+                    await receiveCash(vo.roundNum)
+                    await $.wait(2*1000)
+                  }
+                }
+              } else {
+                console.log(`\n\n${inviteId ? '助力好友' : '获取邀请码'}失败:${data.data.bizMsg}`)
+                if (flag) {
+                  if (data.data && !data.data.result.userActBaseInfo.inviteId) {
+                    console.log(`账号已黑，看不到邀请码\n`);
+                  }
                 }
               }
+            } else {
+              console.log(`\n\ncity_getHomeData失败:${JSON.stringify(data)}\n`)
             }
           }
         }
@@ -273,7 +289,7 @@ function shareCodesFormat() {
       const tempIndex = $.index > inviteCodes.length ? (inviteCodes.length - 1) : ($.index - 1);
       $.newShareCodes = inviteCodes[tempIndex].split('@');
     }
-    const readShareCodeRes = null;//await readShareCode();
+    const readShareCodeRes = await readShareCode();
     if (readShareCodeRes && readShareCodeRes.code === 200) {
       $.newShareCodes = [...new Set([...$.newShareCodes, ...(readShareCodeRes.data || [])])];
     }
