@@ -828,7 +828,7 @@ function zoo_pk_getHomeData(body = "",timeout = 0) {
       $.post(url, async (err, resp, data) => {
         try {
           if (body !== "") {
-            await $.getScript("https://rules.allgreat.xyz/Scripts/JD/InviteCodes/jd_zooPKShareCode.txt").then((text) => (shareCodeList = text.split('\n')))
+            await $.getScript("https://rules.allgreat.xyz/Scripts/JD/InviteCodes/jd_zooPKShareCode.txt").then((text) => (shareCodeList = text.split('&')))
             for (let i in shareCodeList) {
               if (shareCodeList[i]) await zoo_pk_assistGroup(shareCodeList[i]);
             }
