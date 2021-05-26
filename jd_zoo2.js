@@ -9,7 +9,7 @@ PK互助：内部账号自行互助(排名靠前账号得到的机会多),多余
 地图任务：已添加，抽奖未添加
 金融APP任务：未完成，后期添加
 活动时间：2021-05-24至2021-06-20
-脚本更新时间：2021-05-26 16:50
+脚本更新时间：2021-05-26 18:00
 脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
 ===================quantumultx================
 [task_local]
@@ -34,13 +34,13 @@ const pKHelpAuthorFlag = false;//是否助力作者PK  true 助力，false 不�
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [];
 $.cookie = '';
-$.inviteList = [];
+$.inviteList = [
+  'ZXTKT0225KkcRxga9AbWIhzykfJYcgFjRWn6-7zx55awQ',
+];
 $.pkInviteList = [];
 $.secretpInfo = {};
 $.innerPkInviteList = [
-  'sSKNX-MpqKOJsNu-ys_QB8uQqFkCdEeVDMGDHZg04xSunvZqdHKnylpSunootOm02pDQ',
-  'sSKNX-MpqKOJsNv74MOnRO1-y24JzNJfEGle1Ooa7gtNStMf5n0b6pOxJ2-G',
-  'sSKNX-MpqKOUsPHLzP-MQ8sgU5F_0euaHLLGd6Y_Ng7Xhu2RkM0EMvUKJQ',
+  'sSKNX-MpqKOPverkwMXYAZGpPHeOCYdSPhfL6WfGjTrbtu9pdkvdzwg','sSKNX-MpqKOPverkwMXYAZGpPHeOCYdSPhHG2DyZ0DqlUMWHXhSzP8E2sZ8','sSKNX-MpqKOJsNu-mJyLVYj_N3B40VT7D4Vnhg1fpJVX4XhkWpOQ88SawDljlrA','sSKNX-MpqKPS4by7m5_eA0hbXIcTgRenF5pWiyAZAcAjixip1VT9V3k','sSKNX-MpqKOJsNvE5ueQTEQQBPTJcTe4tKXeXiUFDzxQfEMIcPeR1zn4OGFW',
 ];
 if ($.isNode()) {
   Object.keys(jdCookieNode).forEach((item) => {
@@ -307,13 +307,21 @@ async function zoo() {
         }
       }
     }
-    //助力
-    // for (let i = 0; i < $.inviteList.length; i++) {
-    //     $.inviteId = $.inviteList[i];
-    //     await takePostRequest('help');
-    //     await $.wait(2000);
+    //=======================================================京东金融=================================================================================
+    // $.jdjrTaskList = [];
+    // await takePostRequest('jdjrTaskDetail');
+    // await $.wait(1000);
+    // console.log(`11111：${$.jdjrTaskList.length}`)
+    // for (let i = 0; i < $.jdjrTaskList.length; i++) {
+    //   if($.jdjrTaskList[i].status !== '1'){
+    //       continue;
+    //   }
+    //   $.taskId = $.jdjrTaskList[i].id;
+    //   console.log(`去做任务：${$.jdjrTaskList[i].name}`)
+    //   await takePostRequest('jdjrAcceptTask');
+    //   await $.wait(8000);
     // }
-    //======================================================怪兽大作战==============================================================================================================
+    //======================================================怪兽大作战=================================================================================
     $.pkHomeData = {};
     await takePostRequest('zoo_pk_getHomeData');
     if (JSON.stringify($.pkHomeData) === '{}') {
@@ -462,6 +470,14 @@ async function takePostRequest(type) {
     case 'zoo_getWelfareScore':
       body = getBody(type);
       myRequest = await getPostRequest(`zoo_getWelfareScore`,body);
+      break;
+    case 'jdjrTaskDetail':
+      body = `reqData={"eid":"","sdkToken":"jdd014JYKVE2S6UEEIWPKA4B5ZKBS4N6Y6X5GX2NXL4IYUMHKF3EEVK52RQHBYXRZ67XWQF5N7XB6Y2YKYRTGQW4GV5OFGPDPFP3MZINWG2A01234567"}`;
+      myRequest = await getPostRequest(`listTask`,body);
+      break;
+    case 'jdjrAcceptTask':
+      body = `reqData={"eid":"","sdkToken":"jdd014JYKVE2S6UEEIWPKA4B5ZKBS4N6Y6X5GX2NXL4IYUMHKF3EEVK52RQHBYXRZ67XWQF5N7XB6Y2YKYRTGQW4GV5OFGPDPFP3MZINWG2A01234567","id":"${$.taskId}"}`;
+      myRequest = await getPostRequest(`acceptTask`,body);
       break;
     default:
       console.log(`错误${type}`);
@@ -632,6 +648,16 @@ async function dealReturn(type, data) {
         console.log(`分享成功，获得：${data.data.result.score}`);
       }
       break;
+    case 'jdjrTaskDetail':
+      if (data.resultCode === 0) {
+        $.jdjrTaskList = data.resultData.top;
+      }
+      break;
+    case 'jdjrAcceptTask':
+      if (data.resultCode === 0) {
+        console.log(`领任务成功`);
+      }
+      break;
     default:
       console.log(`未判断的异常${type}`);
   }
@@ -669,7 +695,10 @@ function callbackResult(info) {
 }
 
 async function getPostRequest(type, body) {
-  const url = `https://api.m.jd.com/client.action?functionId=${type}`;
+  let url = `https://api.m.jd.com/client.action?functionId=${type}`;
+  if(type === 'listTask' || type === 'acceptTask' ){
+    url = `https://ms.jr.jd.com/gw/generic/hy/h5/m/${type}`;
+  }
   const method = `POST`;
   const headers = {
     'Accept': `application/json, text/plain, */*`,
