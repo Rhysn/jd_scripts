@@ -371,7 +371,7 @@ async function zoo() {
       }
     }
     await $.wait(1000);
-    await takePostRequest('zoo_pk_getTaskDetail');
+    //await takePostRequest('zoo_pk_getTaskDetail');
     let skillList = $.pkHomeData.result.groupInfo.skillList || [];
     //activityStatus === 1未开始，2 已开始
     $.doSkillFlag = true;
