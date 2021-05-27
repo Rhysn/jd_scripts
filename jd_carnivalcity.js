@@ -99,7 +99,6 @@ let nowTime = new Date().getTime() + new Date().getTimezoneOffset()*60*1000 + 8*
     }
   }
   for (let i = 0; i < cookiesArr.length; i++) {
-    break;
     if (cookiesArr[i]) {
       cookie = cookiesArr[i];
       $.canHelp = true;//能否助力
@@ -118,7 +117,7 @@ let nowTime = new Date().getTime() + new Date().getTimezoneOffset()*60*1000 + 8*
       }
       if ($.canHelp) {
         console.log(`\n\n如果有剩余助力机会，则给作者lxk0301以及随机码助力`)
-        await doHelp();
+        //await doHelp();
       }
     }
   }
