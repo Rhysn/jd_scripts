@@ -69,7 +69,7 @@ async function speedRedPacket() {
         var times = 3;
         while (times--) {
             await springRewardReceive();
-            await $.wait(3000);
+            await $.wait(6000);
         }
         await springRewardList();
         for(let item of wechatCash){
