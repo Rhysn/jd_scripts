@@ -9,7 +9,7 @@ PK互助：内部账号自行互助(排名靠前账号得到的机会多),多余
 地图任务：已添加，下午2点到5点执行,抽奖已添加(基本都是优惠券)
 金融APP任务：已完成
 活动时间：2021-05-24至2021-06-20
-脚本更新时间：2021-05-30 21:25
+脚本更新时间：2021-05-31 23:00
 脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
 ===================quantumultx================
 [task_local]
@@ -35,7 +35,8 @@ const pKHelpAuthorFlag = false;//是否助力作者PK  true 助力，false 不�
 let cookiesArr = [];
 $.cookie = '';
 $.inviteList = [];
-$.pkInviteList = [];
+$.pkInviteList = [
+];
 $.secretpInfo = {};
 $.innerPkInviteList = [
   'sSKNX-MpqKOPverkwMXYAZGpPHeOCYdSPhfL6WfGjTrbtu9pdkvdzwg','sSKNX-MpqKOPverkwMXYAZGpPHeOCYdSPhHG2DyZ0DqlUMWHXhSzP8E2sZ8','sSKNX-MpqKOJsNu-mJyLVYj_N3B40VT7D4Vnhg1fpJVX4XhkWpOQ88SawDljlrA','sSKNX-MpqKPS4by7m5_eA0hbXIcTgRenF5pWiyAZAcAjixip1VT9V3k','sSKNX-MpqKOJsNvE5ueQTEQQBPTJcTe4tKXeXiUFDzxQfEMIcPeR1zn4OGFW',
@@ -63,8 +64,7 @@ if ($.isNode()) {
       '地图任务：已添加，下午2点到5点执行,抽奖已添加\n' +
       '金融APP任务：已完成\n' +
       '活动时间：2021-05-24至2021-06-20\n' +
-      '脚本更新时间：2021-05-30 21:25\n' +
-      '火爆账户暂时不做任务，找到解决办法后再做任务'
+      '脚本更新时间：2021-05-31 23:00\n'
       );
   for (let i = 0; i < cookiesArr.length; i++) {
     if (cookiesArr[i]) {
@@ -820,25 +820,21 @@ async function getPostRequest(type, body) {
 }
 
 function getBody(type) {
-  let rnd = Math.round(Math.random() * 1e6)
-  let nonstr = randomWord(false, 10)
-  let time = Date.now()
-  let key = minusByByte(nonstr.slice(0, 5), String(time).slice(-5))
-  let msg = `random=${rnd}&time=${time}&nonce_str=${nonstr}&key=${key}&is_trust=true`
-  let sign = bytesToHex(wordsToBytes(getSign(msg))).toUpperCase();
+  let rnd = Math.floor(1e6 + 9e6 * Math.random()).toString()
+  let ss = JSON.stringify({"extraData" : {"log": "-1", "sceneid": "QD216hPageh5"}, "secretp": $.secretp, "random": rnd.toString()});
   let taskBody = '';
   if (type === 'help') {
-    taskBody = `functionId=zoo_collectScore&body={"taskId":2,"ss":"{\\"extraData\\":{\\"is_trust\\":true,\\"sign\\":\\"${sign}\\",\\"fpb\\":\\"\\",\\"time\\":${time},\\"encrypt\\":\\"3\\",\\"nonstr\\":\\"${nonstr}\\",\\"jj\\":\\"\\",\\"cf_v\\":\\"1.0.2\\",\\"client_version\\":\\"2.2.1\\",\\"buttonid\\":\\"jmdd-react-smash_62\\",\\"sceneid\\":\\"homePageh5\\"},\\"secretp\\":\\"${$.secretp}\\",\\"random\\":\\"${rnd}\\"}","inviteId":"${$.inviteId}","actionType":1}&client=wh5&clientVersion=1.0.0`
+    taskBody = `functionId=zoo_collectScore&body=${JSON.stringify({"taskId": 2,"inviteId":$.inviteId,"actionType":1,"ss" :ss})}&client=wh5&clientVersion=1.0.0`
   } else if (type === 'pkHelp') {
-    taskBody = `functionId=zoo_pk_assistGroup&body={"taskId":2,"ss":"{\\"extraData\\":{\\"is_trust\\":true,\\"sign\\":\\"${sign}\\",\\"fpb\\":\\"\\",\\"time\\":${time},\\"encrypt\\":\\"3\\",\\"nonstr\\":\\"${nonstr}\\",\\"jj\\":\\"\\",\\"cf_v\\":\\"1.0.2\\",\\"client_version\\":\\"2.2.1\\",\\"buttonid\\":\\"jmdd-react-smash_62\\",\\"sceneid\\":\\"homePageh5\\"},\\"secretp\\":\\"${$.secretp}\\",\\"random\\":\\"${rnd}\\"}","inviteId":"${$.pkInviteId}","actionType":1}&client=wh5&clientVersion=1.0.0`;
+    taskBody = `functionId=zoo_pk_assistGroup&body=${JSON.stringify({"confirmFlag": 1,"inviteId" : $.pkInviteId,"ss" : ss})}&client=wh5&clientVersion=1.0.0`;
   } else if (type === 'zoo_collectProduceScore') {
-    taskBody = `functionId=zoo_collectProduceScore&body={"ss":"{\\"extraData\\":{\\"is_trust\\":true,\\"sign\\":\\"${sign}\\",\\"fpb\\":\\"\\",\\"time\\":${time},\\"encrypt\\":\\"3\\",\\"nonstr\\":\\"${nonstr}\\",\\"jj\\":\\"\\",\\"cf_v\\":\\"1.0.2\\",\\"client_version\\":\\"2.2.1\\",\\"buttonid\\":\\"jmdd-react-smash_0\\",\\"sceneid\\":\\"homePageh5\\"},\\"secretp\\":\\"${$.secretp}\\",\\"random\\":\\"${rnd}\\"}"}&client=wh5&clientVersion=1.0.0`;
+    taskBody = `functionId=zoo_collectProduceScore&body=${JSON.stringify({"ss" :ss})}&client=wh5&clientVersion=1.0.0`;
   } else if(type === 'zoo_getWelfareScore'){
-    taskBody = `functionId=zoo_getWelfareScore&body={"type":2,"currentScence":${$.currentScence},"ss":"{\\"extraData\\":{\\"is_trust\\":true,\\"sign\\":\\"${sign}\\",\\"fpb\\":\\"\\",\\"time\\":${time},\\"encrypt\\":\\"3\\",\\"nonstr\\":\\"${nonstr}\\",\\"jj\\":\\"\\",\\"cf_v\\":\\"1.0.2\\",\\"client_version\\":\\"2.2.1\\",\\"buttonid\\":\\"jmdd-react-smash_62\\",\\"sceneid\\":\\"homePageh5\\"},\\"secretp\\":\\"${$.secretp}\\",\\"random\\":\\"${rnd}\\"}"}&client=wh5&clientVersion=1.0.0`;
+    taskBody = `functionId=zoo_getWelfareScore&body=${JSON.stringify({"type": 2,"currentScence":$.currentScence,"ss" : ss})}&client=wh5&clientVersion=1.0.0`;
   } else if(type === 'add_car'){
-    taskBody = `functionId=zoo_collectScore&body={"taskId":"${$.taskId}","taskToken":"${$.taskToken}","actionType":1,"ss":"{\\"extraData\\":{\\"is_trust\\":true,\\"sign\\":\\"${sign}\\",\\"fpb\\":\\"\\",\\"time\\":${time},\\"encrypt\\":\\"3\\",\\"nonstr\\":\\"${nonstr}\\",\\"jj\\":\\"\\",\\"cf_v\\":\\"1.0.2\\",\\"client_version\\":\\"2.2.1\\",\\"buttonid\\":\\"jmdd-react-smash_62\\",\\"sceneid\\":\\"homePageh5\\"},\\"secretp\\":\\"${$.secretp}\\",\\"random\\":\\"${rnd}\\"}"}&client=wh5&clientVersion=1.0.0`
+    taskBody = `functionId=zoo_collectScore&body=${JSON.stringify({"taskId": $.taskId,"taskToken":$.taskToken,"actionType":1,"ss" : ss})}&client=wh5&clientVersion=1.0.0`
   }else{
-    taskBody = `functionId=${type}&body={"taskId":"${$.oneTask.taskId}","taskToken":"${$.oneActivityInfo.taskToken}","actionType":1,"ss":"{\\"extraData\\":{\\"is_trust\\":true,\\"sign\\":\\"${sign}\\",\\"fpb\\":\\"\\",\\"time\\":${time},\\"encrypt\\":\\"3\\",\\"nonstr\\":\\"${nonstr}\\",\\"jj\\":\\"\\",\\"cf_v\\":\\"1.0.2\\",\\"client_version\\":\\"2.2.1\\",\\"buttonid\\":\\"jmdd-react-smash_62\\",\\"sceneid\\":\\"homePageh5\\"},\\"secretp\\":\\"${$.secretp}\\",\\"random\\":\\"${rnd}\\"}","itemId":"${$.oneActivityInfo.itemId}","shopSign":"${$.shopSign}"}&client=wh5&clientVersion=1.0.0`
+    taskBody = `functionId=${type}&body=${JSON.stringify({"taskId": $.oneTask.taskId,"actionType":1,"taskToken" : $.oneActivityInfo.taskToken,"ss" : ss})}&client=wh5&clientVersion=1.0.0`
   }
   return taskBody
 }
@@ -937,122 +933,6 @@ function TotalBean() {
       }
     })
   })
-}
-
-function randomWord(randomFlag, min, max) {
-  let str = "",
-    range = min,
-    arr = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
-  // 随机产生
-  if (randomFlag) {
-    range = Math.round(Math.random() * (max - min)) + min;
-  }
-  for (let i = 0; i < range; i++) {
-    pos = Math.round(Math.random() * (arr.length - 1));
-    str += arr[pos];
-  }
-  return str;
-}
-
-function minusByByte(t, n) {
-  var e = t.length
-    , r = n.length
-    , o = Math.max(e, r)
-    , i = toAscii(t)
-    , a = toAscii(n)
-    , s = ""
-    , u = 0;
-  for (e !== r && (i = add0(i, o),
-    a = this.add0(a, o)); u < o;)
-    s += Math.abs(i[u] - a[u]),
-      u++;
-  return s
-}
-
-function toAscii(t) {
-  var n = "";
-  for (var e in t) {
-    var r = t[e]
-      , o = /[a-zA-Z]/.test(r);
-    if (t.hasOwnProperty(e))
-      if (o)
-        n += getLastAscii(r);
-      else
-        n += r
-  }
-  return n
-}
-
-function add0(t, n) {
-  return (Array(n).join("0") + t).slice(-n)
-}
-
-function getLastAscii(t) {
-  var n = t.charCodeAt(0).toString();
-  return n[n.length - 1]
-}
-
-function wordsToBytes(t) {
-  for (var n = [], e = 0; e < 32 * t.length; e += 8)
-    n.push(t[e >>> 5] >>> 24 - e % 32 & 255);
-  return n
-}
-
-function bytesToHex(t) {
-  for (var n = [], e = 0; e < t.length; e++)
-    n.push((t[e] >>> 4).toString(16)),
-      n.push((15 & t[e]).toString(16));
-  return n.join("")
-}
-
-function stringToBytes(t) {
-  t = unescape(encodeURIComponent(t))
-  for (var n = [], e = 0; e < t.length; e++)
-    n.push(255 & t.charCodeAt(e));
-  return n
-}
-
-function bytesToWords(t) {
-  for (var n = [], e = 0, r = 0; e < t.length; e++,
-    r += 8)
-    n[r >>> 5] |= t[e] << 24 - r % 32;
-  return n
-}
-
-function getSign(t) {
-  t = stringToBytes(t)
-  var e = bytesToWords(t)
-    , i = 8 * t.length
-    , a = []
-    , s = 1732584193
-    , u = -271733879
-    , c = -1732584194
-    , f = 271733878
-    , h = -1009589776;
-  e[i >> 5] |= 128 << 24 - i % 32,
-    e[15 + (i + 64 >>> 9 << 4)] = i;
-  for (var l = 0; l < e.length; l += 16) {
-    for (var p = s, g = u, v = c, d = f, y = h, m = 0; m < 80; m++) {
-      if (m < 16)
-        a[m] = e[l + m];
-      else {
-        var w = a[m - 3] ^ a[m - 8] ^ a[m - 14] ^ a[m - 16];
-        a[m] = w << 1 | w >>> 31
-      }
-      var _ = (s << 5 | s >>> 27) + h + (a[m] >>> 0) + (m < 20 ? 1518500249 + (u & c | ~u & f) : m < 40 ? 1859775393 + (u ^ c ^ f) : m < 60 ? (u & c | u & f | c & f) - 1894007588 : (u ^ c ^ f) - 899497514);
-      h = f,
-        f = c,
-        c = u << 30 | u >>> 2,
-        u = s,
-        s = _
-    }
-    s += p,
-      u += g,
-      c += v,
-      f += d,
-      h += y
-  }
-  return [s, u, c, f, h]
 }
 
 // prettier-ignore
