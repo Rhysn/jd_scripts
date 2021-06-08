@@ -22,7 +22,8 @@ const JD_API_HOST = `https://api.m.jd.com/client.action?functionId=`;
 
 const teamPKInviterList = ['sSKNX-MpqKOPverkwMXYAZGpPHeOCYdSPhfL6WfGjTrbtu9pdkvdzwo', 'sSKNX-MpqKPS4by7m5_eA0hbXIcTgRenF5pWiyAZAcAjixip1VT9V3s', 'sSKNX-MpqKOJsNu-mJyLVYj_N3B40VT7D4Vnhg1fpJVX4XhkWpOQ88SawDljlrI'];
 
-const homeInviterList = ['ZXTKT0225KkcRxga9AbWIhzykfJYcgFjRWn6-7zx55awQ', 'ZXTKT0184qQtHEdH9FHRJBn3kQFjRWn6-7zx55awQ', 'ZXTKT0225KkcRh8epwXVdhnylaZcJQFjRWn6-7zx55awQ', 'ZXTKT018v_h7Qxwd8lPTJByb1AFjRWn6-7zx55awQ', 'ZXTKT0225KkcRB0c8VfRdR_2wfcDfAFjRWn6-7zx55awQ', 'ZXTKT018v_5xRhcQ9lPQKB2b1AFjRWn6-7zx55awQ', 'XSQDWT0225KkcRxga9AbWIhzykfJYcgCTVQnoaRyB55awQ', 'XSQDWT0184qQtHEdH9FHRJBn3kQCTVQn4aRzx55awQ', 'XSQDWT0184qQtHEdH9FHRJBn3kQCTVQnoaRyB55awQ', 'XSQDWT0225KkcRxga9AbWIhzykfJYcgCTVQn4aRzx55awQ'];
+const homeInviterList = ['ZXTKT0225KkcRxga9AbWIhzykfJYcgFjRWn6-7zx55awQ', 'ZXTKT0184qQtHEdH9FHRJBn3kQFjRWn6-7zx55awQ', 'ZXTKT0225KkcRh8epwXVdhnylaZcJQFjRWn6-7zx55awQ', 'ZXTKT018v_h7Qxwd8lPTJByb1AFjRWn6-7zx55awQ', 'ZXTKT0225KkcRB0c8VfRdR_2wfcDfAFjRWn6-7zx55awQ', 'ZXTKT018v_5xRhcQ9lPQKB2b1AFjRWn6-7zx55awQ'];
+const homeInviterList2 = ['XSQDWT0225KkcRxga9AbWIhzykfJYcgCTVQnoaRyB55awQ', 'XSQDWT0184qQtHEdH9FHRJBn3kQCTVQn4aRzx55awQ', 'XSQDWT0184qQtHEdH9FHRJBn3kQCTVQnoaRyB55awQ', 'XSQDWT0225KkcRxga9AbWIhzykfJYcgCTVQn4aRzx55awQ'];
 
 var thePKHomeInviter = '';
 var theHomeInviter = '';
@@ -658,8 +659,12 @@ function zoo_getHomeData(inviteId= "",timeout = 0) {
             //if (data.data.result.homeMainInfo.raiseInfo.buttonStatus === 1 )
             if (parseInt(data.data.result.homeMainInfo.raiseInfo.totalScore) >= parseInt(data.data.result.homeMainInfo.raiseInfo.nextLevelScore) ) await zoo_raise(1000)
             for(let itemOfHIL of homeInviterList){
-            zoo_getHomeData(itemOfHIL);
-            await $.wait(10000);
+				zoo_getHomeData(itemOfHIL);
+				await $.wait(10000);
+            }
+			for(let itemOfHIL of homeInviterList2){
+				zoo_getHomeDataCurrent4(itemOfHIL);
+				await $.wait(10000);
             }
             zoo_getHomeData(theHomeInviter);
             await zoo_getTaskDetail()
@@ -667,6 +672,39 @@ function zoo_getHomeData(inviteId= "",timeout = 0) {
           } else {
             return
           }
+        } catch (e) {
+          $.logErr(e, resp);
+        } finally {
+          resolve()
+        }
+      })
+    },timeout)
+  })
+}
+
+
+function zoo_getHomeDataCurrent4(inviteId= "",timeout = 0) {
+  return new Promise((resolve) => {
+    setTimeout( ()=>{
+      let url = {
+        url : `${JD_API_HOST}zoo_getHomeData`  ,
+        headers : {
+          'Origin' : `https://wbbny.m.jd.com`,
+          'Cookie' : cookie,
+          'Connection' : `keep-alive`,
+          'Accept' : `application/json, text/plain, */*`,
+          'Host' : `api.m.jd.com`,
+          'User-Agent' : `jdapp;iPhone;10.0.2;14.5.1;`,
+          'Accept-Encoding' : `gzip, deflate, br`,
+          'Accept-Language' : `zh-cn`
+        },
+        body : `functionId=zoo_getHomeData&body={${inviteId ? "\"inviteId\":\"" + inviteId +'\"': ""},"current":"4"}&client=wh5&clientVersion=1.0.0`
+      }
+      $.post(url, async (err, resp, data) => {
+        try {
+          //console.log(data)
+          //if (merge.black)  return ;
+          data = JSON.parse(data);
         } catch (e) {
           $.logErr(e, resp);
         } finally {
