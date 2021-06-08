@@ -662,10 +662,12 @@ function zoo_getHomeData(inviteId= "",timeout = 0) {
 				zoo_getHomeData(itemOfHIL);
 				await $.wait(10000);
             }
+            /*
 			for(let itemOfHIL of homeInviterList2){
 				zoo_getHomeDataCurrent4(itemOfHIL);
 				await $.wait(10000);
             }
+            */
             zoo_getHomeData(theHomeInviter);
             await zoo_getTaskDetail()
             await zoo_getTaskDetail("","app")
