@@ -27,14 +27,14 @@ const $ = new Env('618动物联萌');
 const notify = $.isNode() ? require('./sendNotify') : '';
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const pKHelpFlag = true;//是否PK助力  true 助力，false 不助力
-const pKHelpAuthorFlag = true;//是否助力作者PK  true 助力，false 不助力
+const pKHelpAuthorFlag = false;//是否助力作者PK  true 助力，false 不助力
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [];
 $.cookie = '';
-$.inviteList = [];
-$.pkInviteList = [];
+$.inviteList = ['sSKNX-MpqKOPverkwMXYAZGpPHeOCYdSPhfL6WfGjTrbtu9pdkvdzwg','sSKNX-MpqKOPverkwMXYAZGpPHeOCYdSPhHG2DyZ0DqlUMWHXhSzP8E2sZ8','sSKNX-MpqKOJsNu-mJyLVYj_N3B40VT7D4Vnhg1fpJVX4XhkWpOQ88SawDljlrA','sSKNX-MpqKPS4by7m5_eA0hbXIcTgRenF5pWiyAZAcAjixip1VT9V3k','sSKNX-MpqKOJsNvE5ueQTEQQBPTJcTe4tKXeXiUFDzxQfEMIcPeR1zn4OGFW',];
+$.pkInviteList = ['sSKNX-MpqKOPverkwMXYAZGpPHeOCYdSPhfL6WfGjTrbtu9pdkvdzwg','sSKNX-MpqKOPverkwMXYAZGpPHeOCYdSPhHG2DyZ0DqlUMWHXhSzP8E2sZ8','sSKNX-MpqKOJsNu-mJyLVYj_N3B40VT7D4Vnhg1fpJVX4XhkWpOQ88SawDljlrA','sSKNX-MpqKPS4by7m5_eA0hbXIcTgRenF5pWiyAZAcAjixip1VT9V3k','sSKNX-MpqKOJsNvE5ueQTEQQBPTJcTe4tKXeXiUFDzxQfEMIcPeR1zn4OGFW',];
 $.secretpInfo = {};
-$.innerPkInviteList = [];
+$.innerPkInviteList = ['sSKNX-MpqKOPverkwMXYAZGpPHeOCYdSPhfL6WfGjTrbtu9pdkvdzwg','sSKNX-MpqKOPverkwMXYAZGpPHeOCYdSPhHG2DyZ0DqlUMWHXhSzP8E2sZ8','sSKNX-MpqKOJsNu-mJyLVYj_N3B40VT7D4Vnhg1fpJVX4XhkWpOQ88SawDljlrA','sSKNX-MpqKPS4by7m5_eA0hbXIcTgRenF5pWiyAZAcAjixip1VT9V3k','sSKNX-MpqKOJsNvE5ueQTEQQBPTJcTe4tKXeXiUFDzxQfEMIcPeR1zn4OGFW',];
 if ($.isNode()) {
     Object.keys(jdCookieNode).forEach((item) => {
         cookiesArr.push(jdCookieNode[item])
@@ -83,7 +83,7 @@ if ($.isNode()) {
     let res = [], res2 = [], res3 = [];
     //res3 = await getAuthorShareCode('https://raw.githubusercontent.com/gitupdate/updateTeam/master/shareCodes/jd_zoo.json');
     //if (!res3) await getAuthorShareCode('https://cdn.jsdelivr.net/gh/gitupdate/updateTeam@master/shareCodes/jd_zoo.json')
-    res2 = await getAuthorShareCode('https://raw.githubusercontent.com/star261/jd/main/code/zoo.json');
+    //res2 = await getAuthorShareCode('https://raw.githubusercontent.com/star261/jd/main/code/zoo.json');
     if (pKHelpAuthorFlag) {
         $.innerPkInviteList = getRandomArrayElements([...$.innerPkInviteList, ...res, ...res2, ...res3], [...$.innerPkInviteList, ...res, ...res2, ...res3].length);
         $.pkInviteList.push(...$.innerPkInviteList);
