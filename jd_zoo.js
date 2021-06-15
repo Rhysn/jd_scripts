@@ -30,7 +30,7 @@ const JD_API_HOST = `https://api.m.jd.com/client.action?functionId=`;
 
 const teamPKInviterList = ['sSKNX-MpqKOPverkwMXYAZGpPHeOCYdSPhfL6WfGjTrbtu9pdkvdzwo', 'sSKNX-MpqKPS4by7m5_eA0hbXIcTgRenF5pWiyAZAcAjixip1VT9V3s', 'sSKNX-MpqKOJsNu-mJyLVYj_N3B40VT7D4Vnhg1fpJVX4XhkWpOQ88SawDljlrI'];
 
-const homeInviterList = ['ZXTKT0184qQtHEdH9FHRJBn3kQFjRWn6-7zx55awQ', 'ZXTKT0225KkcRh8epwXVdhnylaZcJQFjRWn6-7zx55awQ', 'ZXTKT018v_h7Qxwd8lPTJByb1AFjRWn6-7zx55awQ', 'ZXTKT0225KkcRB0c8VfRdR_2wfcDfAFjRWn6-7zx55awQ', 'ZXTKT018v_5xRhcQ9lPQKB2b1AFjRWn6-7zx55awQ'];
+const homeInviterList = ['ZXTKT0225KkcRB0c8VfRdR_2wfcDfAFjRWn6-7zx55awQ', 'ZXTKT018v_5xRhcQ9lPQKB2b1AFjRWn6-7zx55awQ'];
 const homeInviterList2 = ['XSQDWT0225KkcRxga9AbWIhzykfJYcgCTVQnoaRyB55awQ', 'XSQDWT0184qQtHEdH9FHRJBn3kQCTVQn4aRzx55awQ', 'XSQDWT0184qQtHEdH9FHRJBn3kQCTVQnoaRyB55awQ', 'XSQDWT0225KkcRxga9AbWIhzykfJYcgCTVQn4aRzx55awQ'];
 
 var thePKHomeInviter = '';
