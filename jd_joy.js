@@ -2,7 +2,7 @@
 jd宠汪汪 搬的https://github.com/uniqueque/QuantumultX/blob/4c1572d93d4d4f883f483f907120a75d925a693e/Script/jd_joy.js
 脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
 IOS用户支持京东双账号,NodeJs用户支持N个京东账号
-更新时间：2021-3-39
+更新时间：2021-6-6
 活动入口：京东APP我的-更多工具-宠汪汪
 建议先凌晨0点运行jd_joy.js脚本获取狗粮后，再运行此脚本(jd_joy_steal.js)可偷好友积分，6点运行可偷好友狗粮
 feedCount:自定义 每次喂养数量; 等级只和喂养次数有关，与数量无关
@@ -35,6 +35,7 @@ const $ = new Env('宠汪汪');
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
+const validator=require('./JDJRValidator.js');
 let allMessage = '';
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '';
@@ -95,6 +96,11 @@ const weAppUrl = 'https://draw.jdfcloud.com//pet';
     })
 async function jdJoy() {
   try {
+     $.validator='';
+    let va= new validator($);
+    //console.log(va);
+    
+    await va.run();
     await getPetTaskConfig();
     if ($.getPetTaskConfigRes.success) {
       if ($.isNode()) {
@@ -157,9 +163,11 @@ async function joinTwoPeopleRun() {
       console.log(`赛跑状态：${petRaceResult}\n`);
       if (petRaceResult === 'not_participate') {
         console.log(`暂未参赛，现在为您参加${teamLevelTemp}人赛跑`);
+       
         await runMatch(teamLevelTemp * 1);
         if ($.runMatchResult.success) {
           await getWinCoin();
+          await getRankList();
           console.log(`${$.getWinCoinRes.data.teamLimitCount || teamLevelTemp}人赛跑参加成功\n`);
           message += `${$.getWinCoinRes.data.teamLimitCount || teamLevelTemp}人赛跑：成功参加\n`;
           // if ($.getWinCoinRes.data['supplyOrder']) await energySupplyStation($.getWinCoinRes.data['supplyOrder']);
@@ -729,7 +737,7 @@ function getPetTaskConfig() {
         if (err) {
           console.log('\n京东宠汪汪: API查询请求失败 ‼️‼️')
         } else {
-          // console.log('JSON.parse(data)', JSON.parse(data))
+           //console.log('JSON.parse(data)', JSON.parse(data))
           $.getPetTaskConfigRes = JSON.parse(data);
         }
       } catch (e) {
@@ -795,6 +803,7 @@ function getRankList() {
           data = JSON.parse(data);
           if (data.success) {
             $.raceUsers = data.datas;
+            $.lastUsers=$.raceUsers.length;
           }
         }
       } catch (e) {
@@ -807,7 +816,7 @@ function getRankList() {
 }
 //参加赛跑API
 function runMatch(teamLevel, timeout = 5000) {
-  if (teamLevel === 10 || teamLevel === 50) timeout = 60000;
+  if (teamLevel === 10 || teamLevel === 50) timeout = 10000;
   console.log(`正在参赛中，请稍等${timeout / 1000}秒，以防多个账号匹配到统一赛场\n`)
   return new Promise(async resolve => {
     await $.wait(timeout);
@@ -1015,7 +1024,7 @@ function TotalBean() {
     $.post(options, (err, resp, data) => {
       try {
         if (err) {
-          console.log(`${JSON.stringify(err)}`)
+          //console.log(`${JSON.stringify(err)}`)
           console.log(`${$.name} API请求失败，请检查网路重试`)
         } else {
           if (data) {
@@ -1043,7 +1052,7 @@ function TotalBean() {
 }
 function taskUrl(url, Host, reqSource) {
   return {
-    url: url,
+    url: url+=`&validate=${$.validator}`,
     headers: {
       'Cookie': cookie,
       // 'reqSource': reqSource,
@@ -1059,7 +1068,7 @@ function taskUrl(url, Host, reqSource) {
 }
 function taskPostUrl(url, body, reqSource, Host, ContentType) {
   return {
-    url: url,
+    url: url+=`&validate=${$.validator}`,
     body: body,
     headers: {
       'Cookie': cookie,
