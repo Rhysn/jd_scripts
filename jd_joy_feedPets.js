@@ -32,6 +32,7 @@ const $ = new Env('宠汪汪🐕喂食');
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
+const validator=require('./JDJRValidator.js');
 
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '';
@@ -82,6 +83,12 @@ let FEED_NUM = ($.getdata('joyFeedCount') * 1) || 10;   //喂食数量默认10g,
           }
         }
       }
+      $.validator='';
+      let va= new validator($);
+      //console.log(va);
+    
+      await va.run();
+
       await feedPets(FEED_NUM);//喂食
       await ThreeMeals();//三餐
       await showMsg();
@@ -114,7 +121,7 @@ function feedPets(feedNum) {
       credentials: "include",
       header: {"content-type": "application/json"}
     }
-    const url = "https:"+ taroRequest(opt)['url']
+    const url = "https:"+ taroRequest(opt)['url'] +`&validate=${$.validator}`
     const options = {
       url,
       headers: {
@@ -181,7 +188,8 @@ function ThreeMeals() {
       credentials: "include",
       header: {"content-type": "application/json"}
     }
-    const url = "https:"+ taroRequest(opt)['url']
+    const url = "https:"+ taroRequest(opt)['url'] + `&validate=${$.validator}`,
+
     const options = {
       url,
       headers: {
