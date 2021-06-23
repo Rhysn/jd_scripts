@@ -188,7 +188,7 @@ function ThreeMeals() {
       credentials: "include",
       header: {"content-type": "application/json"}
     }
-    const url = "https:"+ taroRequest(opt)['url'] + `&validate=${$.validator}`,
+    const url = "https:"+ taroRequest(opt)['url'] + `&validate=${$.validator}`;
 
     const options = {
       url,
