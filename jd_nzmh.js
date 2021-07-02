@@ -64,7 +64,9 @@ if ($.isNode()) {
         continue
       }
       try {
-        await jdMh('https://anmp.jd.com/babelDiy/Zeus/2nxUXjyYLz5rNJ1HL472B3KWf71C/index.html')
+        
+        await jdMh('https://anmp.jd.com/babelDiy/Zeus/9Z9HZWmQuwDnYKC1rzZTMpdn8ms/index.html');
+
         //await jdMh('https://h5.m.jd.com/babelDiy/Zeus/3eeruLXVbXge6CexVq8XkBbBvAfy/index.html')
         //await jdMh('https://h5.m.jd.com/babelDiy/Zeus/2k7Tx67WzLHDtdDNB2KPnqWEwavX/index.html')
         // await jdMh('https://anmp.jd.com/babelDiy/Zeus/36ci7L5uDdhTjqNSNdNiFRbMzAVn/index.html')
